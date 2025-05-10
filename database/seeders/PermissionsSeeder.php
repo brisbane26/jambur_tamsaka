@@ -20,15 +20,24 @@ class PermissionsSeeder extends Seeder
     // }
     public function run()
     {
-        // Create permissions if they do not exist
-        $permission = Permission::firstOrCreate(['name' => 'dashboard_access']);
-        
-        // Retrieve the admin role
-        $role = Role::where('name', 'admin')->first();
-        
-        // Check if the role and permission exist before attaching
-        if ($role) {
-            $role->givePermissionTo($permission);
+        // Buat Role
+        $admin = Role::create(['name' => 'admin']);
+        $customer = Role::create(['name' => 'customer']);
+
+        // Buat Permissions
+        $permissions = [
+            'access dashboard',
+            'access forms',
+            'access tables',
+            'access ui elements'
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission]);
         }
+
+        // Assign permissions to roles
+        $admin->givePermissionTo($permissions);
+        $customer->givePermissionTo(['access dashboard', 'access forms', 'access tables']);
     }
 }

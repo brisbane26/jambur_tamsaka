@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Permission;
 
 class AdminUserSeeder extends Seeder
 {
@@ -17,9 +18,25 @@ class AdminUserSeeder extends Seeder
 
     public function run()
     {
-        // Buat Role
-        Role::firstOrCreate(['name' => 'admin']);
-        Role::firstOrCreate(['name' => 'customer']);
+        // Buat Roles (Gunakan firstOrCreate untuk mencegah duplikasi)
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $customerRole = Role::firstOrCreate(['name' => 'customer']);
+
+        // Buat Permissions
+        $permissions = [
+            'access dashboard',
+            'access forms',
+            'access tables',
+            'access ui-elements'
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate(['name' => $permission]);
+        }
+
+        // Assign Permissions ke Role
+        $adminRole->syncPermissions(['access dashboard', 'access forms', 'access tables', 'access ui-elements']);
+        $customerRole->syncPermissions(['access dashboard', 'access forms', 'access tables']);
 
         // Buat Admin User
         $adminUser = User::firstOrCreate(
