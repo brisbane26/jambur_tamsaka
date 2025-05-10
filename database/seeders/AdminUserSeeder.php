@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 
 use App\Models\User;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Hash;
 
 class AdminUserSeeder extends Seeder
 {
@@ -16,19 +17,32 @@ class AdminUserSeeder extends Seeder
 
     public function run()
     {
-        // Create an admin role if it does not exist
-        $role = Role::firstOrCreate(['name' => 'admin']);
-        
-        // Create an admin user
-        $user = User::updateOrCreate(
-            ['email' => 'admin@example.com'], // Use a unique identifier (e.g., email)
+        // Buat Role
+        Role::firstOrCreate(['name' => 'admin']);
+        Role::firstOrCreate(['name' => 'customer']);
+
+        // Buat Admin User
+        $adminUser = User::firstOrCreate(
+            ['email' => 'admin@example.com'],
             [
-                'name' => 'Admin User',
-                'password' => bcrypt('password') // Use a secure password
+                'username' => 'admin',
+                'nama_lengkap' => 'Admin Jambur',
+                'telepon' => '081234567890',
+                'password' => Hash::make('admin123'),
             ]
         );
-        
-        // Assign the admin role to the user
-        $user->assignRole($role);
+        $adminUser->assignRole('admin');
+
+        // Buat Customer User
+        $customerUser = User::firstOrCreate(
+            ['email' => 'customer@example.com'],
+            [
+                'username' => 'customer',
+                'nama_lengkap' => 'Customer Jambur',
+                'telepon' => '081234567891',
+                'password' => Hash::make('customer123'),
+            ]
+        );
+        $customerUser->assignRole('customer');
     }
 }

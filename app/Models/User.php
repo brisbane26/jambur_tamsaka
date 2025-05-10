@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -18,9 +19,12 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
         'email',
+        'username',
         'password',
+        'nama_lengkap',
+        'telepon',
+        'gambar',
     ];
 
     /**
@@ -44,5 +48,21 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the pesanan for the user.
+     */
+    public function pesanan(): HasMany
+    {
+        return $this->hasMany(Pesanan::class);
+    }
+
+    /**
+     * Get the keranjang for the user.
+     */
+    public function keranjang(): HasMany
+    {
+        return $this->hasMany(Keranjang::class);
     }
 }
