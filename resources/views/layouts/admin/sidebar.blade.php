@@ -49,6 +49,7 @@
         </a>
         @endcan
 
+        @role('admin')
         <div class="relative group ">
             <button id="dropdown-button" class="flex items-center px-6 py-2 mt-4 {{ Route::currentRouteNamed('admin.users.index') || Route::currentRouteNamed('admin.roles.index') || Route::currentRouteNamed('admin.permissions.index') ? 'text-gray-100' : 'text-gray-500' }} hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100">
                 <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"stroke="currentColor">
@@ -87,7 +88,7 @@
                 </a>
             </div>
         </div>
-        
+        @endrole
     </nav>
 </div>
 
