@@ -27,7 +27,8 @@ class AdminUserSeeder extends Seeder
             'access dashboard',
             'access forms',
             'access tables',
-            'access ui-elements'
+            'access ui-elements',
+            'access daftar-paket',
         ];
 
         foreach ($permissions as $permission) {
@@ -35,8 +36,8 @@ class AdminUserSeeder extends Seeder
         }
 
         // Assign Permissions ke Role
-        $adminRole->syncPermissions(['access dashboard', 'access forms', 'access tables', 'access ui-elements']);
-        $customerRole->syncPermissions(['access dashboard', 'access forms', 'access tables']);
+        $adminRole->syncPermissions(['access dashboard', 'access forms', 'access tables', 'access ui-elements', 'access daftar-paket']);
+        $customerRole->syncPermissions(['access dashboard', 'access forms', 'access tables', 'access daftar-paket']);
 
         // Buat Admin User
         $adminUser = User::firstOrCreate(
