@@ -22,12 +22,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tables', function () {
         return view('admin.tables');
     })->middleware('permission:access tables')->name('admin.tables');
+    
+     Route::get('/ui-elements', function () {
+            return view('admin.ui-elements');
+        })->middleware('permission:access ui-elements')->name('admin.ui-elements');
 
-    Route::get('/ui-elements', function () {
-        return view('admin.ui-elements');
-    })->middleware('permission:access ui-elements')->name('admin.ui-elements');
-});
-
+     Route::get('/conf', function () {
+               return view('admin.configuration');
+           })->middleware('permission:access configuration')->name('admin.configuration');
+    });
+    
+    
+    
  // Group routes that need admin role and authentication
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('users', UserController::class);
