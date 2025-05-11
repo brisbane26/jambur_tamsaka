@@ -11,6 +11,8 @@ class Paket extends Model
 {
     use HasFactory;
 
+    protected $table = 'pakets';
+
     protected $fillable = [
         'nama_paket',
         'kategori_id',
@@ -42,5 +44,10 @@ class Paket extends Model
     public function detailPesanan(): HasMany
     {
         return $this->hasMany(DetailPesanan::class);
+    }
+
+    public function getGambarUrlAttribute()
+    {
+        return $this->gambar ? asset('storage/' . $this->gambar) : null;
     }
 }
