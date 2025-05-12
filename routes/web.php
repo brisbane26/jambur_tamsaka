@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\PaketController;
+use App\Http\Controllers\KeranjangController;
+use App\Livewire\KeranjangIndex;
 
 Route::get('/', function () {
     return view('welcome');
@@ -48,6 +50,12 @@ Route::post('/paket/tambah', [PaketController::class, 'store'])->middleware(['au
 Route::get('/paket/edit/{id}', [PaketController::class, 'edit'])->middleware(['auth', 'verified'])->name('paket.edit');
 Route::put('/paket/{id}', [PaketController::class, 'update'])->middleware(['auth', 'verified'])->name('paket.update');
 Route::delete('/paket/{id}', [PaketController::class, 'destroy'])->middleware(['auth', 'verified'])->name('paket.destroy');
+
+Route::get('/keranjang', KeranjangIndex::class)->middleware(['auth', 'verified'])->name('keranjang.index');
+Route::post('/keranjang', [KeranjangController::class, 'store'])->middleware(['auth', 'verified'])->name('keranjang.store');
+Route::put('/keranjang/{keranjang}', [KeranjangController::class, 'update'])->middleware(['auth', 'verified'])->name('keranjang.update');
+Route::delete('/keranjang/{keranjang}', [KeranjangController::class, 'destroy'])->middleware(['auth', 'verified'])->name('keranjang.destroy');
+
 
 require __DIR__.'/auth.php';
 
