@@ -46,6 +46,11 @@
             modalDelete.classList.toggle('hidden');
         }
 
+        function toggleEditModal(id) {
+            const modalEdit = document.getElementById('editModal' + id);
+            modalEdit.classList.toggle('hidden');
+        }
+
         @if (Session::has('message'))
             var type = "{{ Session::get('alert-type', 'info') }}"
             switch (type) {

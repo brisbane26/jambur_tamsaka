@@ -4,92 +4,131 @@
     <div class="mt-8">
         <div class="flex justify-between items-center">
             <h4 class="text-gray-600">Daftar Paket</h4>
-
+            @role('admin')
             <button class="px-6 py-3 bg-blue-600 rounded-md text-white font-medium tracking-wide hover:bg-blue-500">
                 <a href="{{ route('paket.create') }}">Tambah Paket</a>
             </button>
+            @endrole
         </div>
       
-        <div class="flex flex-col mt-6">
-            <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-                <div class="align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
-                    <table class="min-w-full">
-                        <thead>
-                            <tr>
-                                <th class="px-6 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">No</th>
-                                <th class="px-6 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Gambar</th>
-                                <th class="px-6 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Nama Paket</th>
-                                <th class="px-6 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
-                                <th class="px-6 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th>
-                                <th class="px-6 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Harga</th>
-                                <th class="px-6 py-3 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                            </tr>
-                        </thead>
-
-                        <tbody class="bg-white">
-                            @foreach ($paket as $pkt)
-                            <tr>
-                                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                    <div class="text-sm leading-5 text-gray-900">{{ $loop->iteration }}</div>
-                                </td>
-
-                                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-32 w-32 bg-gray-100 rounded-md flex items-center justify-center overflow-hidden">
-                                            @if ($pkt->gambar_url)
-                                                <img src="{{ $pkt->gambar_url }}" alt="Gambar Paket" class="object-cover w-full h-full">
-                                            @else
-                                                <span class="text-xs text-gray-500">No Image</span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <div class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                        <div class="text-sm leading-5 text-gray-500">{{ $pkt->nama_paket }}</div>
-                                    </div>
-                                </td>
-                                
-                                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                    <div class="text-sm leading-5 text-gray-500">{{ $pkt->kategori->nama_kategori }}</div>
-                                </td>
-
-                                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-gray-500">{{ $pkt->deskripsi }}</span>
-                                </td>
-
-                                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm leading-5 text-gray-500">{{ $pkt->harga_jual }}</td>
-
-                                <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
-                                    <button onclick="toggleDeleteModal({{ $pkt->id }})" class="text-2xl text-red-500 hover:text-red-700">
-                                        <i class="bi bi-trash-fill"></i></button>
-
-                                <div id="deleteModal{{ $pkt->id }}" class="fixed inset-0 hidden overflow-y-auto bg-black/50">
-                                    <div class="flex items-center justify-center min-h-screen px-4">
-                                        <div class="relative w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
-                                            <h2 class="text-lg mb-4 font-semibold">Apakah kamu yakin untuk menghapus?</h2>
-                                            <div class="flex justify-end space-x-2">
-                                                <button type="button" onclick="toggleDeleteModal({{ $pkt->id }})" 
-                                                class="px-4 py-2 text-gray-700 bg-gray-200 rounded hover:bg-gray-300">Cancel</button>
-                                                <form action="{{ route('paket.destroy', $pkt->id) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" 
-                                                    class="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-700">Delete</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                </td>
-                            </tr>
-                            @endforeach
-
-                        </tbody>
-                    </table>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+        @foreach ($paket as $pkt)
+        <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+            <div class="h-56 bg-gray-100 flex items-center justify-center overflow-hidden">
+                @if ($pkt->gambar_url)
+                    <img src="{{ $pkt->gambar_url }}" alt="Gambar Paket" class="object-cover w-full h-full">
+                @else
+                    <span class="text-base text-gray-500">No Image</span>
+                @endif
+            </div>
+            <div class="px-4 py-3">
+                <h5 class="text-xl font-semibold text-gray-900 mb-2">{{ $pkt->nama_paket }}</h5>
+                <p class="text-sm text-gray-600 mb-4">{{ $pkt->deskripsi }}</p>
+                <span class="block text-basem font-bold text-gray-800 mb-3">Rp {{ number_format($pkt->harga_jual, 0, ',', '.') }}</span>
+                <div class="flex justify-between items-center">
+                    @role('admin')
+                    <button onclick="toggleDeleteModal({{ $pkt->id }})" class="text-red-500 hover:text-red-700 text-base font-semibold">
+                        <i class="bi bi-trash-fill"></i> Delete
+                    </button>
+                    <button onclick="toggleEditModal({{ $pkt->id }})" class="text-yellow-500 hover:text-yellow-700 text-base font-semibold">
+                        <i class="bi bi-pencil-square"></i> Edit
+                    </button>
+                    @endrole
+                    <button onclick="" class="text-green-500 hover:text-green-700 text-base font-semibold">
+                        <i class="bi bi-cart-plus-fill"></i> Add to Cart
+                    </button>
                 </div>
             </div>
         </div>
+
+        <!-- Modal Delete -->
+        <div id="deleteModal{{ $pkt->id }}" class="fixed inset-0 hidden overflow-y-auto bg-black/50">
+            <div class="flex items-center justify-center min-h-screen px-4">
+                <div class="relative w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
+                    <h2 class="text-lg mb-4 font-semibold">Apakah kamu yakin untuk menghapus?</h2>
+                    <div class="flex justify-end space-x-2">
+                        <button type="button" onclick="toggleDeleteModal({{ $pkt->id }})" 
+                        class="px-4 py-2 text-gray-700 bg-gray-200 rounded hover:bg-gray-300">Cancel</button>
+                        <form action="{{ route('paket.destroy', $pkt->id) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" 
+                            class="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-700">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- Modal Edit -->
+<div id="editModal{{ $pkt->id }}" class="fixed inset-0 hidden overflow-y-auto bg-black/50">
+    <div class="flex items-center justify-center min-h-screen px-4">
+        <div class="relative w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
+            <h2 class="text-lg mb-4 font-semibold">Edit Paket</h2>
+
+            <form action="{{ route('paket.update', $pkt->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                
+                <!-- Nama Paket -->
+                <div class="mb-4">
+                    <label for="nama_paket" class="block text-gray-600">Nama Paket</label>
+                    <input type="text" name="nama_paket" id="nama_paket" value="{{ $pkt->nama_paket }}" class="w-full p-2 border border-gray-300 rounded-md" required>
+                </div>
+
+                <!-- Kategori -->
+                <div class="mb-4">
+                    <label for="kategori_id" class="block text-gray-600">Kategori</label>
+                    <select name="kategori_id" id="kategori_id" class="w-full p-2 border border-gray-300 rounded-md" required>
+                        <option value="">Pilih Kategori</option>
+                        @foreach($kategori as $kat)
+                            <option value="{{ $kat->id }}" {{ $pkt->kategori_id == $kat->id ? 'selected' : '' }}>
+                                {{ $kat->nama_kategori }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Deskripsi -->
+                <div class="mb-4">
+                    <label for="deskripsi" class="block text-gray-600">Deskripsi</label>
+                    <textarea name="deskripsi" id="deskripsi" class="w-full p-2 border border-gray-300 rounded-md" required>{{ $pkt->deskripsi }}</textarea>
+                </div>
+
+                <!-- Modal -->
+                <div class="mb-4">
+                    <label for="modal" class="block text-gray-600">Modal</label>
+                    <input type="number" name="modal" id="modal" value="{{ $pkt->modal }}" class="w-full p-2 border border-gray-300 rounded-md" required>
+                </div>
+
+                <!-- Harga Jual -->
+                <div class="mb-4">
+                    <label for="harga_jual" class="block text-gray-600">Harga Jual</label>
+                    <input type="number" name="harga_jual" id="harga_jual" value="{{ $pkt->harga_jual }}" class="w-full p-2 border border-gray-300 rounded-md" required>
+                </div>
+
+                <!-- Gambar -->
+                <div class="mb-4">
+                    <label for="gambar" class="block text-gray-600">Gambar</label>
+                    <input type="file" name="gambar" id="gambar" class="w-full p-2 border border-gray-300 rounded-md" accept="image/*">
+                    @error('gambar')
+                    <span class="text-sm text-red-500">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="flex justify-end space-x-2">
+                    <button type="button" onclick="toggleEditModal({{ $pkt->id }})" 
+                    class="px-4 py-2 text-gray-700 bg-gray-200 rounded hover:bg-gray-300">Cancel</button>
+
+                    <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-500">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+    @endforeach
+</div>
+
     </div>
 </x-admin-layout>
