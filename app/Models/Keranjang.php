@@ -33,4 +33,9 @@ class Keranjang extends Model
     {
         return $this->belongsTo(Paket::class);
     }
+
+    public function getTotalHargaAttribute()
+    {
+        return $this->paket->harga_jual * $this->kuantitas;
+    }
 }

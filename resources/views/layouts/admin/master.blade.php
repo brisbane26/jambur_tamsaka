@@ -18,6 +18,7 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @livewireStyles
     </head>
     <body>
         <!-- Tostr Link -->
@@ -34,6 +35,7 @@
                 <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
                     <div class="container mx-auto px-6 py-8">
                         {{ $slot }}
+                        @livewireScripts
                     </div>
                 </main>
             </div>

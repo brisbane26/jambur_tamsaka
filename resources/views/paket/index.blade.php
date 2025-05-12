@@ -34,9 +34,13 @@
                         <i class="bi bi-pencil-square"></i> Edit
                     </button>
                     @endrole
-                    <button onclick="" class="text-green-500 hover:text-green-700 text-base font-semibold">
-                        <i class="bi bi-cart-plus-fill"></i> Add to Cart
-                    </button>
+                    <form action="{{ route('keranjang.store') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="paket_id" value="{{ $pkt->id }}">
+                        <button type="submit" class="text-green-500 hover:text-green-700 text-base font-semibold">
+                            <i class="bi bi-cart-plus-fill"></i> Add to Cart
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
