@@ -47,6 +47,7 @@ class KeranjangIndex extends Component
 
     public function render()
     {
-        return view('livewire.keranjang-index');
+        return view('livewire.keranjang-index')
+            ->layout('layouts.admin.master');
     }
 }
