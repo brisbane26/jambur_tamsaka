@@ -14,7 +14,8 @@ class PaketController extends Controller
     public function index()
     {
         $paket = Paket::with('kategori')->get();
-        return view('paket.index', compact('paket'));
+        $kategori = Kategori::all();
+        return view('paket.index', compact('paket', 'kategori'));
     }
 
     public function create()
@@ -52,6 +53,48 @@ class PaketController extends Controller
 
         $notifications = [
             'message' => 'Data Paket Berhasil Ditambahkan',
+            'alert-type' => 'success'
+        ];
+
+        return redirect()->route('paket.index')->with($notifications);
+    }
+
+    public function edit($id)
+    {
+        $paket = Paket::findOrFail($id);
+        $kategori = Kategori::all();
+        return view('paket.edit', compact('paket', 'kategori'));
+    }
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nama_paket' => 'required|string|max:255',
+            'kategori_id' => 'required|exists:kategoris,id',
+            'deskripsi' => 'required|string|max:255',
+            'modal' => 'required|numeric',
+            'harga_jual' => 'required|numeric',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2097152', // 2MB Max
+        ]);
+
+        // Handle file upload
+        $gambarPath = null;
+        if ($request->hasFile('gambar')) {
+            $gambarPath = $request->file('gambar')->store('uploads/gambar', 'public');
+        }
+
+        // Update data ke database
+        $paket = Paket::findOrFail($id);
+        $paket->update([
+            'nama_paket' => $request->nama_paket,
+            'kategori_id' => $request->kategori_id,
+            'deskripsi' => $request->deskripsi,
+            'modal' => $request->modal,
+            'harga_jual' => $request->harga_jual,
+            'gambar' => $gambarPath ? $gambarPath : $paket->gambar,
+        ]);
+
+        $notifications = [
+            'message' => 'Data Paket Berhasil Diperbarui',
             'alert-type' => 'success'
         ];
 
