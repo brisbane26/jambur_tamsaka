@@ -52,6 +52,7 @@ class KeranjangController extends Controller
     public function destroy(Keranjang $keranjang)
     {
         $keranjang->delete();
-        return redirect()->route('keranjang.index');
+        return redirect()->route('keranjang.index')
+             ->layout('layouts.admin.master');
     }
 }
