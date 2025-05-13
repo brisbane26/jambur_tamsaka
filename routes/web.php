@@ -35,7 +35,11 @@ Route::middleware(['auth'])->group(function () {
            })->middleware('permission:access configuration')->name('admin.configuration');
     });
     
-    
+
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    }); 
     
  // Group routes that need admin role and authentication
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -58,4 +62,3 @@ Route::delete('/keranjang/{keranjang}', [KeranjangController::class, 'destroy'])
 
 
 require __DIR__.'/auth.php';
-

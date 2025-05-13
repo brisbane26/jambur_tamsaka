@@ -8,53 +8,73 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
     /**
      * Display the user's profile form.
      */
-    public function edit(Request $request): View
-    {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+   public function edit()
+{
+    $user = Auth::user();
+
+    if (!$user instanceof \App\Models\User) {
+        abort(500, 'Authenticated user is not an instance of the User model.');
     }
 
-    /**
-     * Update the user's profile information.
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
+    return view('profile.edit', compact('user'));
+}
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+public function update(Request $request)
+{
+    $user = Auth::user();
 
-        $request->user()->save();
+    $request->validate([
+        'username' => 'required',
+        'email' => 'required|email',
+        'nama_lengkap' => 'required',
+        'telepon' => 'nullable',
+        'password' => 'nullable|min:6',
+        'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+    ]);
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+    $user->username = $request->username;
+    $user->email = $request->email;
+    $user->nama_lengkap = $request->nama_lengkap;
+    $user->telepon = $request->telepon;
+
+    if ($request->password) {
+        $user->password = Hash::make($request->password);
     }
 
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
-
-        $user = $request->user();
-
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+    if ($request->hasFile('gambar')) {
+        $gambar = $request->file('gambar')->store('profile_images', 'public');
+        $user->gambar = $gambar;
     }
+
+    $user->save();
+
+    return redirect()->route('profile.edit')->with('status', 'Profil berhasil diperbarui!');
+}
+
+public function destroy(Request $request): RedirectResponse
+{
+    $request->validateWithBag('userDeletion', [
+        'password' => ['required', 'current_password'],
+    ]);
+
+    $user = $request->user();
+
+    Auth::logout();
+
+    $user->delete();
+
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return Redirect::to('/');
+}
+
 }
