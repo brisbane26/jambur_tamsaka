@@ -23,15 +23,12 @@
                 <td class="py-3 px-4 border">{{ $keranjang->paket->nama_paket }}</td>
                 <td class="py-3 px-4 border">
                     <div class="flex items-center justify-center gap-2">
-                        <button wire:click="updateQuantity({{ $keranjang->id }}, 'decrement')" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">-</button>
-                        <input type="number" 
-                            value="{{ $keranjang->kuantitas }}" 
-                            class="w-12 text-center border border-gray-300 rounded [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
+                        <input key="qty-{{ $keranjang->id }}-{{ $keranjang->kuantitas }}"
+                        type="number"
+                        value="{{ $keranjang->kuantitas }}"
+                        wire:input.debounce.500ms="updateQuantityLive({{ $keranjang->id }}, $event.target.value)"
                             min="1" max="1000"
-                            wire:change="handleQuantityUpdate({{ $keranjang->id }}, $event.target.value)"
-                            wire:keydown.enter="handleQuantityUpdate({{ $keranjang->id }}, $event.target.value)"
                             oninput="this.value = Math.abs(this.value)">
-                        <button wire:click="updateQuantity({{ $keranjang->id }}, 'increment')" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600">+</button>
                     </div>
                 </td>
                 <td class="py-3 px-4 border">Rp {{ number_format($keranjang->paket->harga_jual, 0, ',', '.') }}</td>

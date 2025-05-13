@@ -10,8 +10,16 @@ class KeranjangIndex extends Component
     public $keranjangs = [];
     public $totalHarga = 0;
 
-    protected $listeners = ['quantityUpdated' => 'handleQuantityUpdate'];
-
+    public function updateQuantityLive($keranjangId, $newQuantity)
+    {
+        $newQuantity = max(1, min(1000, (int)$newQuantity));
+        
+        Keranjang::where('id', $keranjangId)
+            ->update(['kuantitas' => $newQuantity]);
+        
+        $this->loadKeranjang(); // Reload data dari database
+    }
+    
     public function mount()
     {
         $this->loadKeranjang();
@@ -33,23 +41,27 @@ class KeranjangIndex extends Component
         });
     }
 
-public function updateQuantity($keranjangId, $action)
-{
-    $keranjang = Keranjang::find($keranjangId);
-    
-    if ($action === 'increment') {
-        $keranjang->kuantitas++;
-    } elseif ($action === 'decrement' && $keranjang->kuantitas > 1) {
-        $keranjang->kuantitas--;
+    public function updateQuantity($keranjangId, $action)
+    {
+        // Ambil ulang data dari database (kuantitas terbaru setelah input manual)
+        $keranjang = Keranjang::find($keranjangId);
+
+        if (!$keranjang) return;
+
+        // Gunakan nilai dari database, bukan dari cache Livewire
+        $currentQty = $keranjang->kuantitas;
+
+        if ($action === 'increment') {
+            $keranjang->kuantitas = min(1000, $currentQty + 1);
+        } elseif ($action === 'decrement') {
+            $keranjang->kuantitas = max(1, $currentQty - 1);
+        }
+
+        $keranjang->save();
+        $this->loadKeranjang();
     }
-    
-    $keranjang->save();
-    
-    $this->dispatch('cartUpdated'); 
-}
 
     
-
     public function handleQuantityUpdate($id, $newQuantity)
     {
         $newQuantity = max(1, min(1000, (int)$newQuantity)); // Pastikan antara 1-1000
