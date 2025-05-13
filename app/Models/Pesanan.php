@@ -14,15 +14,13 @@ class Pesanan extends Model
 
     protected $table = 'pesanans';
     
-    protected $fillable = [
-        'user_id',
-        'pembayaran_id',
-        'bank_id',
-        'status',
-        'bukti_transaksi',
-        'alasan_tolak',
-    ];
-
+ protected $fillable = [
+    'user_id', 
+    'pembayaran_id', 
+    'bank_id', 
+    'status', 
+    'bukti_transaksi', 
+    'alasan_tolak'];
     /**
      * Get the user that owns the pesanan.
      */
@@ -61,5 +59,10 @@ class Pesanan extends Model
     public function invoice(): HasOne
     {
         return $this->hasOne(Invoice::class);
+    }
+
+    public function jadwal()
+    {
+        return $this->hasOne(Jadwal::class);
     }
 }

@@ -17,13 +17,7 @@ class DetailPesanan extends Model
         'paket_id',
         'kuantitas',
         'harga',
-        'tanggal_acara',
-        'nama_acara',
         'catatan',
-    ];
-
-    protected $casts = [
-        'tanggal_acara' => 'date',
     ];
 
     /**

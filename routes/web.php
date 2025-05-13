@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\PaketController;
 use App\Http\Controllers\KeranjangController;
 use App\Livewire\KeranjangIndex;
+use App\Http\Controllers\JadwalController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -35,11 +36,7 @@ Route::middleware(['auth'])->group(function () {
            })->middleware('permission:access configuration')->name('admin.configuration');
     });
     
-
-    Route::middleware(['auth'])->group(function () {
-        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    }); 
+    
     
  // Group routes that need admin role and authentication
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -59,6 +56,14 @@ Route::get('/keranjang', KeranjangIndex::class)->middleware(['auth', 'verified']
 Route::post('/keranjang', [KeranjangController::class, 'store'])->middleware(['auth', 'verified'])->name('keranjang.store');
 Route::put('/keranjang/{keranjang}', [KeranjangController::class, 'update'])->middleware(['auth', 'verified'])->name('keranjang.update');
 Route::delete('/keranjang/{keranjang}', [KeranjangController::class, 'destroy'])->middleware(['auth', 'verified'])->name('keranjang.destroy');
+
+// Route::controller(JadwalController::class)->group(function(){
+//     Route::get('full-calender', 'index');
+//     Route::post('full-calender-ajax', 'ajax');
+// });
+
+Route::get('/jadwal', [JadwalController::class, 'index'])->middleware(['auth', 'verified'])->name('jadwal.index');
+Route::post('/jadwal', [JadwalController::class, 'ajax'])->middleware(['auth', 'verified'])->name('jadwal.ajax');
 
 
 require __DIR__.'/auth.php';
