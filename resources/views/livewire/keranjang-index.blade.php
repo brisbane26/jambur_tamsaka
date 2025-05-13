@@ -1,4 +1,3 @@
-
 <div class="w-full p-4">
     <h3 class="text-gray-700 text-3xl font-medium mb-6">Keranjang Belanja</h3>
 
@@ -25,18 +24,20 @@
                 <td class="py-3 px-4 border">
                     <div class="flex items-center justify-center gap-2">
                         <button wire:click="updateQuantity({{ $keranjang->id }}, 'decrement')" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">-</button>
-                        <input type="text" value="{{ $keranjang->kuantitas }}" 
-                            class="w-12 text-center border border-gray-300 rounded" 
-                            inputmode="numeric" 
-                            pattern="[0-9]*"
-                            readonly>
+                        <input type="number" 
+                            value="{{ $keranjang->kuantitas }}" 
+                            class="w-12 text-center border border-gray-300 rounded [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
+                            min="1" max="1000"
+                            wire:change="handleQuantityUpdate({{ $keranjang->id }}, $event.target.value)"
+                            wire:keydown.enter="handleQuantityUpdate({{ $keranjang->id }}, $event.target.value)"
+                            oninput="this.value = Math.abs(this.value)">
                         <button wire:click="updateQuantity({{ $keranjang->id }}, 'increment')" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600">+</button>
                     </div>
                 </td>
                 <td class="py-3 px-4 border">Rp {{ number_format($keranjang->paket->harga_jual, 0, ',', '.') }}</td>
                 <td class="py-3 px-4 border">Rp {{ number_format($keranjang->paket->harga_jual * $keranjang->kuantitas, 0, ',', '.') }}</td>
                 <td class="py-3 px-4 border">
-                    <button wire:click="updateQuantity({{ $keranjang->id }}, 'decrement')" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+                    <button wire:click="removeItem({{ $keranjang->id }})" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
                         <i class="bi bi-trash3-fill"></i>
                     </button>
                 </td>
