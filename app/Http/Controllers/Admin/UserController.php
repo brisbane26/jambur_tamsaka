@@ -25,17 +25,21 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'nama_lengkap' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'username' => 'required|string|max:255|unique:users', 
+            'telepon' => 'required|string|min:10|max:15',
+            'password' => 'required|string|min:8|confirmed|regex:/[A-Z]/|regex:/[a-z]/|regex:/[0-9]/|regex:/[\W_]/',
             'roles' => 'nullable|array',
             'roles.*' => 'exists:roles,id',
         ]);
 
         $user = User::create([
-            'name' => $request->name,
+            'nama_lengkap' => $request->nama_lengkap,
             'email' => $request->email,
-            'password' => bcrypt($request->password),
+            'username' => $request->username, // Add username here
+            'telepon' => $request->telepon,
+            'password' => Hash::make($request->password), // Use Hash::make for better security
         ]);
 
         if ($request->has('roles')) {
@@ -60,32 +64,29 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        // Validate incoming request
         $request->validate([
-            'name' => 'required|string|max:255',
+            'nama_lengkap' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:8|confirmed',
+            'username' => 'required|string|max:255|unique:users,username,' . $user->id, 
+            'telepon' => 'required|string|min:10|max:15',
+            'password' => 'required|string|min:8|confirmed|regex:/[A-Z]/|regex:/[a-z]/|regex:/[0-9]/|regex:/[\W_]/',
             'roles' => 'nullable|array',
-            'roles.*' => 'exists:roles,id', // Validate role IDs
+            'roles.*' => 'exists:roles,id',
         ]);
 
-        // Update user details
         $user->update([
-            'name' => $request->name,
+            'nama_lengkap' => $request->nama_lengkap,
             'email' => $request->email,
-            'password' => $request->password ? bcrypt($request->password) : $user->password,
+            'username' => $request->username,
+            'telepon' => $request->telepon,
+            'password' => $request->password ? Hash::make($request->password) : $user->password, 
         ]);
 
-        // Map role IDs to role names
-        $roleIds = $request->roles;
-        $validRoleNames = Role::whereIn('id', $roleIds)->pluck('name')->toArray();
-
-        // Sync roles by name
-        $user->syncRoles($validRoleNames);
+        // Sync roles
+        $user->syncRoles($request->roles);
 
         return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
     }
-
 
     public function destroy(User $user)
     {
