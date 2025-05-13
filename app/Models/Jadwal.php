@@ -12,13 +12,18 @@ class Jadwal extends Model
     protected $table = 'jadwals';
     
     protected $fillable = [
+        'user_id',
         'tanggal',
         'nama_acara',
-        'waktu',
     ];
 
-    protected $casts = [
-        'tanggal' => 'date',
-        'waktu' => 'datetime',
-    ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function pesanan()
+    {
+        return $this->hasOne(Pesanan::class);
+    }
 }

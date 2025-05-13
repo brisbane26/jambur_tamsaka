@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('jadwals', function (Blueprint $table) {
             $table->id();
-            $table->date('tanggal');
-            $table->string('nama_acara');
-            $table->time('waktu');
+            $table->date('tanggal')->unique();
+            $table->string('nama_acara')->nullable();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

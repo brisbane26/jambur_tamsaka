@@ -17,8 +17,6 @@ return new class extends Migration
             $table->foreignId('paket_id')->constrained('pakets')->onDelete('cascade');
             $table->integer('kuantitas');
             $table->decimal('harga', 12, 2);
-            $table->date('tanggal_acara');
-            $table->string('nama_acara');
             $table->text('catatan')->nullable();
             $table->timestamps();
         });
