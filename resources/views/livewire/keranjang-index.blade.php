@@ -1,45 +1,50 @@
-<div>
-    <h3 class="text-gray-700 text-3xl font-medium">Keranjang Belanja</h3>
 
-    <table class="min-w-full bg-white mt-8">
-        <thead>
+<div class="w-full p-4">
+    <h3 class="text-gray-700 text-3xl font-medium mb-6">Keranjang Belanja</h3>
+
+    <table class="w-full bg-white border border-gray-200 rounded-lg shadow-md">
+        <thead class="bg-gray-100">
             <tr>
-                <th class="py-2">No</th>
-                <th class="py-2">Gambar</th>
-                <th class="py-2">Nama Paket</th>
-                <th class="py-2">Kuantitas</th>
-                <th class="py-2">Harga Satuan</th>
-                <th class="py-2">Total Harga</th>
-                <th class="py-2">Aksi</th>
+                <th class="py-3 px-4 text-left text-gray-600 font-semibold border">No</th>
+                <th class="py-3 px-4 text-left text-gray-600 font-semibold border">Gambar</th>
+                <th class="py-3 px-4 text-left text-gray-600 font-semibold border">Nama Paket</th>
+                <th class="py-3 px-4 text-left text-gray-600 font-semibold border">Kuantitas</th>
+                <th class="py-3 px-4 text-left text-gray-600 font-semibold border">Harga Satuan</th>
+                <th class="py-3 px-4 text-left text-gray-600 font-semibold border">Total Harga</th>
+                <th class="py-3 px-4 text-left text-gray-600 font-semibold border">Aksi</th>
             </tr>
         </thead>
         <tbody>
             @foreach($keranjangs as $index => $keranjang)
-            <tr>
-                <td class="py-2">{{ $index + 1 }}</td>
-                <td class="py-2">
-                    <img src="{{ $keranjang->paket->gambar_url }}" alt="{{ $keranjang->paket->nama_paket }}" width="100">
+            <tr class="border-t border-gray-200 hover:bg-gray-50">
+                <td class="py-3 px-4 border">{{ $loop->iteration }}</td>
+                <td class="py-3 px-4 border">
+                    <img src="{{ $keranjang->paket->gambar_url }}" alt="{{ $keranjang->paket->nama_paket }}" class="w-20 h-20 object-cover rounded">
                 </td>
-                <td class="py-2">{{ $keranjang->paket->nama_paket }}</td>
-                <td class="py-2 flex items-center gap-2">
-                    <button wire:click="updateQuantity({{ $keranjang->id }}, 'decrement')" class="px-2 py-1 bg-red-500 text-white rounded">-</button>
-                    <input type="text" value="{{ $keranjang->kuantitas }}" 
-                        class="w-12 text-center border border-gray-300 rounded" 
-                        inputmode="numeric" 
-                        pattern="[0-9]*"
-                        readonly>
-                    <button wire:click="updateQuantity({{ $keranjang->id }}, 'increment')" class="px-2 py-1 bg-green-500 text-white rounded">+</button>
+                <td class="py-3 px-4 border">{{ $keranjang->paket->nama_paket }}</td>
+                <td class="py-3 px-4 border">
+                    <div class="flex items-center justify-center gap-2">
+                        <button wire:click="updateQuantity({{ $keranjang->id }}, 'decrement')" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">-</button>
+                        <input type="text" value="{{ $keranjang->kuantitas }}" 
+                            class="w-12 text-center border border-gray-300 rounded" 
+                            inputmode="numeric" 
+                            pattern="[0-9]*"
+                            readonly>
+                        <button wire:click="updateQuantity({{ $keranjang->id }}, 'increment')" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600">+</button>
+                    </div>
                 </td>
-                <td class="py-2">Rp {{ number_format($keranjang->paket->harga_jual, 0, ',', '.') }}</td>
-                <td class="py-2">Rp {{ number_format($keranjang->paket->harga_jual * $keranjang->kuantitas, 0, ',', '.') }}</td>
-                <td class="py-2">
-                    <button wire:click="updateQuantity({{ $keranjang->id }}, 'decrement')" class="px-2 py-1 bg-red-500 text-white rounded">Hapus</button>
+                <td class="py-3 px-4 border">Rp {{ number_format($keranjang->paket->harga_jual, 0, ',', '.') }}</td>
+                <td class="py-3 px-4 border">Rp {{ number_format($keranjang->paket->harga_jual * $keranjang->kuantitas, 0, ',', '.') }}</td>
+                <td class="py-3 px-4 border">
+                    <button wire:click="updateQuantity({{ $keranjang->id }}, 'decrement')" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+                        <i class="bi bi-trash3-fill"></i>
+                    </button>
                 </td>
             </tr>
             @endforeach
-            <tr>
-                <td colspan="5" class="text-right font-bold py-2">Total Harga Semua Paket:</td>
-                <td colspan="2" class="py-2">Rp {{ number_format($totalHarga, 0, ',', '.') }}</td>
+            <tr class="bg-gray-100 font-semibold">
+                <td colspan="5" class="text-right py-3 px-4 border">Total Harga Semua Paket:</td>
+                <td colspan="2" class="py-3 px-4 border">Rp {{ number_format($totalHarga, 0, ',', '.') }}</td>
             </tr>
         </tbody>
     </table>

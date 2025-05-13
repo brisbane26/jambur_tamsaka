@@ -7,25 +7,9 @@ use App\Models\Keranjang;
 
 class KeranjangIndex extends Component
 {
-    public $keranjangs = [];
     public $totalHarga = 0;
 
-    public function mount()
-    {
-        $this->loadKeranjang();
-    }
-
-    public function loadKeranjang()
-    {
-        $this->keranjangs = Keranjang::where('user_id', auth()->id())
-            ->with('paket')
-            ->get();
-
-        $this->totalHarga = $this->keranjangs->sum(function ($item) {
-            return $item->paket->harga_jual * $item->kuantitas;
-        });
-    }
-
+    // Menambah atau mengurangi kuantitas barang
     public function updateQuantity($id, $operation)
     {
         $keranjang = Keranjang::find($id);
@@ -42,12 +26,31 @@ class KeranjangIndex extends Component
             $keranjang->save();
         }
 
-        $this->loadKeranjang();
+        $this->calculateTotalHarga(); // Memperbarui total harga
     }
 
+    // Menghitung total harga semua barang di keranjang
+    public function calculateTotalHarga()
+    {
+        $this->totalHarga = Keranjang::where('user_id', auth()->id())
+            ->with('paket')
+            ->get()
+            ->sum(function ($item) {
+                return $item->paket->harga_jual * $item->kuantitas;
+            });
+    }
+
+    // Render data keranjang
     public function render()
     {
-        return view('livewire.keranjang-index')
-            ->layout('layouts.admin.master');
+        $keranjangs = Keranjang::where('user_id', auth()->id())
+            ->with('paket')
+            ->get(); // Mengambil semua item
+
+        $this->calculateTotalHarga(); // Memperbarui total harga
+
+        return view('livewire.keranjang-index', [
+            'keranjangs' => $keranjangs,
+        ])->layout('layouts.admin.master');
     }
 }
