@@ -1,47 +1,88 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center px-4">
+  <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
+    <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">Masuk ke Akun</h2>
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+    <!-- Session Status Message (Opsional) -->
+    <div id="session-status" class="mb-4 hidden text-sm text-green-600 text-center"></div>
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+    <form id="loginForm" method="POST"  action="{{ route('login') }}">
+      <!-- CSRF Token (bila pakai Laravel backend) -->
+    @csrf
+      <!-- Email -->
+      <div class="mb-4">
+        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+        <input type="email" id="email" name="email" required
+               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+      <!-- Password -->
+      <div class="mb-4">
+        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+        <input type="password" id="password" name="password" required
+               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+      <!-- Remember Me -->
+      <div class="flex items-center mb-4">
+        <input type="checkbox" id="remember_me" name="remember"
+               class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
+        <label for="remember_me" class="ml-2 block text-sm text-gray-700">Ingat Saya</label>
+      </div>
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
+      <!-- Aksi -->
+      <div class="flex items-center justify-between">
+        <a href="/forgot-password" class="text-sm text-blue-600 hover:text-blue-800">Lupa password?</a>
+        <button type="submit"
+                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+          Login
+        </button>
+      </div>
     </form>
-</x-guest-layout>
+
+    <div class="mt-4 text-center">
+      <span class="text-sm text-gray-600">Belum punya akun? </span>
+      <a href="/register" class="text-sm text-blue-600 hover:text-blue-800">Daftar disini</a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+      if (!validEmail) {
+        e.preventDefault();
+        Swal.fire('Email tidak valid', 'Masukkan format email yang benar.', 'error');
+        return;
+      }
+
+      if (password.length < 4) {
+        e.preventDefault();
+        Swal.fire('Password terlalu pendek', 'Minimal 4 karakter.', 'error');
+        return;
+      }
+
+      // Anda bisa menambahkan request ke backend jika menggunakan AJAX
+    });
+
+    // Contoh menampilkan pesan sukses dari session (jika pakai Laravel backend)
+    const sessionStatus = '{{ session('status') }}';
+    if (sessionStatus) {
+      const statusEl = document.getElementById('session-status');
+      statusEl.textContent = sessionStatus;
+      statusEl.classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
