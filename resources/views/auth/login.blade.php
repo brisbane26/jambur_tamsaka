@@ -81,6 +81,11 @@
       statusEl.classList.remove('hidden');
     }
 
+    const loginError = @json($errors->first('email'));
+    if (loginError) {
+      Swal.fire('Login Gagal', loginError, 'error');
+  }
+
     function togglePw() {
         const pw = document.getElementById('password');
         const btn = document.getElementById('toggleBtn');
