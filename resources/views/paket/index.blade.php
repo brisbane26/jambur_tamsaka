@@ -1,3 +1,4 @@
+
 <x-admin-layout>
     <h3 class="text-gray-700 text-3xl font-medium">Tables</h3>
 
@@ -25,23 +26,29 @@
                 <h5 class="text-xl font-semibold text-gray-900 mb-2">{{ $pkt->nama_paket }}</h5>
                 <p class="text-sm text-gray-600 mb-4">{{ $pkt->deskripsi }}</p>
                 <span class="block text-basem font-bold text-gray-800 mb-3">Rp {{ number_format($pkt->harga_jual, 0, ',', '.') }}</span>
-                <div class="flex justify-between items-center">
-                    @role('admin')
-                    <button onclick="toggleDeleteModal({{ $pkt->id }})" class="text-red-500 hover:text-red-700 text-base font-semibold">
-                        <i class="bi bi-trash-fill"></i> Delete
-                    </button>
-                    <button onclick="toggleEditModal({{ $pkt->id }})" class="text-yellow-500 hover:text-yellow-700 text-base font-semibold">
-                        <i class="bi bi-pencil-square"></i> Edit
-                    </button>
-                    @endrole
-                    <form action="{{ route('keranjang.store') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="paket_id" value="{{ $pkt->id }}">
-                        <button type="submit" class="text-green-500 hover:text-green-700 text-base font-semibold">
-                            <i class="bi bi-cart-plus-fill"></i> Add to Cart
-                        </button>
-                    </form>
-                </div>
+<div class="flex justify-between items-center space-x-2">
+    <!-- Tombol Delete -->
+    <button onclick="toggleDeleteModal({{ $pkt->id }})" 
+        class="flex items-center px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 hover:shadow-lg transition duration-300 ease-in-out">
+        <i class="bi bi-trash-fill mr-2"></i> Delete
+    </button>
+
+    <!-- Tombol Edit -->
+    <button onclick="toggleEditModal({{ $pkt->id }})" 
+        class="flex items-center px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 hover:shadow-lg transition duration-300 ease-in-out">
+        <i class="bi bi-pencil-square mr-2"></i> Edit
+    </button>
+
+    <!-- Tombol Add to Cart -->
+    <form action="{{ route('keranjang.store') }}" method="POST">
+        @csrf
+        <input type="hidden" name="paket_id" value="{{ $pkt->id }}">
+        <button type="submit" 
+            class="flex items-center px-4 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 hover:shadow-lg transition duration-300 ease-in-out">
+            <i class="bi bi-cart-plus-fill mr-2"></i> Add to Cart
+        </button>
+    </form>
+</div>
             </div>
         </div>
 
