@@ -59,7 +59,7 @@
                 @if (auth()->user()->gambar)
                     <img src="{{ asset('storage/' . auth()->user()->gambar) }}" alt="Foto Profil" class="w-10 h-10 rounded-full object-cover">
                 @else
-                    <img src="{{ asset('storage/profile_images/profile.jpg') }}" alt="Default Foto Profil" class="w-10 h-10 rounded-full object-cover">
+                    <img src="{{ asset('storage/profile.jpg') }}" alt="Default Foto Profil" class="w-10 h-10 rounded-full object-cover">
                 @endif
 
 
