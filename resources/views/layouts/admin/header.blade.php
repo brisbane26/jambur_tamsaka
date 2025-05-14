@@ -59,11 +59,15 @@
                 @if (auth()->user()->gambar)
                     <img src="{{ asset('storage/' . auth()->user()->gambar) }}" alt="Foto Profil" class="w-10 h-10 rounded-full object-cover">
                 @else
-                    <img src="https://via.placeholder.com/40" alt="Default Foto Profil" class="w-10 h-10 rounded-full object-cover">
+                    <img src="{{ asset('storage/profile_images/profile.jpg') }}" alt="Default Foto Profil" class="w-10 h-10 rounded-full object-cover">
                 @endif
 
+
                 <!-- Nama Pengguna -->
-                <span class="ml-2 text-gray-700 font-medium">{{ auth()->user()->name }}</span>
+                @if (auth()->check())
+                    <span class="ml-2 text-gray-700 font-medium">{{ auth()->user()->username }}</span>
+                @endif
+
 
                 <!-- Ikon Dropdown -->
                 <svg class="w-4 h-4 ml-2 text-gray-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
