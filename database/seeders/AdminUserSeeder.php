@@ -1,4 +1,3 @@
-npm install 
 <?php
 
 namespace Database\Seeders;
