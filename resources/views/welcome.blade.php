@@ -61,8 +61,8 @@
     </div>
     <div class="absolute inset-9 flex flex-col md:flex-row items-center justify-between">
         <div class="md:w-1/2 mb-4 md:mb-0">
-            <h1 class="text-grey-700 font-medium text-4xl md:text-5xl leading-tight mb-2">Bappa Flour mill</h1>
-            <p class="font-regular text-xl mb-8 mt-4">One stop solution for flour grinding services</p>
+            <h1 class="text-grey-700 font-medium text-4xl md:text-5xl leading-tight mb-2">Jambur Tamsaka</h1>
+            <p class="font-regular text-xl mb-8 mt-4">Tempat kawin terbaik</p>
             <a href="#contactUs"
                 class="px-6 py-3 bg-[#c8a876] text-white font-medium rounded-full hover:bg-[#c09858]  transition duration-200">Contact
                 Us</a>
@@ -147,51 +147,123 @@
 
 
 
-<!-- gallery -->
-<section class="text-gray-700 body-font" id="gallery">
-    <div class="flex justify-center text-3xl font-bold text-gray-800 text-center py-10">
-        Gallery
+<section class="py-16 bg-white" id="gallery">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-gray-800 mb-4">Our Gallery</h2>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">Explore beautiful moments captured at Jambur Tamsaka</p>
     </div>
 
-    <div class="grid grid-cols-1 place-items-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+    <!-- Gallery Filter -->
+    <div class="flex justify-center mb-8">
+      <div class="inline-flex rounded-md shadow-sm" role="group">
+        <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium rounded-l-lg border border-[#c8a876] bg-[#c8a876] text-white" data-filter="all">
+          All
+        </button>
+        <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium border-t border-b border-[#c8a876] text-[#c8a876]" data-filter="wedding">
+          Wedding
+        </button>
+        <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium border border-[#c8a876] text-[#c8a876]" data-filter="event">
+          Events
+        </button>
+        <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium rounded-r-lg border border-[#c8a876] text-[#c8a876]" data-filter="venue">
+          Venue
+        </button>
+      </div>
+    </div>
+    
 
-        <div class="group relative">
-            <img
-      src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw1fHxuYXR1cmV8ZW58MHwwfHx8MTY5NDA5OTcyOXww&ixlib=rb-4.0.3&q=80&w=1080"
-      alt="Image 1"
-      class="aspect-[2/3] h-80 object-cover rounded-lg transition-transform transform scale-100 group-hover:scale-105"
-    />
+    <!-- Gallery Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 gallery-container">
+      <!-- Wedding Items -->
+      <div class="gallery-item wedding relative group overflow-hidden rounded-lg shadow-md">
+        <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" 
+             alt="Wedding at Jambur Tamsaka" 
+             class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+        <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span class="text-white text-lg font-medium">Wedding Celebration</span>
         </div>
+      </div>
 
-        <div class="group relative">
-            <img
-      src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw1fHxuYXR1cmV8ZW58MHwwfHx8MTY5NDA5OTcyOXww&ixlib=rb-4.0.3&q=80&w=1080"
-      alt="Image 1"
-      class="aspect-[2/3] h-80 object-cover rounded-lg transition-transform transform scale-100 group-hover:scale-105"
-    />
+      <div class="gallery-item wedding relative group overflow-hidden rounded-lg shadow-md">
+        <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" 
+             alt="Wedding Decoration" 
+             class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+        <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span class="text-white text-lg font-medium">Wedding Decoration</span>
         </div>
+      </div>
 
-        <div class="group relative">
-            <img
-      src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw1fHxuYXR1cmV8ZW58MHwwfHx8MTY5NDA5OTcyOXww&ixlib=rb-4.0.3&q=80&w=1080"
-      alt="Image 1"
-      class="aspect-[2/3] h-80 object-cover rounded-lg transition-transform transform scale-100 group-hover:scale-105"
-    />
+      <!-- Event Items -->
+      <div class="gallery-item event relative group overflow-hidden rounded-lg shadow-md">
+        <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" 
+             alt="Cultural Event" 
+             class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+        <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span class="text-white text-lg font-medium">Cultural Event</span>
         </div>
-        <div class="group relative">
-            <img
-      src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw1fHxuYXR1cmV8ZW58MHwwfHx8MTY5NDA5OTcyOXww&ixlib=rb-4.0.3&q=80&w=1080"
-      alt="Image 1"
-      class="aspect-[2/3] h-80 object-cover rounded-lg transition-transform transform scale-100 group-hover:scale-105"
-    />
+      </div>
+
+      <div class="gallery-item event relative group overflow-hidden rounded-lg shadow-md">
+        <img src="https://images.unsplash.com/photo-1492681290082-e932832941e6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" 
+             alt="Music Performance" 
+             class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+        <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span class="text-white text-lg font-medium">Music Performance</span>
         </div>
+      </div>
 
+      <!-- Venue Items -->
+      <div class="gallery-item venue relative group overflow-hidden rounded-lg shadow-md">
+        <img src="https://images.unsplash.com/photo-1575425186775-b8de9a427e67?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" 
+             alt="Venue Overview" 
+             class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+        <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span class="text-white text-lg font-medium">Venue Overview</span>
+        </div>
+      </div>
 
-
-        <!-- Repeat this div for each image -->
+      <div class="gallery-item venue relative group overflow-hidden rounded-lg shadow-md">
+        <img src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" 
+             alt="Outdoor Area" 
+             class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+        <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span class="text-white text-lg font-medium">Outdoor Area</span>
+        </div>
+      </div>
     </div>
 
+    <!-- View More Button -->
+    <div class="text-center mt-10">
+      <button class="px-6 py-3 bg-[#c8a876] text-white font-medium rounded-full hover:bg-[#b8996a] transition duration-200">
+        View More Photos
+      </button>
+    </div>
+  </div>
 </section>
+
+<!-- Facility Section -->
+<div class="mt-20 px-4">
+  <h2 class="text-2xl font-bold text-center mb-10">Facility</h2>
+  
+  <!-- Baris pertama: 4 card ukuran sama seperti gallery -->
+  <div class="flex justify-center flex-wrap gap-6 mb-6 max-w-screen-xl mx-auto">
+    <div class="bg-gray-300 w-64 h-64 rounded-lg shadow-md"></div>
+    <div class="bg-gray-300 w-64 h-64 rounded-lg shadow-md"></div>
+    <div class="bg-gray-300 w-64 h-64 rounded-lg shadow-md"></div>
+    <div class="bg-gray-300 w-64 h-64 rounded-lg shadow-md"></div>
+  </div>
+  
+  <!-- Baris kedua: 3 card ukuran sama seperti gallery, diposisikan di tengah -->
+  <div class="flex justify-center gap-6 max-w-screen-xl mx-auto">
+    <div class="bg-gray-300 w-64 h-64 rounded-lg shadow-md"></div>
+    <div class="bg-gray-300 w-64 h-64 rounded-lg shadow-md"></div>
+    <div class="bg-gray-300 w-64 h-64 rounded-lg shadow-md"></div>
+  </div>
+</div>
+
+
+
 
 <!-- Visit us section -->
 <section class="bg-gray-100">
@@ -216,7 +288,6 @@
                 </div>
                 <div class="rounded-lg overflow-hidden order-none sm:order-first">
                     <iframe width="500px" height="450px" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed/v1/place?q=jambur%20tamsaka&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8"></iframe>
-
                 </div>
 
             </div>
@@ -225,16 +296,45 @@
 </section>
 <!-- footer -->
 <section>
-    <footer class="bg-gray-200 text-white py-4 px-3">
-        <div class="container mx-auto flex flex-wrap items-center justify-between">
-            <div class="w-full md:w-1/2 md:text-center md:mb-4 mb-8">
-                <p class="text-xs text-gray-400 md:text-sm">Copyright 2024 &copy; All Rights Reserved</p>
+    <footer class="bg-[#e8e8e5] text-gray-800 py-8 border-t border-gray-300">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+            <!-- Brand & Copyright -->
+            <div class="flex flex-col items-center md:items-start">
+                <span class="text-lg font-bold tracking-wide text-gray-900">Jambur Tamsaka</span>
+                <span class="text-xs text-gray-600 mt-1">&copy; 2024 All Rights Reserved</span>
             </div>
-            <div class="w-full md:w-1/2 md:text-center md:mb-0 mb-8">
-                <ul class="list-reset flex justify-center flex-wrap text-xs md:text-sm gap-3">
-                    <li><a href="#contactUs" class="text-gray-400 hover:text-white">Contact</a></li>
-                    <li class="mx-4"><a href="/privacy" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
-                </ul>
+            <!-- Navigation -->
+            <ul class="flex flex-wrap gap-6 justify-center md:justify-end mt-4 md:mt-0">
+                <li>
+                    <a href="#contactUs" class="hover:text-[#c8a876] transition">Contact</a>
+                </li>
+                <li>
+                    <a href="/privacy" class="hover:text-[#c8a876] transition">Privacy Policy</a>
+                </li>
+                <li>
+                    <a href="#aboutus" class="hover:text-[#c8a876] transition">About Us</a>
+                </li>
+                <li>
+                    <a href="#gallery" class="hover:text-[#c8a876] transition">Gallery</a>
+                </li>
+            </ul>
+            <!-- Social Media -->
+            <div class="flex gap-4 mt-4 md:mt-0">
+                <a href="https://wa.me/6281234567890" target="_blank" class="hover:text-[#25D366] transition" title="WhatsApp">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20.52 3.48A12.07 12.07 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.14 1.6 5.93L0 24l6.22-1.63A11.94 11.94 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.19-1.24-6.19-3.48-8.52zM12 22c-1.77 0-3.5-.46-5.01-1.33l-.36-.21-3.69.97.99-3.59-.23-.37A9.93 9.93 0 0 1 2 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.2-7.8c-.28-.14-1.65-.81-1.9-.9-.25-.09-.43-.14-.61.14-.18.28-.7.9-.86 1.09-.16.18-.32.2-.6.07-.28-.14-1.18-.44-2.25-1.41-.83-.74-1.39-1.65-1.55-1.93-.16-.28-.02-.43.12-.57.13-.13.28-.34.42-.51.14-.17.18-.29.27-.48.09-.19.05-.36-.02-.5-.07-.14-.61-1.47-.83-2.01-.22-.53-.44-.46-.61-.47-.16-.01-.36-.01-.56-.01-.2 0-.52.07-.8.34-.28.28-1.06 1.04-1.06 2.54 0 1.5 1.09 2.95 1.24 3.16.15.21 2.14 3.27 5.19 4.45.73.28 1.3.45 1.74.58.73.23 1.39.2 1.91.12.58-.09 1.65-.67 1.89-1.32.23-.65.23-1.2.16-1.32-.07-.12-.25-.19-.53-.33z"/>
+                    </svg>
+                </a>
+                <a href="mailto:info@jamburtamsaka.com" class="hover:text-[#0072c6] transition" title="Email">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 12l-4-4-4 4m8 0v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6m16-2V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v4"/>
+                    </svg>
+                </a>
+                <a href="https://instagram.com/" target="_blank" class="hover:text-[#c8a876] transition" title="Instagram">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5zm4.25 3.25a5.25 5.25 0 1 1 0 10.5 5.25 5.25 0 0 1 0-10.5zm0 1.5a3.75 3.75 0 1 0 0 7.5 3.75 3.75 0 0 0 0-7.5zm5.25.75a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                    </svg>
+                </a>
             </div>
         </div>
     </footer>
