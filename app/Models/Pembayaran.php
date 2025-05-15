@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Pembayaran extends Model
 {
@@ -13,15 +13,13 @@ class Pembayaran extends Model
     protected $table = 'pembayarans';
     
     protected $fillable = [
+        'pesanan_id',
         'metode_bayar',
         'status',
     ];
 
-    /**
-     * Get the pesanan for the pembayaran.
-     */
-    public function pesanan(): HasMany
+    public function pesanan(): BelongsTo
     {
-        return $this->hasMany(Pesanan::class);
+        return $this->belongsTo(Pesanan::class);
     }
 }
