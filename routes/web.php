@@ -65,8 +65,10 @@ Route::delete('/keranjang/{keranjang}', [KeranjangController::class, 'destroy'])
 //     Route::post('full-calender-ajax', 'ajax');
 // });
 
-Route::get('/jadwal', [JadwalController::class, 'index'])->middleware(['auth', 'verified'])->name('jadwal.index');
-Route::post('/jadwal', [JadwalController::class, 'ajax'])->middleware(['auth', 'verified'])->name('jadwal.ajax');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
+    Route::post('/jadwal', [JadwalController::class, 'ajax'])->name('jadwal.ajax');
+});
 
 
 require __DIR__.'/auth.php';

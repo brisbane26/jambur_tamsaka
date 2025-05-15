@@ -29,40 +29,18 @@ class Pesanan extends Model
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get the pembayaran that owns the pesanan.
-     */
-    public function pembayaran(): BelongsTo
+    public function jadwal(): BelongsTo
     {
-        return $this->belongsTo(Pembayaran::class);
+        return $this->belongsTo(Jadwal::class);
     }
 
-    /**
-     * Get the bank that owns the pesanan.
-     */
-    public function bank(): BelongsTo
-    {
-        return $this->belongsTo(Bank::class);
-    }
-
-    /**
-     * Get the detail pesanan for the pesanan.
-     */
     public function detailPesanan(): HasMany
     {
         return $this->hasMany(DetailPesanan::class);
     }
 
-    /**
-     * Get the invoice associated with the pesanan.
-     */
-    public function invoice(): HasOne
+    public function pembayaran(): HasOne
     {
-        return $this->hasOne(Invoice::class);
-    }
-
-    public function jadwal()
-    {
-        return $this->hasOne(Jadwal::class);
+        return $this->hasOne(Pembayaran::class);
     }
 }
