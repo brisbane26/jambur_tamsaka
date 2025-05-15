@@ -10,9 +10,8 @@ use App\Http\Controllers\KeranjangController;
 use App\Livewire\KeranjangIndex;
 use App\Http\Controllers\JadwalController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () { return view('welcome');});
+Route::get('/', [PaketController::class, 'dashboard']);
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {

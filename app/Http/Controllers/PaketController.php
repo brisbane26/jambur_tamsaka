@@ -14,9 +14,20 @@ class PaketController extends Controller
     public function index()
     {
         $paket = Paket::with('kategori')->get();
+        
+
         $kategori = Kategori::all();
         return view('paket.index', compact('paket', 'kategori'));
+                
     }
+
+public function dashboard()
+{
+    $pakets = Paket::with('kategori')->get();
+    $kategoris = Kategori::all();
+    return view('welcome', compact('pakets', 'kategoris'));
+}
+
 
     public function create()
     {

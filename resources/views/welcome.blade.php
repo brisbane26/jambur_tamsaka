@@ -96,85 +96,35 @@
     </div>
   </div>
 </section>
-
-<!-- our services section -->
 <section class="py-10 bg-gray-100" id="services">
   <div class="container mx-auto px-8 max-w-7xl">
     <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Paket</h2>
 
-    <!-- Dropdown Pilihan Kategori -->
-    <div class="mb-8 flex justify-end">
-      <label for="kategori" class="flex items-center text-lg font-medium text-gray-700 space-x-2">
-        <span>Pilih Kategori:</span>
-        <select id="kategori" class="px-3 py-1 rounded border border-gray-300 shadow-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 w-40">
-          <option value="all">Semua</option>
-          <option value="catering">Catering</option>
-          <option value="dekorasi">Dekorasi</option>
-          <option value="dokumentasi">Dokumentasi</option>
-          <option value="salon">Salon</option>
-          <option value="musik">Musik</option>
-          <option value="lainnya">Lainnya</option>
-        </select>
-      </label>
-    </div>
+   <div class="mb-8 flex justify-end">
+  <label for="kategori" class="flex items-center text-lg font-medium text-gray-700 space-x-2">
+    <span>Pilih Kategori:</span>
+    <select id="kategori" class="px-3 py-1 rounded border border-gray-300 shadow-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 w-40">
+      <option value="all">Semua</option>
+      @foreach ($kategoris as $kategori)
+        <option value="{{ strtolower($kategori->nama_kategori) }}">{{ $kategori->nama_kategori }}</option>
+      @endforeach
+    </select>
+  </label>
+</div>
 
-    <!-- Semua Card Disatukan -->
     <div id="all-content" class="grid grid-cols-1 md:grid-cols-3 gap-8 justify-center">
-      <!-- Catering -->
-      <div class="category-item catering bg-white rounded-lg shadow-md overflow-hidden">
-        <img src="https://image3.jdomni.in/banner/13062021/42/5C/B1/45AC18B7F8EE562BC3DDB95D34_1623559815667.png?output-format=webp" class="w-full h-56 object-cover" alt="Paket Catering">
-        <div class="p-6 text-center">
-          <h4 class="text-xl font-medium text-gray-800 mb-2">Paket 1 - 500 Orang</h4>
-          <p class="text-gray-700 text-base">Rp 15.500.000</p>
-          <p class="text-gray-700 text-base mt-2">Makan Siang (ayam/ikan/daging)</p>
-        </div>
-      </div>
-
-      <!-- Dekorasi -->
-      <div class="category-item dekorasi bg-white rounded-lg shadow-md overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1607672632458-9eb56696346b" class="w-full h-56 object-cover" alt="Dekorasi">
-        <div class="p-6 text-center">
-          <h4 class="text-xl font-medium text-gray-800 mb-2">Dekorasi Pelaminan & Bunga Gereja</h4>
-          <p class="text-gray-700 text-base">Dekorasi pelaminan sesuai tema dan bunga segar untuk gereja.</p>
-        </div>
-      </div>
-
-      <!-- Dokumentasi -->
-      <div class="category-item dokumentasi bg-white rounded-lg shadow-md overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1556910110-a5a63dfd393c" class="w-full h-56 object-cover" alt="Dokumentasi">
-        <div class="p-6 text-center">
-          <h4 class="text-xl font-medium text-gray-800 mb-2">Foto & Shooting</h4>
-          <p class="text-gray-700 text-base">2 rol/2 jam dokumentasi acara.</p>
-        </div>
-      </div>
-
-      <!-- Salon -->
-      <div class="category-item salon bg-white rounded-lg shadow-md overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1606854428728-5fe3eea23475" class="w-full h-56 object-cover" alt="Salon">
-        <div class="p-6 text-center">
-          <h4 class="text-xl font-medium text-gray-800 mb-2">Salon Pasu Pasu & Ose Ose</h4>
-          <p class="text-gray-700 text-base">Tata rias untuk 3 pasang Pasu Pasu dan 3 pasang Ose Ose.</p>
-        </div>
-      </div>
-
-      <!-- Musik -->
-      <div class="category-item musik bg-white rounded-lg shadow-md overflow-hidden">
-        <img src="https://image2.jdomni.in/banner/13062021/D2/99/0D/48D7F4AFC48C041DC8D80432E9_1623562146900.png?output-format=webp" class="w-full h-56 object-cover" alt="Musik">
-        <div class="p-6 text-center">
-          <h4 class="text-xl font-medium text-gray-800 mb-2">Soundsystem & Pemusik</h4>
-          <p class="text-gray-700 text-base">Termasuk keyboard dan pemusik untuk mendukung acara.</p>
-        </div>
-      </div>
-
-      <!-- Lainnya -->
-      <div class="category-item lainnya bg-white rounded-lg shadow-md overflow-hidden">
-        <img src="https://media.istockphoto.com/id/1265641298/photo/fried-papad.jpg?s=612x612" class="w-full h-56 object-cover" alt="Lainnya">
-        <div class="p-6 text-center">
-          <h4 class="text-xl font-medium text-gray-800 mb-2">Luah Adat Simanjilen</h4>
-          <p class="text-gray-700 text-base">Pelengkap adat Batak sesuai tradisi keluarga.</p>
-        </div>
+  @foreach ($pakets as $paket)
+    <div class="category-item {{ strtolower($paket->kategori->nama_kategori) }} bg-white rounded-lg shadow-md overflow-hidden">
+      <img src="{{ $paket->gambar_url }}" class="w-full h-56 object-cover" alt="{{ $paket->nama_paket }}">
+      <div class="p-6 text-center">
+        <h4 class="text-xl font-medium text-gray-800 mb-2">{{ $paket->nama_paket }}</h4>
+        <p class="text-gray-700 text-base">Rp {{ number_format($paket->harga_jual, 0, ',', '.') }}</p>
+        <p class="text-gray-700 text-base mt-2">{{ $paket->deskripsi }}</p>
       </div>
     </div>
+  @endforeach
+</div>
+
   </div>
 </section>
 
@@ -193,6 +143,8 @@
     });
   });
 </script>
+
+
 
 
 <!-- gallery -->
