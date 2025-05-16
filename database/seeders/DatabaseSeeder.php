@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(AdminUserSeeder::class);
         $this->call(KategoriSeeder::class);
+        $this->call(BankSeeder::class);
         // $this->call(PermissionsSeeder::class);
     }
 

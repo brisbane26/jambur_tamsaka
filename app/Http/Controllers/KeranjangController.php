@@ -70,7 +70,7 @@ public function checkout_store(Request $request){
         'tanggal' => $request->tanggal_acara,
         'nama_acara' => $request->nama_acara,
         'user_id' => Auth::id(),
-        'status' => 'dipesan',
+        'status' => 'menunggu',
     ]);
 
     // Create pesanan
