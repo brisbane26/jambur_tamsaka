@@ -3,25 +3,24 @@
     <head>
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+
         <style>
             .fc-event {
                 background-color: #007bff !important;
-                /* Warna biru */
                 color: #000 !important;
-                /* Teks hitam */
                 padding: 2px 4px;
                 border-radius: 5px;
             }
 
             .fc-event .fc-title {
                 background-color: #ffffff !important;
-                /* Label putih */
                 color: #000 !important;
                 padding: 2px 4px;
                 border-radius: 3px;
@@ -36,8 +35,14 @@
             <div id='calendar'></div>
         </div>
 
+        <!-- Menu Aksi -->
+        <div id="event-menu" style="display:none; position:absolute; z-index:1000; background:white; border:1px solid #ccc; padding:10px; border-radius:5px;">
+            <button id="edit-event" class="btn btn-sm btn-primary mb-1">Edit</button><br>
+            <button id="delete-event" class="btn btn-sm btn-danger">Hapus</button>
+        </div>
+
         <script>
-            $(document).ready(function() {
+            $(document).ready(function () {
                 var SITEURL = "{{ url('/') }}";
 
                 $.ajaxSetup({
@@ -52,7 +57,8 @@
                     displayEventTime: false,
                     selectable: true,
                     selectHelper: true,
-                    select: function(start, end, allDay) {
+
+                    select: function (start, end, allDay) {
                         var today = moment();
                         var minDate = today.add(3, 'days');
 
@@ -76,7 +82,7 @@
                                     type: 'add'
                                 },
                                 type: "POST",
-                                success: function(data) {
+                                success: function (data) {
                                     calendar.fullCalendar('renderEvent', {
                                         id: data.id,
                                         title: nama_acara,
@@ -87,63 +93,89 @@
                                     calendar.fullCalendar('unselect');
                                     toastr.success("Acara berhasil ditambahkan");
                                 },
-                                error: function(xhr) {
+                                error: function (xhr) {
                                     var error = JSON.parse(xhr.responseText);
                                     toastr.error(error.error);
                                 }
                             });
                         }
                     },
-                    eventClick: function(event) {
+
+                    eventClick: function (event, jsEvent) {
                         var isAdmin = @json(auth()->user()->hasRole('admin'));
                         var isOwner = event.user_id == "{{ auth()->user()->id }}";
 
                         if (isAdmin || isOwner) {
-                            var nama_acara = prompt("Edit Nama Acara:", event.title);
+                            // Simpan event ke variabel global
+                            window.selectedEvent = event;
 
-                            if (nama_acara !== null) {
-                                $.ajax({
-                                    url: SITEURL + "/jadwal",
-                                    data: {
-                                        id: event.id,
-                                        nama_acara: nama_acara,
-                                        type: 'update'
-                                    },
-                                    type: "POST",
-                                    success: function(response) {
-                                        event.title = nama_acara;
-                                        calendar.fullCalendar('updateEvent', event);
-                                        toastr.success("Nama acara berhasil diperbarui");
-                                    },
-                                    error: function(xhr) {
-                                        var error = JSON.parse(xhr.responseText);
-                                        toastr.error(error.error);
-                                    }
-                                });
-                            }
-
-                            if (confirm("Yakin ingin menghapus acara ini?")) {
-                                $.ajax({
-                                    url: SITEURL + "/jadwal",
-                                    data: {
-                                        id: event.id,
-                                        type: 'delete'
-                                    },
-                                    type: "POST",
-                                    success: function(response) {
-                                        calendar.fullCalendar('removeEvents', event.id);
-                                        toastr.success("Acara berhasil dihapus");
-                                    },
-                                    error: function(xhr) {
-                                        var error = JSON.parse(xhr.responseText);
-                                        toastr.error(error.error);
-                                    }
-                                });
-                            }
+                            // Tampilkan menu di posisi klik
+                            $('#event-menu').css({
+                                top: jsEvent.pageY + "px",
+                                left: jsEvent.pageX + "px"
+                            }).show();
                         } else {
                             toastr.error("Anda tidak memiliki izin untuk mengelola acara ini");
                         }
                     }
+                });
+
+                // Sembunyikan menu saat klik di luar menu dan event
+                $(document).click(function (e) {
+                    if (!$(e.target).closest('#event-menu, .fc-event').length) {
+                        $('#event-menu').hide();
+                    }
+                });
+
+                // Aksi Edit
+                $('#edit-event').click(function () {
+                    var event = window.selectedEvent;
+                    var nama_acara = prompt("Edit Nama Acara:", event.title);
+
+                    if (nama_acara !== null) {
+                        $.ajax({
+                            url: SITEURL + "/jadwal",
+                            data: {
+                                id: event.id,
+                                nama_acara: nama_acara,
+                                type: 'update'
+                            },
+                            type: "POST",
+                            success: function () {
+                                event.title = nama_acara;
+                                $('#calendar').fullCalendar('updateEvent', event);
+                                toastr.success("Nama acara berhasil diperbarui");
+                                $('#event-menu').hide();
+                            },
+                            error: function (xhr) {
+                                var error = JSON.parse(xhr.responseText);
+                                toastr.error(error.error);
+                            }
+                        });
+                    }
+                });
+
+                // Aksi Hapus
+                $('#delete-event').click(function () {
+                    var event = window.selectedEvent;
+
+                    $.ajax({
+                        url: SITEURL + "/jadwal",
+                        data: {
+                            id: event.id,
+                            type: 'delete'
+                        },
+                        type: "POST",
+                        success: function () {
+                            $('#calendar').fullCalendar('removeEvents', event.id);
+                            toastr.success("Acara berhasil dihapus");
+                            $('#event-menu').hide();
+                        },
+                        error: function (xhr) {
+                            var error = JSON.parse(xhr.responseText);
+                            toastr.error(error.error);
+                        }
+                    });
                 });
             });
         </script>

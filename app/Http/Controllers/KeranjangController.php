@@ -45,17 +45,15 @@ public function checkout_store(Request $request){
     ]);
 
     // Check date availability
-    $isBooked = Jadwal::where('tanggal', $request->tanggal_acara)
-        ->whereHas('pesanan', function($query) {
-            $query->where('status', 'disetujui');
-        })
-        ->exists();
+    $isBooked = Jadwal::where('tanggal', $request->tanggal_acara)->exists();
+
         
     if ($isBooked) {
-        return back()->withErrors([
+        return redirect()->back()->withErrors([
             'tanggal_acara' => 'Tanggal ini sudah dipesan oleh orang lain.'
-        ]);
+        ])->withInput();
     }
+
 
     // Handle bukti transfer upload
     $buktiPath = null;
