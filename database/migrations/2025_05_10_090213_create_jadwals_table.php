@@ -16,7 +16,7 @@ return new class extends Migration
             $table->date('tanggal')->unique();
             $table->string('nama_acara')->nullable();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->enum('status', ['tersedia', 'dipesan'])->default('tersedia');
+            $table->enum('status', ['tersedia', 'menunggu', 'dipesan'])->default('tersedia');
             $table->timestamps();
         });
     }
