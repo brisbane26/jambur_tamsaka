@@ -59,7 +59,8 @@ Route::get('/keranjang', KeranjangIndex::class)->middleware(['auth', 'verified']
 Route::post('/keranjang', [KeranjangController::class, 'store'])->middleware(['auth', 'verified'])->name('keranjang.store');
 Route::put('/keranjang/{keranjang}', [KeranjangController::class, 'update'])->middleware(['auth', 'verified'])->name('keranjang.update');
 Route::delete('/keranjang/{keranjang}', [KeranjangController::class, 'destroy'])->middleware(['auth', 'verified'])->name('keranjang.destroy');
-
+Route::get('/checkout', [KeranjangController::class, 'checkout_index'])->middleware(['auth', 'verified'])->name('checkout.index');
+Route::post('/checkout', [KeranjangController::class, 'checkout_store'])->middleware(['auth', 'verified'])->name('checkout.store');
 // Route::controller(JadwalController::class)->group(function(){
 //     Route::get('full-calender', 'index');
 //     Route::post('full-calender-ajax', 'ajax');
