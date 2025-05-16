@@ -104,7 +104,12 @@ public function checkout_store(Request $request){
     // Clear cart
     Keranjang::where('user_id', Auth::id())->delete();
 
-    return redirect()->route('paket.index')->with('success', 'Pesanan berhasil dibuat!');
+    $notifications = [
+            'message' => 'Paket berhasil dicheckout',
+            'alert-type' => 'success'
+        ];
+
+        return redirect()->route('keranjang.index')->with($notifications);
 }
 
     public function store(Request $request)
@@ -121,7 +126,12 @@ public function checkout_store(Request $request){
             ['kuantitas' => 1]
         );
 
-        return redirect()->route('keranjang.index');
+        $notifications = [
+            'message' => 'Paket berhasil ditambahkan ke keranjang',
+            'alert-type' => 'success'
+        ];
+
+        return redirect()->route('keranjang.index')->with($notifications);
     }
 
     public function update(Request $request, Keranjang $keranjang)
@@ -138,13 +148,16 @@ public function checkout_store(Request $request){
 
         return redirect()->route('keranjang.index');
     }
+
     public function checkout(){
+
 
     }
 
     public function destroy(Keranjang $keranjang)
     {
         $keranjang->delete();
+        
         return redirect()->route('keranjang.index')
              ->layout('layouts.admin.master');
     }
