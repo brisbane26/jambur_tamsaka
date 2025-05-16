@@ -33,7 +33,7 @@
                     
                     <div class="mb-6">
                         <label for="tanggal_acara" class="block text-gray-700 mb-2">Tanggal Acara</label>
-                        <input type="date" id="tanggal_acara" name="tanggal_acara" 
+                        <input type="date" id="tanggal_acara" name="tanggal_acara"  value="{{ old('tanggal_acara') }}"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             min="{{ date('Y-m-d') }}" required>
                         @error('tanggal_acara')
