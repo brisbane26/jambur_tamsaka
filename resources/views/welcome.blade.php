@@ -52,7 +52,7 @@
 <!-- hero section - Updated with red theme -->
 <div class="relative w-full h-[320px]" id="home">
     <div class="absolute inset-0 opacity-90">
-        <img src="{{ asset('storage/images/Jambur.jpg') }}" alt="Background Image" class="object-cover object-center w-full h-full mix-blend-overlay" />
+        <img src="{{ asset('images/Jambur.jpg') }}" alt="Background Image" class="object-cover object-center w-full h-full mix-blend-overlay" />
     </div>
     <div class="absolute inset-9 flex flex-col md:flex-row items-center justify-between">
         <div class="md:w-1/2 mb-4 md:mb-0 text-white">
