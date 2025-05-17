@@ -38,30 +38,29 @@ public function checkout_index(){
 
 public function checkout_store(Request $request){
     $request->validate([
-        'nama_acara' => 'required|string|max:255',
-        'tanggal_acara' => 'required|date|after_or_equal:today',
-        'metode_bayar' => 'required|in:cash,transfer',
-        'bukti_transfer' => 'required_if:metode_bayar,transfer|image|mimes:jpeg,png,jpg|max:2048',
-    ]);
+    'nama_acara' => 'required|string|max:255',
+    'tanggal_acara' => 'required|date|after_or_equal:' . now()->addDays(3)->toDateString(),
+    'metode_bayar' => 'required|in:cash,transfer',
+    'bukti_transfer' => 'required_if:metode_bayar,transfer|image|mimes:jpeg,png,jpg|max:2048',
+], [
+    'tanggal_acara.after_or_equal' => 'Tanggal acara minimal harus 3 hari setelah hari ini.',
+]);
+
 
     // Check date availability
     $isBooked = Jadwal::where('tanggal', $request->tanggal_acara)->exists();
 
-        
     if ($isBooked) {
         return redirect()->back()->withErrors([
             'tanggal_acara' => 'Tanggal ini sudah dipesan oleh orang lain.'
         ])->withInput();
     }
 
-
     // Handle bukti transfer upload
     $buktiPath = null;
     if ($request->hasFile('bukti_transfer')) {
         $buktiPath = $request->file('bukti_transfer')->store('bukti_transfer', 'public');
     }
-
-
     
     // Create jadwal
     $jadwal = Jadwal::create([
@@ -111,26 +110,37 @@ public function checkout_store(Request $request){
 }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'paket_id' => 'required|exists:pakets,id',
+{
+    $request->validate([
+        'paket_id' => 'required|exists:pakets,id',
+    ]);
+
+    // Cari keranjang yang sudah ada
+    $keranjang = Keranjang::where([
+        'user_id' => Auth::id(),
+        'paket_id' => $request->paket_id,
+    ])->first();
+
+    // Jika ada, tambah kuantitas
+    if ($keranjang) {
+        $keranjang->increment('kuantitas');
+    } else {
+        // Jika tidak, buat baru dengan kuantitas 1
+        Keranjang::create([
+            'user_id' => Auth::id(),
+            'paket_id' => $request->paket_id,
+            'kuantitas' => 1,
         ]);
-
-        $keranjang = Keranjang::firstOrCreate(
-            [
-                'user_id' => Auth::id(),
-                'paket_id' => $request->paket_id,
-            ],
-            ['kuantitas' => 1]
-        );
-
-        $notifications = [
-            'message' => 'Paket berhasil ditambahkan ke keranjang',
-            'alert-type' => 'success'
-        ];
-
-        return redirect()->route('keranjang.index')->with($notifications);
     }
+
+    $notifications = [
+        'message' => 'Paket berhasil ditambahkan ke keranjang',
+        'alert-type' => 'success'
+    ];
+
+    return redirect()->route('paket.index')->with($notifications);
+}
+
 
     public function update(Request $request, Keranjang $keranjang)
     {

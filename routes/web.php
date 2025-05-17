@@ -9,6 +9,7 @@ use App\Http\Controllers\PaketController;
 use App\Http\Controllers\KeranjangController;
 use App\Livewire\KeranjangIndex;
 use App\Http\Controllers\JadwalController;
+use App\Http\Controllers\PesananController;
 
 // Route utama
 Route::get('/', [PaketController::class, 'dashboard']);
@@ -65,27 +66,38 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::resource('permissions', PermissionController::class);
 });
 
-// Route untuk paket
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/paket', [PaketController::class, 'index'])->name('paket.index');
-    Route::get('/paket/tambah', [PaketController::class, 'create'])->name('paket.create');
-    Route::post('/paket/tambah', [PaketController::class, 'store'])->name('paket.store');
-    Route::get('/paket/edit/{id}', [PaketController::class, 'edit'])->name('paket.edit');
-    Route::put('/paket/{id}', [PaketController::class, 'update'])->name('paket.update');
-    Route::delete('/paket/{id}', [PaketController::class, 'destroy'])->name('paket.destroy');
+Route::get('/paket', [PaketController::class, 'index'])->middleware(['auth', 'verified'])->name('paket.index');
+Route::get('/paket/tambah', [PaketController::class, 'create'])->middleware(['auth', 'verified'])->name('paket.create');
+Route::post('/paket/tambah', [PaketController::class, 'store'])->middleware(['auth', 'verified'])->name('paket.store');
+Route::get('/paket/edit/{id}', [PaketController::class, 'edit'])->middleware(['auth', 'verified'])->name('paket.edit');
+Route::put('/paket/{id}', [PaketController::class, 'update'])->middleware(['auth', 'verified'])->name('paket.update');
+Route::delete('/paket/{id}', [PaketController::class, 'destroy'])->middleware(['auth', 'verified'])->name('paket.destroy');
+
+Route::get('/keranjang', KeranjangIndex::class)->middleware(['auth', 'verified'])->name('keranjang.index');
+Route::post('/keranjang', [KeranjangController::class, 'store'])->middleware(['auth', 'verified'])->name('keranjang.store');
+Route::put('/keranjang/{keranjang}', [KeranjangController::class, 'update'])->middleware(['auth', 'verified'])->name('keranjang.update');
+Route::delete('/keranjang/{keranjang}', [KeranjangController::class, 'destroy'])->middleware(['auth', 'verified'])->name('keranjang.destroy');
+Route::get('/checkout', [KeranjangController::class, 'checkout_index'])->middleware(['auth', 'verified'])->name('checkout.index');
+Route::post('/checkout', [KeranjangController::class, 'checkout_store'])->middleware(['auth', 'verified'])->name('checkout.store');
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::post('/pesanan/{id}/konfirmasi', [PesananController::class, 'konfirmasi'])->middleware(['auth', 'verified'])->name('pesanan.konfirmasi');
+    Route::put('/pesanan/{id}/update-status', [PesananController::class, 'updateStatus'])->name('pesanan.updateStatus');
+
 });
 
-// Route untuk keranjang
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/keranjang', KeranjangIndex::class)->name('keranjang.index');
-    Route::post('/keranjang', [KeranjangController::class, 'store'])->name('keranjang.store');
-    Route::put('/keranjang/{keranjang}', [KeranjangController::class, 'update'])->name('keranjang.update');
-    Route::delete('/keranjang/{keranjang}', [KeranjangController::class, 'destroy'])->name('keranjang.destroy');
-    Route::get('/checkout', [KeranjangController::class, 'checkout_index'])->name('checkout.index');
-    Route::post('/checkout', [KeranjangController::class, 'checkout_store'])->name('checkout.store');
+    Route::get('/admin/pesanan', [PesananController::class, 'index'])->middleware(['auth', 'verified'])->name('admin.pesanan');
+
+Route::middleware(['auth', 'role:customer'])->group(function () {
+    Route::post('/pesanan/{id}/cancel', [PesananController::class, 'cancel'])->middleware(['auth', 'verified'])->name('pesanan.cancel');
 });
 
-// Route untuk jadwal
+
+// Route::controller(JadwalController::class)->group(function(){
+//     Route::get('full-calender', 'index');
+//     Route::post('full-calender-ajax', 'ajax');
+// });
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
     Route::post('/jadwal', [JadwalController::class, 'ajax'])->name('jadwal.ajax');

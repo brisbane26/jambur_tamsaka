@@ -27,6 +27,8 @@
                         <span class="block text-basem font-bold text-gray-800 mb-3">Rp
                             {{ number_format($pkt->harga_jual, 0, ',', '.') }}</span>
                         <div class="grid grid-cols-3 gap-2">
+                            @role('admin')
+                                <span class="text-sm text-gray-500">Kategori: {{ $pkt->kategori->nama_kategori }}</span>
                             <!-- Tombol Delete -->
                             <button onclick="toggleDeleteModal({{ $pkt->id }})"
                                 class="flex items-center justify-center px-2 py-1 bg-red-500 text-white text-xs font-semibold rounded-md hover:bg-red-600 transition duration-300 ease-in-out min-h-[28px]">
@@ -38,6 +40,7 @@
                                 class="flex items-center justify-center px-2 py-1 bg-yellow-500 text-white text-xs font-semibold rounded-md hover:bg-yellow-600 transition duration-300 ease-in-out min-h-[28px]">
                                 <i class="bi bi-pencil-square mr-1"></i> Edit
                             </button>
+                            @endrole
 
                             <!-- Tombol Add to Cart -->
                             <form action="{{ route('keranjang.store') }}" method="POST">
