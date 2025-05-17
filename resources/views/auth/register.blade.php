@@ -176,7 +176,7 @@
       const confirm = confirmInput.value;
 
       const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-      const validPassword = /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[\W_]).{8,}$/.test(password);
+      const validPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(password);
 
       if (!validEmail) {
         e.preventDefault();
