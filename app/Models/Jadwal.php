@@ -15,7 +15,6 @@ class Jadwal extends Model
         'user_id',
         'tanggal',
         'nama_acara',
-        'status',
     ];
 
     public function user()

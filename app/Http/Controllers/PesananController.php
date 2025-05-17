@@ -10,65 +10,108 @@ use App\Models\Pesanan;
 use App\Models\Pembayaran;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PesananController extends Controller
 {
-    
     public function index()
-{
-    $user = auth()->user();
-    
-    $pesanans = Pesanan::with(['user', 'jadwal'])
-        ->when($user->role !== 'admin', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
-        })
-        ->latest()
-        ->get();
+    {
+        $user = Auth::user();
+        
+        // Gunakan scope atau query langsung
+        $pesanans = Pesanan::with(['user', 'jadwal', 'detailPesanan.paket'])
+            ->when(!$user->hasRole('admin'), function($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->latest()
+            ->get();
 
-    return view('pesanan.index', [
-        'pesanans' => $pesanans,
-        'isAdmin' => $user->role === 'admin'
-    ]);
-}
+        return view('pesanan.index', [
+            'pesanans' => $pesanans,
+            'isAdmin' => $user->hasRole('admin')
+        ]);
+    }
 
+    public function show(Pesanan $pesanan)
+    {
+        // Authorization dengan @role di blade atau middleware
+        if (Auth::user()->hasRole('customer') && $pesanan->user_id != Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
 
+        $pesanan->load(['detailPesanan.paket', 'jadwal', 'pembayaran']);
 
+        return view('pesanan.show', [
+            'pesanan' => $pesanan,
+            'isAdmin' => Auth::user()->hasRole('admin')
+        ]);
+    }
 
-   // PesananController.php
-
-public function updateStatus(Request $request, $id)
+public function updateStatus(Request $request, Pesanan $pesanan)
 {
     $request->validate([
         'status' => 'required|in:menunggu,disetujui,ditolak,selesai,dibatalkan'
     ]);
 
-    $pesanan = Pesanan::findOrFail($id);
-    $pesanan->status = $request->status;
-    $pesanan->save();
+    $pesanan->update([
+        'status' => $request->status,
+        'alasan_tolak' => $request->status === 'ditolak' ? $request->alasan_tolak : null
+    ]);
 
-    return redirect()->back()->with('message', 'Status pesanan berhasil diperbarui.');
-}
+    // Jika status diubah ke disetujui, pastikan tidak ada konflik jadwal
+    if ($request->status === 'disetujui') {
+        $conflict = Pesanan::where('jadwal_id', $pesanan->jadwal_id)
+            ->where('id', '!=', $pesanan->id)
+            ->where('status', 'disetujui')
+            ->exists();
 
-
-public function konfirmasi($id)
-{
-    $pesanan = Pesanan::findOrFail($id);
-    $pesanan->update(['status' => 'disetujui']);
-
-    return back()->with('message', 'Pesanan berhasil dikonfirmasi');
-}
-
-public function cancel($id)
-{
-    $pesanan = Pesanan::findOrFail($id);
-    
-    if (!in_array($pesanan->status, ['menunggu', 'disetujui'])) {
-        return back()->with('error', 'Pesanan tidak dapat dibatalkan');
+        if ($conflict) {
+            return back()->with('error', 'Sudah ada pesanan disetujui untuk tanggal ini');
+        }
     }
 
-    $pesanan->update(['status' => 'dibatalkan']);
-
-    return back()->with('message', 'Pesanan berhasil dibatalkan');
+    return redirect()->back()->with('message', 'Status pesanan berhasil diperbarui');
 }
-    
+
+    public function updateBukti(Request $request, Pesanan $pesanan)
+    {
+        // Pastikan hanya pemilik pesanan yang bisa update
+        if ($pesanan->user_id != Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $request->validate([
+            'bukti_transfer' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        // Hapus bukti lama jika ada
+        if ($pesanan->bukti_transaksi) {
+            Storage::disk('public')->delete($pesanan->bukti_transaksi);
+        }
+
+        $buktiPath = $request->file('bukti_transfer')->store('bukti_transfer', 'public');
+
+        $pesanan->update(['bukti_transaksi' => $buktiPath]);
+
+        return redirect()->back()->with('message', 'Bukti transfer berhasil diperbarui.');
+    }
+
+    public function cancel(Pesanan $pesanan)
+    {
+        $user = Auth::user();
+        
+        // Admin bisa batalkan kapan saja
+        if ($user->hasRole('admin')) {
+            $pesanan->update(['status' => 'dibatalkan']);
+            return back()->with('message', 'Pesanan berhasil dibatalkan');
+        }
+        
+        // Customer hanya bisa batalkan jika status menunggu/disetujui
+        if ($pesanan->user_id == $user->id && in_array($pesanan->status, ['menunggu', 'disetujui'])) {
+            $pesanan->update(['status' => 'dibatalkan']);
+            return back()->with('message', 'Pesanan berhasil dibatalkan');
+        }
+
+        return back()->with('error', 'Anda tidak dapat membatalkan pesanan ini');
+    }
 }

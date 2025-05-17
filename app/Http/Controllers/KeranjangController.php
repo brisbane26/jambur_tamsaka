@@ -36,16 +36,16 @@ public function checkout_index(){
     return view('checkout.index', compact('keranjangs', 'totalHarga', 'banks'));
 }
 
-public function checkout_store(Request $request){
+public function checkout_store(Request $request)
+{
     $request->validate([
-    'nama_acara' => 'required|string|max:255',
-    'tanggal_acara' => 'required|date|after_or_equal:' . now()->addDays(3)->toDateString(),
-    'metode_bayar' => 'required|in:cash,transfer',
-    'bukti_transfer' => 'required_if:metode_bayar,transfer|image|mimes:jpeg,png,jpg|max:2048',
-], [
-    'tanggal_acara.after_or_equal' => 'Tanggal acara minimal harus 3 hari setelah hari ini.',
-]);
-
+        'nama_acara' => 'required|string|max:255',
+        'tanggal_acara' => 'required|date|after_or_equal:' . now()->addDays(3)->toDateString(),
+        'metode_bayar' => 'required|in:cash,transfer',
+        'bukti_transfer' => 'required_if:metode_bayar,transfer|image|mimes:jpeg,png,jpg|max:2048',
+    ], [
+        'tanggal_acara.after_or_equal' => 'Tanggal acara minimal harus 3 hari setelah hari ini.',
+    ]);
 
     // Check date availability
     $isBooked = Jadwal::where('tanggal', $request->tanggal_acara)->exists();
@@ -67,16 +67,13 @@ public function checkout_store(Request $request){
         'tanggal' => $request->tanggal_acara,
         'nama_acara' => $request->nama_acara,
         'user_id' => Auth::id(),
-        'status' => 'menunggu',
     ]);
 
     // Create pesanan
     $pesanan = Pesanan::create([
         'user_id' => Auth::id(),
         'jadwal_id' => $jadwal->id,
-        'nama_acara' => $request->nama_acara,
         'status' => 'menunggu',
-        'total_harga' => $request->total_harga,
         'bukti_transaksi' => $buktiPath,
     ]);
 
@@ -101,12 +98,10 @@ public function checkout_store(Request $request){
     // Clear cart
     Keranjang::where('user_id', Auth::id())->delete();
 
-    $notifications = [
-            'message' => 'Paket berhasil dicheckout',
-            'alert-type' => 'success'
-        ];
-
-        return redirect()->route('keranjang.index')->with($notifications);
+    return redirect()->route('pesanan.index')->with([
+        'message' => 'Pesanan berhasil dibuat',
+        'alert-type' => 'success'
+    ]);
 }
 
     public function store(Request $request)
