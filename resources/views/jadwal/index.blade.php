@@ -1,24 +1,43 @@
 <x-admin-layout>
-
     <head>
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
-
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
         <style>
+            /* Gaya kalender */
+            #calendar {
+                background-color: white;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                padding: 20px;
+            }
+            
+            /* Gaya header kalender */
+            .fc-header-toolbar {
+                margin-bottom: 1em;
+            }
+            
+            /* Gaya sel tanggal */
+            .fc-day {
+                border: 1px solid #ddd !important;
+                transition: background-color 0.2s;
+            }
+            
+            .fc-day:hover {
+                background-color: #f5f5f5;
+            }
+            
+            /* Gaya event */
             .fc-event {
                 background-color: #007bff !important;
                 color: #000 !important;
                 padding: 2px 4px;
                 border-radius: 5px;
+                border: none !important;
+                cursor: pointer !important;
             }
-
+            
             .fc-event .fc-title {
                 background-color: #ffffff !important;
                 color: #000 !important;
@@ -26,24 +45,67 @@
                 border-radius: 3px;
                 font-weight: bold;
             }
+            
+            /* Gaya hari ini */
+            .fc-today {
+                background-color: #fff8e1 !important;
+            }
+            
+            /* Gaya modal */
+            .modal-footer .btn {
+                min-width: 80px;
+            }
         </style>
     </head>
 
     <body>
-        <div class="container">
-            <h1>Kalender Busuk</h1>
+        <div class="container p-6">
+            <h1 class="text-2xl font-bold mb-4">Kalender Acara</h1>
             <div id='calendar'></div>
         </div>
 
-        <!-- Menu Aksi -->
-        <div id="event-menu" style="display:none; position:absolute; z-index:1000; background:white; border:1px solid #ccc; padding:10px; border-radius:5px;">
-            <button id="edit-event" class="btn btn-sm btn-primary mb-1">Edit</button><br>
-            <button id="delete-event" class="btn btn-sm btn-danger">Hapus</button>
+        <!-- Modal untuk Acara -->
+        <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="eventModalLabel">Kelola Acara</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="eventForm">
+                            <div class="form-group">
+                                <label for="eventDate">Tanggal Acara</label>
+                                <input type="text" class="form-control" id="eventDate" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="eventName">Nama Acara</label>
+                                <input type="text" class="form-control" id="eventName" required>
+                            </div>
+                            <input type="hidden" id="eventId">
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" id="deleteEvent">Hapus</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-primary" id="updateEvent">Update</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        
         <script>
             $(document).ready(function () {
                 var SITEURL = "{{ url('/') }}";
+                var isAdmin = @json(auth()->user()->hasRole('admin'));
 
                 $.ajaxSetup({
                     headers: {
@@ -51,101 +113,112 @@
                     }
                 });
 
+                toastr.options = {
+                    "closeButton": true,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "timeOut": "5000"
+                };
+
                 var calendar = $('#calendar').fullCalendar({
-                    editable: true,
                     events: SITEURL + "/jadwal",
                     displayEventTime: false,
-                    selectable: true,
-                    selectHelper: true,
-
-                    select: function (start, end, allDay) {
-                        var today = moment();
-                        var minDate = today.add(3, 'days');
-
-                        if (moment(start).isBefore(minDate)) {
-                            toastr.error("Pesan tanggal minimal 3 hari setelah hari ini");
-                            calendar.fullCalendar('unselect');
-                            return;
-                        }
-
-                        var nama_acara = prompt('Masukkan Nama Acara:');
-                        if (nama_acara) {
-                            var tanggal = moment(start).format("YYYY-MM-DD");
-                            var user_id = "{{ auth()->user()->id }}";
-
-                            $.ajax({
-                                url: SITEURL + "/jadwal",
-                                data: {
-                                    nama_acara: nama_acara,
-                                    tanggal: tanggal,
-                                    user_id: user_id,
-                                    type: 'add'
-                                },
-                                type: "POST",
-                                success: function (data) {
-                                    calendar.fullCalendar('renderEvent', {
-                                        id: data.id,
-                                        title: nama_acara,
-                                        start: tanggal,
-                                        user_id: user_id,
-                                        allDay: allDay
-                                    }, true);
-                                    calendar.fullCalendar('unselect');
-                                    toastr.success("Acara berhasil ditambahkan");
-                                },
-                                error: function (xhr) {
-                                    var error = JSON.parse(xhr.responseText);
-                                    toastr.error(error.error);
-                                }
-                            });
-                        }
+                    selectable: false, // Nonaktifkan seleksi tanggal
+                    editable: false,
+                    eventDurationEditable: false,
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'month,agendaWeek,agendaDay'
                     },
-
-                    eventClick: function (event, jsEvent) {
-                        var isAdmin = @json(auth()->user()->hasRole('admin'));
-                        var isOwner = event.user_id == "{{ auth()->user()->id }}";
-
-                        if (isAdmin || isOwner) {
-                            // Simpan event ke variabel global
-                            window.selectedEvent = event;
-
-                            // Tampilkan menu di posisi klik
-                            $('#event-menu').css({
-                                top: jsEvent.pageY + "px",
-                                left: jsEvent.pageX + "px"
-                            }).show();
-                        } else {
-                            toastr.error("Anda tidak memiliki izin untuk mengelola acara ini");
+                    dayClick: function(date, jsEvent, view) {
+                        // Hanya admin yang bisa interaksi
+                        if (!isAdmin) return false;
+                        
+                        // Cari event di tanggal yang diklik
+                        var events = $('#calendar').fullCalendar('clientEvents', function(event) {
+                            return moment(event.start).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD');
+                        });
+                        
+                        // Jika ada event, tampilkan modal edit
+                        if (events.length > 0) {
+                            var event = events[0];
+                            $('#eventModalLabel').text('Kelola Acara');
+                            $('#eventDate').val(moment(event.start).format('DD MMMM YYYY'));
+                            $('#eventName').val(event.title);
+                            $('#eventId').val(event.id);
+                            $('#eventModal').modal('show');
                         }
+                        
+                        return false;
+                    },
+                    eventClick: function(event, jsEvent) {
+                        if (!isAdmin) return false;
+                        
+                        $('#eventModalLabel').text('Kelola Acara');
+                        $('#eventDate').val(moment(event.start).format('DD MMMM YYYY'));
+                        $('#eventName').val(event.title);
+                        $('#eventId').val(event.id);
+                        $('#eventModal').modal('show');
+                        
+                        return false;
+                    },
+                    eventRender: function(event, element) {
+                        // Tambahkan tooltip
+                        element.attr('title', event.title);
                     }
                 });
 
-                // Sembunyikan menu saat klik di luar menu dan event
-                $(document).click(function (e) {
-                    if (!$(e.target).closest('#event-menu, .fc-event').length) {
-                        $('#event-menu').hide();
+                // Handle update event
+                $('#updateEvent').click(function() {
+                    var eventName = $('#eventName').val().trim();
+                    var eventId = $('#eventId').val();
+                    
+                    if (!eventName) {
+                        toastr.error("Nama acara harus diisi");
+                        return;
                     }
+
+                    $.ajax({
+                        url: SITEURL + "/jadwal",
+                        data: {
+                            id: eventId,
+                            nama_acara: eventName,
+                            type: 'update'
+                        },
+                        type: "POST",
+                        success: function (data) {
+                            var event = calendar.fullCalendar('clientEvents', eventId)[0];
+                            if (event) {
+                                event.title = data.title;
+                                calendar.fullCalendar('updateEvent', event);
+                            }
+                            $('#eventModal').modal('hide');
+                            toastr.success("Nama acara berhasil diperbarui");
+                        },
+                        error: function (xhr) {
+                            var error = JSON.parse(xhr.responseText);
+                            toastr.error(error.error);
+                        }
+                    });
                 });
 
-                // Aksi Edit
-                $('#edit-event').click(function () {
-                    var event = window.selectedEvent;
-                    var nama_acara = prompt("Edit Nama Acara:", event.title);
+                // Handle hapus event
+                $('#deleteEvent').click(function() {
+                    if (confirm('Apakah Anda yakin ingin membatalkan acara ini?')) {
+                        var eventId = $('#eventId').val();
 
-                    if (nama_acara !== null) {
                         $.ajax({
                             url: SITEURL + "/jadwal",
                             data: {
-                                id: event.id,
-                                nama_acara: nama_acara,
-                                type: 'update'
+                                id: eventId,
+                                type: 'delete'
                             },
                             type: "POST",
                             success: function () {
-                                event.title = nama_acara;
-                                $('#calendar').fullCalendar('updateEvent', event);
-                                toastr.success("Nama acara berhasil diperbarui");
-                                $('#event-menu').hide();
+                                calendar.fullCalendar('removeEvents', eventId);
+                                $('#eventModal').modal('hide');
+                                toastr.success("Acara berhasil dibatalkan");
                             },
                             error: function (xhr) {
                                 var error = JSON.parse(xhr.responseText);
@@ -154,30 +227,7 @@
                         });
                     }
                 });
-
-                // Aksi Hapus
-                $('#delete-event').click(function () {
-                    var event = window.selectedEvent;
-
-                    $.ajax({
-                        url: SITEURL + "/jadwal",
-                        data: {
-                            id: event.id,
-                            type: 'delete'
-                        },
-                        type: "POST",
-                        success: function () {
-                            $('#calendar').fullCalendar('removeEvents', event.id);
-                            toastr.success("Acara berhasil dihapus");
-                            $('#event-menu').hide();
-                        },
-                        error: function (xhr) {
-                            var error = JSON.parse(xhr.responseText);
-                            toastr.error(error.error);
-                        }
-                    });
-                });
             });
         </script>
-
+    </body>
 </x-admin-layout>

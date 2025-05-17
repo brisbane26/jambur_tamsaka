@@ -80,16 +80,25 @@ Route::delete('/keranjang/{keranjang}', [KeranjangController::class, 'destroy'])
 Route::get('/checkout', [KeranjangController::class, 'checkout_index'])->middleware(['auth', 'verified'])->name('checkout.index');
 Route::post('/checkout', [KeranjangController::class, 'checkout_store'])->middleware(['auth', 'verified'])->name('checkout.store');
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::post('/pesanan/{id}/konfirmasi', [PesananController::class, 'konfirmasi'])->middleware(['auth', 'verified'])->name('pesanan.konfirmasi');
-    Route::put('/pesanan/{id}/update-status', [PesananController::class, 'updateStatus'])->name('pesanan.updateStatus');
-
-});
-
-    Route::get('/admin/pesanan', [PesananController::class, 'index'])->middleware(['auth', 'verified'])->name('admin.pesanan');
-
-Route::middleware(['auth', 'role:customer'])->group(function () {
-    Route::post('/pesanan/{id}/cancel', [PesananController::class, 'cancel'])->middleware(['auth', 'verified'])->name('pesanan.cancel');
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Route untuk pesanan
+    Route::prefix('pesanan')->name('pesanan.')->group(function () {
+        Route::get('/', [PesananController::class, 'index'])->name('index');
+        Route::get('/{pesanan}', [PesananController::class, 'show'])->name('show');
+        
+        // Hanya admin yang bisa update status
+        Route::middleware(['role:admin'])->group(function () {
+            Route::put('/{pesanan}/update-status', [PesananController::class, 'updateStatus'])->name('updateStatus');
+        });
+        
+        // Hanya customer yang bisa update bukti transfer
+        Route::middleware(['role:customer'])->group(function () {
+            Route::put('/{pesanan}/update-bukti', [PesananController::class, 'updateBukti'])->name('updateBukti');
+        });
+        
+        // Baik admin maupun customer bisa cancel (dengan kondisi berbeda)
+        Route::post('/{pesanan}/cancel', [PesananController::class, 'cancel'])->name('cancel');
+    });
 });
 
 

@@ -12,17 +12,20 @@ class Pesanan extends Model
 {
     use HasFactory;
 
-    protected $table = 'pesanans';
-    
- protected $fillable = [
-    'user_id', 
-    'jadwal_id', 
-    'status', 
-    'bukti_transaksi', 
-    'alasan_tolak'];
-    /**
-     * Get the user that owns the pesanan.
-     */
+    protected $fillable = [
+        'user_id', 
+        'jadwal_id', 
+        'nama_acara',
+        'status', 
+        'total_harga',
+        'bukti_transaksi', 
+        'alasan_tolak'
+    ];
+
+    protected $casts = [
+        'total_harga' => 'decimal:2',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -42,11 +45,24 @@ class Pesanan extends Model
     {
         return $this->hasOne(Pembayaran::class);
     }
-    
 
     public function getTotalHargaAttribute()
-{
-    return $this->detailPesanan->sum('harga');
-}
+    {
+        return $this->detailPesanan->sum(function($item) {
+            return $item->harga * $item->kuantitas;
+        });
+    }
 
+    // Scope untuk admin
+    public function scopeForAdmin($query)
+    {
+        return $query->with(['user', 'jadwal', 'detailPesanan.paket']);
+    }
+
+    // Scope untuk customer
+    public function scopeForCustomer($query, $userId)
+    {
+        return $query->where('user_id', $userId)
+            ->with(['jadwal', 'detailPesanan.paket']);
+    }
 }

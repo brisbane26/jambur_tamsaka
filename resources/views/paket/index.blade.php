@@ -28,7 +28,7 @@
                             {{ number_format($pkt->harga_jual, 0, ',', '.') }}</span>
                         <div class="grid grid-cols-3 gap-2">
                             @role('admin')
-                                <span class="text-sm text-gray-500">Kategori: {{ $pkt->kategori->nama_kategori }}</span>
+                                {{-- <span class="text-sm text-gray-500">Kategori: {{ $pkt->kategori->nama_kategori }}</span> --}}
                             <!-- Tombol Delete -->
                             <button onclick="toggleDeleteModal({{ $pkt->id }})"
                                 class="flex items-center justify-center px-2 py-1 bg-red-500 text-white text-xs font-semibold rounded-md hover:bg-red-600 transition duration-300 ease-in-out min-h-[28px]">
@@ -94,7 +94,7 @@
                                 </div>
 
                                 <!-- Kategori -->
-                                <div class="mb-4">
+                                {{-- <div class="mb-4">
                                     <label for="kategori_id" class="block text-gray-600">Kategori</label>
                                     <select name="kategori_id" id="kategori_id"
                                         class="w-full p-2 border border-gray-300 rounded-md" required>
@@ -106,7 +106,7 @@
                                             </option>
                                         @endforeach
                                     </select>
-                                </div>
+                                </div> --}}
 
                                 <!-- Deskripsi -->
                                 <div class="mb-4">

@@ -113,7 +113,7 @@
             </svg>
             <span class="mx-3">Keranjang</span>
         </a>
-        <a class="flex items-center px-6 py-2 mt-4 {{ Route::currentRouteNamed('admin.pesanan') ? 'text-gray-100' : 'text-gray-500' }} hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100" href="{{ route('admin.pesanan') }}">
+        <a class="flex items-center px-6 py-2 mt-4 {{ Route::currentRouteNamed('pesanan.index') ? 'text-gray-100' : 'text-gray-500' }} hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100" href="{{ route('pesanan.index') }}">
             <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h18M3 17h18" />
             </svg>

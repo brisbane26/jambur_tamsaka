@@ -10,8 +10,13 @@ class JadwalController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Jadwal::whereDate('tanggal', '>=', now())
-                ->get(['id', 'nama_acara as title', 'tanggal as start', 'user_id', 'status']);
+            // Hanya tampilkan jadwal yang terkait dengan pesanan disetujui
+            $data = Jadwal::whereHas('pesanan', function($query) {
+                    $query->where('status', 'disetujui');
+                })
+                ->whereDate('tanggal', '>=', now())
+                ->get(['id', 'nama_acara as title', 'tanggal as start', 'user_id']);
+            
             return response()->json($data);
         }
 
@@ -20,60 +25,31 @@ class JadwalController extends Controller
 
     public function ajax(Request $request)
     {
+        if (!auth()->user()->hasRole('admin')) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
         switch ($request->type) {
-            case 'add':
-                $tanggalSudahDipesan = Jadwal::where('tanggal', $request->tanggal)
-                    ->where('status', 'dipesan')
-                    ->exists();
-
-                if (!$tanggalSudahDipesan) {
-                    $event = Jadwal::create([
-                        'tanggal' => $request->tanggal,
-                        'nama_acara' => $request->nama_acara,
-                        'user_id' => $request->user_id,
-                        'status' => 'dipesan',
-                    ]);
-
+            case 'update':
+                $event = Jadwal::find($request->id);
+                if ($event) {
+                    $event->update(['nama_acara' => $request->nama_acara]);
                     return response()->json([
                         'id' => $event->id,
                         'title' => $event->nama_acara,
-                        'start' => $event->tanggal,
-                        'user_id' => $event->user_id,
-                        'status' => $event->status,
+                        'start' => $event->tanggal
                     ]);
-                } else {
-                    return response()->json(['error' => 'Tanggal ini sudah dipesan.'], 400);
-                }
-                break;
-
-            case 'update':
-                $event = Jadwal::find($request->id);
-
-                if ($event) {
-                    if (auth()->user()->hasRole('admin') || auth()->user()->id == $event->user_id) {
-                        $event->update(['nama_acara' => $request->nama_acara]);
-                        return response()->json($event);
-                    } else {
-                        return response()->json(['error' => 'Anda tidak memiliki izin untuk mengedit acara ini.'], 403);
-                    }
                 }
                 return response()->json(['error' => 'Acara tidak ditemukan.'], 404);
-                break;
 
             case 'delete':
                 $event = Jadwal::find($request->id);
-
-                if ($event) {
-                    if (auth()->user()->hasRole('admin') || auth()->user()->id == $event->user_id) {
-                        $event->update(['status' => 'tersedia']);
-                        $event->delete();
-                        return response()->json($event);
-                    } else {
-                        return response()->json(['error' => 'Anda tidak memiliki izin untuk menghapus acara ini.'], 403);
-                    }
+                if ($event && $event->pesanan) {
+                    // Update status pesanan terkait menjadi dibatalkan
+                    $event->pesanan->update(['status' => 'dibatalkan']);
+                    return response()->json(['success' => true]);
                 }
                 return response()->json(['error' => 'Acara tidak ditemukan.'], 404);
-                break;
         }
     }
 }
