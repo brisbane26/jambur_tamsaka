@@ -9,6 +9,7 @@ use App\Http\Controllers\PaketController;
 use App\Http\Controllers\KeranjangController;
 use App\Livewire\KeranjangIndex;
 use App\Http\Controllers\JadwalController;
+use App\Http\Controllers\PesananController;
 
 // Route::get('/', function () { return view('welcome');});
 Route::get('/', [PaketController::class, 'dashboard']);
@@ -61,6 +62,20 @@ Route::put('/keranjang/{keranjang}', [KeranjangController::class, 'update'])->mi
 Route::delete('/keranjang/{keranjang}', [KeranjangController::class, 'destroy'])->middleware(['auth', 'verified'])->name('keranjang.destroy');
 Route::get('/checkout', [KeranjangController::class, 'checkout_index'])->middleware(['auth', 'verified'])->name('checkout.index');
 Route::post('/checkout', [KeranjangController::class, 'checkout_store'])->middleware(['auth', 'verified'])->name('checkout.store');
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::post('/pesanan/{id}/konfirmasi', [PesananController::class, 'konfirmasi'])->middleware(['auth', 'verified'])->name('pesanan.konfirmasi');
+    Route::put('/pesanan/{id}/update-status', [PesananController::class, 'updateStatus'])->name('pesanan.updateStatus');
+
+});
+
+    Route::get('/admin/pesanan', [PesananController::class, 'index'])->middleware(['auth', 'verified'])->name('admin.pesanan');
+
+Route::middleware(['auth', 'role:customer'])->group(function () {
+    Route::post('/pesanan/{id}/cancel', [PesananController::class, 'cancel'])->middleware(['auth', 'verified'])->name('pesanan.cancel');
+});
+
+
 // Route::controller(JadwalController::class)->group(function(){
 //     Route::get('full-calender', 'index');
 //     Route::post('full-calender-ajax', 'ajax');

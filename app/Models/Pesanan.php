@@ -42,4 +42,11 @@ class Pesanan extends Model
     {
         return $this->hasOne(Pembayaran::class);
     }
+    
+
+    public function getTotalHargaAttribute()
+{
+    return $this->detailPesanan->sum('harga');
+}
+
 }
