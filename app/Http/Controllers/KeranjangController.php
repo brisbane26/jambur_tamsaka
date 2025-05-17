@@ -110,26 +110,37 @@ public function checkout_store(Request $request){
 }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'paket_id' => 'required|exists:pakets,id',
+{
+    $request->validate([
+        'paket_id' => 'required|exists:pakets,id',
+    ]);
+
+    // Cari keranjang yang sudah ada
+    $keranjang = Keranjang::where([
+        'user_id' => Auth::id(),
+        'paket_id' => $request->paket_id,
+    ])->first();
+
+    // Jika ada, tambah kuantitas
+    if ($keranjang) {
+        $keranjang->increment('kuantitas');
+    } else {
+        // Jika tidak, buat baru dengan kuantitas 1
+        Keranjang::create([
+            'user_id' => Auth::id(),
+            'paket_id' => $request->paket_id,
+            'kuantitas' => 1,
         ]);
-
-        $keranjang = Keranjang::firstOrCreate(
-            [
-                'user_id' => Auth::id(),
-                'paket_id' => $request->paket_id,
-            ],
-            ['kuantitas' => 1]
-        );
-
-        $notifications = [
-            'message' => 'Paket berhasil ditambahkan ke keranjang',
-            'alert-type' => 'success'
-        ];
-
-        return redirect()->route('keranjang.index')->with($notifications);
     }
+
+    $notifications = [
+        'message' => 'Paket berhasil ditambahkan ke keranjang',
+        'alert-type' => 'success'
+    ];
+
+    return redirect()->route('paket.index')->with($notifications);
+}
+
 
     public function update(Request $request, Keranjang $keranjang)
     {
