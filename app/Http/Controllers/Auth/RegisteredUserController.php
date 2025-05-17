@@ -27,29 +27,31 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'nama_lengkap' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'username' => 'required|string|max:255|unique:users', 
-            'telepon' => 'required|string|min:10|max:15',
-            'password' => 'required|string|min:8|confirmed|regex:/[A-Z]/|regex:/[a-z]/|regex:/[0-9]/|regex:/[\W_]/',
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+public function store(Request $request): RedirectResponse
+{
+    $request->validate([
+        'nama_lengkap' => ['required', 'string', 'max:255'],
+        'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+        'username' => 'required|string|max:255|unique:users', 
+        'telepon' => 'required|string|min:10|max:15',
+        'password' => ['required', 'confirmed', Rules\Password::defaults()],
+    ]);
 
-        $user = User::create([
-            'nama_lengkap' => $request->nama_lengkap,
-            'email' => $request->email,
-            'username' => $request->username, 
-            'telepon' => $request->telepon,
-            'password' => Hash::make($request->password),
-        ]);
+    $user = User::create([
+        'nama_lengkap' => $request->nama_lengkap,
+        'email' => $request->email,
+        'username' => $request->username, 
+        'telepon' => $request->telepon,
+        'password' => Hash::make($request->password),
+    ]);
 
-        event(new Registered($user));
+    // Assign role customer secara default
+    $user->assignRole('customer');
 
-        Auth::login($user);
+    event(new Registered($user));
 
-        return redirect(route('admin.dashboard', absolute: false));
-    }
+    Auth::login($user);
+
+    return redirect()->route('dashboard');
+}
 }
