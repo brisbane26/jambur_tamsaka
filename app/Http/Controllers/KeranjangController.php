@@ -38,30 +38,29 @@ public function checkout_index(){
 
 public function checkout_store(Request $request){
     $request->validate([
-        'nama_acara' => 'required|string|max:255',
-        'tanggal_acara' => 'required|date|after_or_equal:today',
-        'metode_bayar' => 'required|in:cash,transfer',
-        'bukti_transfer' => 'required_if:metode_bayar,transfer|image|mimes:jpeg,png,jpg|max:2048',
-    ]);
+    'nama_acara' => 'required|string|max:255',
+    'tanggal_acara' => 'required|date|after_or_equal:' . now()->addDays(3)->toDateString(),
+    'metode_bayar' => 'required|in:cash,transfer',
+    'bukti_transfer' => 'required_if:metode_bayar,transfer|image|mimes:jpeg,png,jpg|max:2048',
+], [
+    'tanggal_acara.after_or_equal' => 'Tanggal acara minimal harus 3 hari setelah hari ini.',
+]);
+
 
     // Check date availability
     $isBooked = Jadwal::where('tanggal', $request->tanggal_acara)->exists();
 
-        
     if ($isBooked) {
         return redirect()->back()->withErrors([
             'tanggal_acara' => 'Tanggal ini sudah dipesan oleh orang lain.'
         ])->withInput();
     }
 
-
     // Handle bukti transfer upload
     $buktiPath = null;
     if ($request->hasFile('bukti_transfer')) {
         $buktiPath = $request->file('bukti_transfer')->store('bukti_transfer', 'public');
     }
-
-
     
     // Create jadwal
     $jadwal = Jadwal::create([
