@@ -47,6 +47,7 @@ class AdminUserSeeder extends Seeder
                 'nama_lengkap' => 'Admin Jambur',
                 'telepon' => '081234567890',
                 'password' => Hash::make('admin123'),
+                'email_verified_at' => now(),
             ]
         );
         $adminUser->assignRole('admin');
@@ -59,6 +60,7 @@ class AdminUserSeeder extends Seeder
                 'nama_lengkap' => 'Customer Jambur',
                 'telepon' => '081234567891',
                 'password' => Hash::make('customer123'),
+                'email_verified_at' => now(),
             ]
         );
         $customerUser->assignRole('customer');

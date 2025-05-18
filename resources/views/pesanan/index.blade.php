@@ -9,7 +9,7 @@
             @endrole
         </div>
 
-        @if (session('message'))
+        {{-- @if (session('message'))
             <div class="bg-green-100 text-green-800 px-4 py-2 rounded mb-4 border border-green-300">
                 {{ session('message') }}
             </div>
@@ -19,7 +19,7 @@
             <div class="bg-red-100 text-red-800 px-4 py-2 rounded mb-4 border border-red-300">
                 {{ session('error') }}
             </div>
-        @endif
+        @endif --}}
 
         <livewire:show-pesanans />
     </div>
