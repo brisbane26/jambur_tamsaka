@@ -98,6 +98,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         // Baik admin maupun customer bisa cancel (dengan kondisi berbeda)
         Route::post('/{pesanan}/cancel', [PesananController::class, 'cancel'])->name('cancel');
+        Route::get('/pesanan/history', [PesananController::class, 'history'])->name('history');
     });
 });
 

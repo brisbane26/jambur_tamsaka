@@ -23,6 +23,7 @@ class PesananController extends Controller
             ->when(!$user->hasRole('admin'), function($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
+            ->whereIn('status', ['menunggu', 'disetujui'])
             ->latest()
             ->get();
 
@@ -135,4 +136,20 @@ public function updateStatus(Request $request, Pesanan $pesanan)
 
         return back()->with($notifications);
     }
+
+public function history()
+{
+            $user = Auth::user();
+
+    $pesanans = Pesanan::whereIn('status', ['selesai', 'dibatalkan', 'ditolak'])
+    ->with(['user'])
+    ->when(!$user->hasRole('admin'), function($query) use ($user) {
+                $query->where('user_id', $user->id);
+    })
+    ->get();
+
+    return view('pesanan.history', [
+        'pesanans' => $pesanans,
+    ]);
+}
 }
