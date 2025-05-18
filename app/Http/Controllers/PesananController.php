@@ -70,7 +70,12 @@ public function updateStatus(Request $request, Pesanan $pesanan)
         }
     }
 
-    return redirect()->back()->with('message', 'Status pesanan berhasil diperbarui');
+    $notifications = [
+            'message' => 'Status pesanan berhasil diperbarui',
+            'alert-type' => 'success'
+        ];
+
+    return redirect()->back()->with($notifications);
 }
 
     public function updateBukti(Request $request, Pesanan $pesanan)
@@ -93,7 +98,12 @@ public function updateStatus(Request $request, Pesanan $pesanan)
 
         $pesanan->update(['bukti_transaksi' => $buktiPath]);
 
-        return redirect()->back()->with('message', 'Bukti transfer berhasil diperbarui.');
+        $notifications = [
+            'message' => 'Bukti transfer berhasil diperbarui.',
+            'alert-type' => 'success'
+        ];
+
+        return redirect()->back()->with($notifications);
     }
 
     public function cancel(Pesanan $pesanan)
@@ -109,9 +119,20 @@ public function updateStatus(Request $request, Pesanan $pesanan)
         // Customer hanya bisa batalkan jika status menunggu/disetujui
         if ($pesanan->user_id == $user->id && in_array($pesanan->status, ['menunggu', 'disetujui'])) {
             $pesanan->update(['status' => 'dibatalkan']);
-            return back()->with('message', 'Pesanan berhasil dibatalkan');
+
+            $notifications = [
+            'message' => 'Pesanan berhasil dibatalkan',
+            'alert-type' => 'success'
+        ];
+
+            return back()->with($notifications);
         }
 
-        return back()->with('error', 'Anda tidak dapat membatalkan pesanan ini');
+        $notifications = [
+            'message' => 'Anda tidak dapat membatalkan pesanan ini',
+            'alert-type' => 'alert'
+        ];
+
+        return back()->with($notifications);
     }
 }
