@@ -112,4 +112,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/jadwal', [JadwalController::class, 'ajax'])->name('jadwal.ajax');
 });
 
+
+    Route::get('/contact-us', function () {
+        $title = "Contact Us"; // Atur nilai variabel title
+        return view('contact.index', compact('title')); // Kirim variabel ke view
+    });
 require __DIR__.'/auth.php';
