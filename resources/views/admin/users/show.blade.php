@@ -6,8 +6,11 @@
     <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
         <div class="mb-4">
             <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">User Information</h2>
-            <p class="mt-2 text-gray-600 dark:text-gray-400">Name: <span class="font-medium">{{ $user->name }}</span></p>
+            <p class="mt-2 text-gray-600 dark:text-gray-400">Username: <span class="font-medium">{{ $user->username }}</span></p>
+            <p class="mt-2 text-gray-600 dark:text-gray-400">Nama Lengkap: <span class="font-medium">{{ $user->nama_lengkap }}</span></p>
             <p class="mt-2 text-gray-600 dark:text-gray-400">Email: <span class="font-medium">{{ $user->email }}</span></p>
+            <p class="mt-2 text-gray-600 dark:text-gray-400">Nomor Telepon: <span class="font-medium">{{ $user->telepon }}</span></p>
+            <p class="mt-2 text-gray-600 dark:text-gray-400">Email diverifikasi: <span class="font-medium">{{ $user->email_verified_at }}</span></p>
         </div>
 
         <div class="mb-4">
@@ -26,9 +29,6 @@
         <div class="flex items-center justify-between mt-4">
             <a href="{{ route('admin.users.index') }}" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
                 Back to Users List
-            </a>
-            <a href="{{ route('admin.users.edit', $user) }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-white text-xs uppercase tracking-widest shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Edit User
             </a>
         </div>
     </div>

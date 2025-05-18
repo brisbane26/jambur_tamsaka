@@ -133,7 +133,7 @@ public function checkout_store(Request $request)
         'alert-type' => 'success'
     ];
 
-    return redirect()->route('paket.index')->with($notifications);
+    return redirect()->route('keranjang.index')->with($notifications);
 }
 
 
