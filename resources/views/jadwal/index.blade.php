@@ -55,6 +55,31 @@
             .modal-footer .btn {
                 min-width: 80px;
             }
+
+            /* Kotak tanggal biru jika ada event */
+            .fc-day.has-event {
+                background-color: #007bff !important;
+                color: #fff !important;
+                position: relative;
+            }
+            /* Label acara putih, tulisan hitam */
+            .event-label {
+                display: inline-block;
+                background: #fff;
+                color: #222;
+                border-radius: 4px;
+                padding: 2px 8px;
+                font-weight: bold;
+                font-size: 13px;
+                margin-top: 2px;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+            }
+            .fc-event {
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+            }
         </style>
     </head>
 
@@ -164,8 +189,12 @@
                         return false;
                     },
                     eventRender: function(event, element) {
-                        // Tambahkan tooltip
-                        element.attr('title', event.title);
+                        // Kotak tanggal biru untuk tanggal yang ada event
+                        var dateString = moment(event.start).format('YYYY-MM-DD');
+                        var cell = $(".fc-day[data-date='" + dateString + "']");
+                        cell.addClass('has-event');
+                        // Label acara putih, tulisan hitam
+                        element.find('.fc-title').wrap('<span class="event-label"></span>');
                     }
                 });
 
