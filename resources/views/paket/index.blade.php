@@ -16,7 +16,7 @@
                 <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
                     <div class="h-56 bg-gray-100 flex items-center justify-center overflow-hidden">
                         @if ($pkt->gambar_url)
-                            <img src="{{ $pkt->gambar_url }}" alt="Gambar Paket" class="object-cover w-full h-full">
+                            <img src="{{ asset('images/' . $pkt->gambar) }}" alt="Gambar Paket" class="object-cover w-full h-full">
                         @else
                             <span class="text-base text-gray-500">No Image</span>
                         @endif
