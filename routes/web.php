@@ -11,6 +11,7 @@ use App\Http\Controllers\KeranjangController;
 use App\Livewire\KeranjangIndex;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\PesananController;
+use App\Livewire\ShowPesanans;
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -83,6 +84,10 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::resource('permissions', PermissionController::class);
 });
 
+
+
+Route::get('/pesanan', ShowPesanans::class)->name('pesanan.index');
+
 Route::get('/paket', [PaketController::class, 'index'])->middleware(['auth', 'verified'])->name('paket.index');
 Route::get('/paket/tambah', [PaketController::class, 'create'])->middleware(['auth', 'verified'])->name('paket.create');
 Route::post('/paket/tambah', [PaketController::class, 'store'])->middleware(['auth', 'verified'])->name('paket.store');
@@ -102,6 +107,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('pesanan')->name('pesanan.')->group(function () {
         Route::get('/', [PesananController::class, 'index'])->name('index');
         Route::get('/{pesanan}', [PesananController::class, 'show'])->name('show');
+
         
         // Hanya admin yang bisa update status
         Route::middleware(['role:admin'])->group(function () {
@@ -116,6 +122,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Baik admin maupun customer bisa cancel (dengan kondisi berbeda)
         Route::post('/{pesanan}/cancel', [PesananController::class, 'cancel'])->name('cancel');
         Route::get('/pesanan/history', [PesananController::class, 'history'])->name('history');
+
     });
 });
 

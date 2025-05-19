@@ -137,19 +137,23 @@ public function updateStatus(Request $request, Pesanan $pesanan)
         return back()->with($notifications);
     }
 
-public function history()
+public function history(Request $request)
 {
-            $user = Auth::user();
+    $user = Auth::user();
+    $statusFilter = $request->input('status'); // nilai bisa: 'selesai', 'dibatalkan', 'ditolak', atau null
 
     $pesanans = Pesanan::whereIn('status', ['selesai', 'dibatalkan', 'ditolak'])
-    ->with(['user'])
-    ->when(!$user->hasRole('admin'), function($query) use ($user) {
-                $query->where('user_id', $user->id);
-    })
-    ->get();
+        ->with(['user', 'jadwal']) // tambahkan 'jadwal' juga agar tidak N+1 di view
+        ->when(!$user->hasRole('admin'), function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })
+        ->when($statusFilter, function ($query) use ($statusFilter) {
+            $query->where('status', $statusFilter);
+        })
+        ->latest()
+        ->paginate(10); // tambahkan pagination agar lebih rapi
 
-    return view('pesanan.history', [
-        'pesanans' => $pesanans,
-    ]);
+    return view('pesanan.history', compact('pesanans', 'statusFilter'));
 }
+
 }
