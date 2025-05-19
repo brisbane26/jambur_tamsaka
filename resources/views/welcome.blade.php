@@ -14,7 +14,7 @@
 <body class="bg-gray-100 text-gray-800">
 
   <!-- nav bar section - Changed to red theme -->
-<nav class="flex flex-wrap items-center justify-between p-3 bg-red-700 text-white">
+<nav class="flex flex-wrap items-center justify-between p-3" style="background-color:#5c1515;color:white;">
     <div class="text-xl font-bold">Tamsaka</div>
     <div class="flex md:hidden">
         <button id="hamburger">
@@ -23,17 +23,17 @@
         </button>
     </div>
     <div class="toggle hidden w-full md:w-auto md:flex text-right text-bold mt-5 md:mt-0 md:border-none">
-        <a href="#home" class="block md:inline-block hover:text-red-200 px-3 py-3 md:border-none">Home</a>
-        <a href="#services" class="block md:inline-block hover:text-red-200 px-3 py-3 md:border-none">Paket</a>
-        <a href="#aboutus" class="block md:inline-block hover:text-red-200 px-3 py-3 md:border-none">About us</a>
-        <a href="#gallery" class="block md:inline-block hover:text-red-200 px-3 py-3 md:border-none">Gallery</a>
-        <a href="#contactUs" class="block md:inline-block hover:text-red-200 px-3 py-3 md:border-none">Visit Us</a>
+        <a href="#home" class="block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none">Home</a>
+        <a href="#services" class="block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none">Paket</a>
+        <a href="#aboutus" class="block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none">About us</a>
+        <a href="#gallery" class="block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none">Gallery</a>
+        <a href="#contactUs" class="block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none">Visit Us</a>
     </div>
 
     <div class="toggle w-full text-end hidden md:flex md:w-auto px-2 py-2 md:rounded">
     <a href="{{ route('login') }}">
         <div class="flex justify-end">
-            <div class="flex items-center h-10 w-30 rounded-md bg-white text-red-700 font-bold p-2 hover:bg-red-100 transition">
+            <div class="flex items-center h-10 w-30 rounded-md bg-white" style="color:#5c1515;font-weight:bold;" p-2 hover:bg-[#f8d7da] transition">
                 <!-- Heroicon name: calendar -->
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-6 h-6 mr-1">
@@ -50,16 +50,14 @@
 </nav>
 
 <!-- hero section - Updated with red theme -->
-<div class="relative w-full h-[320px]" id="home">
-    <div class="absolute inset-0 opacity-90">
-        <img src="{{ asset('images/Jambur.jpg') }}" alt="Background Image" class="object-cover object-center w-full h-full mix-blend-overlay" />
-    </div>
-    <div class="absolute inset-9 flex flex-col md:flex-row items-center justify-between">
-        <div class="md:w-1/2 mb-4 md:mb-0 text-white">
-            <h1 class="font-bold text-4xl md:text-5xl leading-tight mb-2">Jambur Tamsaka</h1>
-            <p class="font-regular text-xl mb-8 mt-4">Tempat kawin terbaik</p>
-            <a href="#contactUs"
-                class="px-6 py-3 bg-white text-red-700 font-bold rounded-full hover:bg-red-100 transition duration-200">Contact Us</a>
+<div class="flex justify-center mt-8" id="home">
+    <div class="w-full max-w-7xl px-4">
+        <div class="relative rounded-2xl overflow-hidden shadow-lg bg-white">
+            <img src="{{ asset('images/Jambur.jpg') }}" alt="Background Image" class="object-cover object-center w-full h-64 md:h-80" />
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-center bg-black/30">
+                <h1 class="font-bold text-4xl md:text-5xl text-white drop-shadow-lg mb-2" style="text-shadow:0 2px 8px #000">Jambur Tamsaka</h1>
+                <p class="italic text-lg md:text-xl text-gray-100 mb-2" style="text-shadow:0 2px 8px #000">Solusi lengkap untuk semua kebutuhan acara Anda, dari adat hingga modern.</p>
+            </div>
         </div>
     </div>
 </div>
@@ -70,7 +68,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-6">
       <!-- Teks -->
       <div class="max-w-xl">
-        <h2 class="text-3xl font-bold text-red-700 mb-8 text-left">About Us</h2>
+        <h2 class="text-3xl font-bold mb-8 text-left" style="color:#5c1515;">About Us</h2>
         <p class="mt-4 text-gray-700 text-lg">
           Jambur Tamsaka adalah tempat yang disediakan untuk menyelenggarakan 
           berbagai acara penting dalam kehidupan masyarakat, seperti pesta pernikahan, 
@@ -92,12 +90,12 @@
 <!-- Paket section - Updated with red accents -->
 <section class="py-10 bg-gray-50" id="services">
   <div class="container mx-auto px-8 max-w-7xl">
-    <h2 class="text-3xl font-bold text-red-700 mb-6 text-center">Paket</h2>
+    <h2 class="text-3xl font-bold mb-6 text-center" style="color:#5c1515;">Paket</h2>
 
    <div class="mb-8 flex justify-end">
   <label for="kategori" class="flex items-center text-lg font-medium text-gray-700 space-x-2">
     <span>Pilih Kategori:</span>
-    <select id="kategori" class="px-3 py-1 rounded border border-red-300 shadow-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500 w-40">
+    <select id="kategori" class="px-3 py-1 rounded border border-[#5c1515] shadow-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#5c1515] w-40">
       <option value="all">Semua</option>
       @foreach ($kategoris as $kategori)
         <option value="{{ strtolower($kategori->nama_kategori) }}">{{ $kategori->nama_kategori }}</option>
@@ -111,8 +109,8 @@
     <div class="category-item {{ strtolower($paket->kategori->nama_kategori) }} bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
       <img src="{{ $paket->gambar_url }}" class="w-full h-56 object-cover" alt="{{ $paket->nama_paket }}">
       <div class="p-6 text-center">
-        <h4 class="text-xl font-bold text-red-700 mb-2">{{ $paket->nama_paket }}</h4>
-        <p class="text-red-600 font-semibold text-base">Rp {{ number_format($paket->harga_jual, 0, ',', '.') }}</p>
+        <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">{{ $paket->nama_paket }}</h4>
+        <p class="font-semibold text-base" style="color:#5c1515;">Rp {{ number_format($paket->harga_jual, 0, ',', '.') }}</p>
         <p class="text-gray-700 text-base mt-2">{{ $paket->deskripsi }}</p>
       </div>
     </div>
@@ -125,23 +123,23 @@
 <section class="py-16 bg-white" id="gallery">
   <div class="container mx-auto px-8 max-w-7xl">
     <div class="text-center mb-12">
-      <h2 class="text-3xl font-bold text-red-700 mb-4">Our Gallery</h2>
+      <h2 class="text-3xl font-bold mb-4" style="color:#5c1515;">Our Gallery</h2>
       <p class="text-lg text-gray-600 max-w-2xl mx-auto">Explore beautiful moments captured at Jambur Tamsaka</p>
     </div>
 
     <!-- Gallery Filter -->
     <div class="flex justify-center mb-8">
       <div class="inline-flex rounded-md shadow-sm" role="group">
-        <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium rounded-l-lg border border-red-700 bg-red-700 text-white" data-filter="all">
+        <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium rounded-l-lg border" style="background-color:#5c1515;color:white;border-color:#5c1515;" data-filter="all">
           All
         </button>
-        <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium border-t border-b border-red-700 text-red-700 hover:bg-red-50" data-filter="wedding">
+        <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium border-t border-b" style="color:#5c1515;border-color:#5c1515;" data-filter="wedding">
           Wedding
         </button>
-        <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium border border-red-700 text-red-700 hover:bg-red-50" data-filter="event">
+        <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium border" style="color:#5c1515;border-color:#5c1515;" data-filter="event">
           Events
         </button>
-        <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium rounded-r-lg border border-red-700 text-red-700 hover:bg-red-50" data-filter="venue">
+        <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium rounded-r-lg border" style="color:#5c1515;border-color:#5c1515;" data-filter="venue">
           Venue
         </button>
       </div>
@@ -155,7 +153,7 @@
              alt="Wedding at Jambur Tamsaka" 
              class="w-full h-56 object-cover">
         <div class="p-6 text-center">
-          <h4 class="text-xl font-bold text-red-700 mb-2">Wedding Celebration</h4>
+          <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Wedding Celebration</h4>
           <p class="text-gray-700 text-base">Beautiful wedding moments at our venue</p>
         </div>
       </div>
@@ -166,7 +164,7 @@
              alt="Wedding Decoration" 
              class="w-full h-56 object-cover">
         <div class="p-6 text-center">
-          <h4 class="text-xl font-bold text-red-700 mb-2">Wedding Decoration</h4>
+          <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Wedding Decoration</h4>
           <p class="text-gray-700 text-base">Elegant decoration setup</p>
         </div>
       </div>
@@ -177,7 +175,7 @@
              alt="Cultural Event" 
              class="w-full h-56 object-cover">
         <div class="p-6 text-center">
-          <h4 class="text-xl font-bold text-red-700 mb-2">Cultural Event</h4>
+          <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Cultural Event</h4>
           <p class="text-gray-700 text-base">Traditional performances</p>
         </div>
       </div>
@@ -188,7 +186,7 @@
              alt="Music Performance" 
              class="w-full h-56 object-cover">
         <div class="p-6 text-center">
-          <h4 class="text-xl font-bold text-red-700 mb-2">Music Performance</h4>
+          <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Music Performance</h4>
           <p class="text-gray-700 text-base">Live music entertainment</p>
         </div>
       </div>
@@ -199,7 +197,7 @@
              alt="Venue Overview" 
              class="w-full h-56 object-cover">
         <div class="p-6 text-center">
-          <h4 class="text-xl font-bold text-red-700 mb-2">Venue Overview</h4>
+          <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Venue Overview</h4>
           <p class="text-gray-700 text-base">Our beautiful venue space</p>
         </div>
       </div>
@@ -210,7 +208,7 @@
              alt="Outdoor Area" 
              class="w-full h-56 object-cover">
         <div class="p-6 text-center">
-          <h4 class="text-xl font-bold text-red-700 mb-2">Outdoor Area</h4>
+          <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Outdoor Area</h4>
           <p class="text-gray-700 text-base">Spacious outdoor setting</p>
         </div>
       </div>
@@ -218,7 +216,7 @@
 
     <!-- View More Button -->
     <div class="text-center mt-10">
-      <button class="px-6 py-3 bg-red-700 text-white font-bold rounded-full hover:bg-red-800 transition duration-200">
+      <button class="px-6 py-3 font-bold rounded-full hover:bg-[#7a2323] transition duration-200" style="background-color:#5c1515;color:white;">
         View More Photos
       </button>
     </div>
@@ -227,47 +225,47 @@
 
 <!-- Facility Section - Updated with red theme -->
 <div class="mt-20 px-4 bg-gray-50 py-12">
-  <h2 class="text-3xl font-bold text-red-700 text-center mb-10">Facility</h2>
+  <h2 class="text-3xl font-bold text-center mb-10" style="color:#5c1515;">Facility</h2>
   
   <!-- Baris pertama: 4 card ukuran sama seperti gallery -->
   <div class="flex justify-center flex-wrap gap-8 mb-8 max-w-screen-xl mx-auto">
-    <div class="bg-white w-64 h-64 rounded-lg shadow-md hover:shadow-lg transition p-6 text-center border-t-4 border-red-600">
-      <div class="bg-red-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
-        <svg class="w-8 h-8 text-red-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="bg-white w-64 h-64 rounded-lg shadow-md hover:shadow-lg transition p-6 text-center border-t-4" style="border-color:#5c1515;">
+      <div class="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4" style="background-color:#f3eaea;">
+        <svg class="w-8 h-8" style="color:#5c1515;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
         </svg>
       </div>
-      <h3 class="text-xl font-bold text-red-700 mb-2">Spacious Hall</h3>
+      <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Spacious Hall</h3>
       <p class="text-gray-700">Large area for various events</p>
     </div>
     
-    <div class="bg-white w-64 h-64 rounded-lg shadow-md hover:shadow-lg transition p-6 text-center border-t-4 border-red-600">
-      <div class="bg-red-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
-        <svg class="w-8 h-8 text-red-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="bg-white w-64 h-64 rounded-lg shadow-md hover:shadow-lg transition p-6 text-center border-t-4" style="border-color:#5c1515;">
+      <div class="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4" style="background-color:#f3eaea;">
+        <svg class="w-8 h-8" style="color:#5c1515;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
         </svg>
       </div>
-      <h3 class="text-xl font-bold text-red-700 mb-2">Complete Equipment</h3>
+      <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Complete Equipment</h3>
       <p class="text-gray-700">Tables, chairs, and sound system</p>
     </div>
     
-    <div class="bg-white w-64 h-64 rounded-lg shadow-md hover:shadow-lg transition p-6 text-center border-t-4 border-red-600">
-      <div class="bg-red-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
-        <svg class="w-8 h-8 text-red-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="bg-white w-64 h-64 rounded-lg shadow-md hover:shadow-lg transition p-6 text-center border-t-4" style="border-color:#5c1515;">
+      <div class="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4" style="background-color:#f3eaea;">
+        <svg class="w-8 h-8" style="color:#5c1515;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
       </div>
-      <h3 class="text-xl font-bold text-red-700 mb-2">Affordable Price</h3>
+      <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Affordable Price</h3>
       <p class="text-gray-700">Competitive packages</p>
     </div>
     
-    <div class="bg-white w-64 h-64 rounded-lg shadow-md hover:shadow-lg transition p-6 text-center border-t-4 border-red-600">
-      <div class="bg-red-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
-        <svg class="w-8 h-8 text-red-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="bg-white w-64 h-64 rounded-lg shadow-md hover:shadow-lg transition p-6 text-center border-t-4" style="border-color:#5c1515;">
+      <div class="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4" style="background-color:#f3eaea;">
+        <svg class="w-8 h-8" style="color:#5c1515;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
         </svg>
       </div>
-      <h3 class="text-xl font-bold text-red-700 mb-2">Decoration</h3>
+      <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Decoration</h3>
       <p class="text-gray-700">Beautiful setup options</p>
     </div>
   </div>
@@ -304,7 +302,7 @@
 
 <!-- footer - Updated with red theme -->
 <section>
-    <footer class="bg-red-800 text-white py-8">
+    <footer class="py-8" style="background-color:#5c1515;color:white;">
         <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
             <!-- Brand & Copyright -->
             <div class="flex flex-col items-center md:items-start">
@@ -314,16 +312,16 @@
             <!-- Navigation -->
             <ul class="flex flex-wrap gap-6 justify-center md:justify-end mt-4 md:mt-0">
                 <li>
-                    <a href="#contactUs" class="hover:text-red-200 transition">Contact</a>
+                    <a href="#contactUs" class="hover:text-[#a94442] transition">Contact</a>
                 </li>
                 <li>
-                    <a href="/privacy" class="hover:text-red-200 transition">Privacy Policy</a>
+                    <a href="/privacy" class="hover:text-[#a94442] transition">Privacy Policy</a>
                 </li>
                 <li>
-                    <a href="#aboutus" class="hover:text-red-200 transition">About Us</a>
+                    <a href="#aboutus" class="hover:text-[#a94442] transition">About Us</a>
                 </li>
                 <li>
-                    <a href="#gallery" class="hover:text-red-200 transition">Gallery</a>
+                    <a href="#gallery" class="hover:text-[#a94442] transition">Gallery</a>
                 </li>
             </ul>
             <!-- Social Media -->
