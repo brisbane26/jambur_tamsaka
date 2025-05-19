@@ -1,5 +1,20 @@
 <div>
-    <div class="overflow-x-auto">
+        <div class="overflow-x-auto">
+            
+
+<div class="mb-4">
+            <label for="status" class="text-sm font-medium text-gray-700">Filter Status:</label>
+            <select wire:model.live="status"
+                class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring focus:ring-blue-200">
+                <option value="">Semua</option>
+                <option value="selesai">Selesai</option>
+                <option value="menunggu">Menunggu</option>
+                <option value="disetujui">Disetujui</option>
+                <option value="ditolak">Ditolak</option>
+                <option value="dibatalkan">Dibatalkan</option>
+            </select>
+        </div>
+
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
@@ -70,13 +85,11 @@
                             </a>
                             @role('customer')
                             @if(in_array($pesanan->status, ['menunggu', 'disetujui']))
-                                <form action="{{ route('pesanan.cancel', $pesanan->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    <button type="submit" class="text-red-600 hover:text-red-900" 
-                                        onclick="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')">
-                                        Batalkan
-                                    </button>
-                                </form>
+                                <button wire:click="confirmCancel({{ $pesanan->id }})"
+                                    class="text-red-600 hover:text-red-900">
+                                    Batalkan
+                                </button>
+
                             @endif
                             @endrole
                         </td>
@@ -90,10 +103,50 @@
                 @endforelse
             </tbody>
         </table>
+        @if($showCancelModal)
+        <div class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+            <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+                <h2 class="text-lg font-semibold mb-4">Konfirmasi Pembatalan</h2>
+                <p class="mb-4">Apakah Anda yakin ingin membatalkan pesanan ini?</p>
+                <div class="flex justify-end space-x-2">
+                    <button wire:click="$set('showCancelModal', false)"
+                        class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded">Batal</button>
+                    <button wire:click="cancelPesanan"
+                        class="px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded">Ya, Batalkan</button>
+                </div>
+            </div>
+        </div>
+        @endif
+        
     </div>
 
     <!-- Pagination Links -->
     <div class="mt-4">
         {{ $pesanans->links() }}
     </div>
+        @if(session()->has('notification'))
+        <div class="fixed top-4 right-4 z-50">
+            <div class="px-4 py-3 rounded shadow-lg 
+                @if(session('notification.alert-type') === 'success') bg-green-100 text-green-800 border-green-200
+                @elseif(session('notification.alert-type') === 'error') bg-red-100 text-red-800 border-red-200
+                @else bg-blue-100 text-blue-800 border-blue-200 @endif
+                border">
+                <p>{{ session('notification.message') }}</p>
+            </div>
+        </div>
+        
+        <script>
+document.addEventListener('livewire:load', function () {
+    Livewire.hook('message.processed', (message, component) => {
+        const notif = document.querySelector('.fixed.top-4.right-4');
+        if (notif) {
+            setTimeout(() => {
+                notif.remove();
+            }, 3000);
+        }
+    });
+});
+
+        </script>
+    @endif
 </div>

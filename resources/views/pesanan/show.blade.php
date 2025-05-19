@@ -13,8 +13,10 @@
                 <h3 class="text-lg font-semibold mb-4 border-b pb-2">Informasi Pesanan</h3>
                 <div class="space-y-3">
                     <div class="flex">
-                        <span class="w-1/3 font-medium">Status:</span>
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                        <span class="w-1/3 font-medium">Status</span>
+                        <span>:</span>
+                        <span></span>
+                        <span class="px-2 inline-flex text-xs leading-7 font-semibold rounded-full 
                             @if($pesanan->status === 'menunggu') bg-yellow-100 text-yellow-800
                             @elseif($pesanan->status === 'disetujui') bg-blue-100 text-blue-800
                             @elseif($pesanan->status === 'ditolak') bg-red-100 text-red-800
@@ -24,29 +26,29 @@
                         </span>
                     </div>
                     <div class="flex">
-                        <span class="w-1/3 font-medium">Tanggal Pesan:</span>
-                        <span>{{ $pesanan->created_at->format('d M Y H:i') }}</span>
+                        <span class="w-1/3 font-medium">Tanggal Pesan</span>
+                        <span>: {{ $pesanan->created_at->format('d M Y H:i') }}</span>
                     </div>
                     <div class="flex">
-                        <span class="w-1/3 font-medium">Nama Acara:</span>
-                        <span>{{ $pesanan->jadwal->nama_acara }}</span>
+                        <span class="w-1/3 font-medium">Nama Acara</span>
+                        <span>: {{ $pesanan->jadwal->nama_acara }}</span>
                     </div>
                     <div class="flex">
                         <span class="w-1/3 font-medium">Tanggal Acara:</span>
-                        <span>{{ $pesanan->jadwal->tanggal }}</span>
+                        <span>: {{ $pesanan->jadwal->tanggal }}</span>
                     </div>
                     <div class="flex">
                         <span class="w-1/3 font-medium">Nama Pemesan:</span>
-                        <span>{{ $pesanan->user->nama_lengkap }}</span>
+                        <span>: {{ $pesanan->user->nama_lengkap }}</span>
                     </div>
                     <div class="flex">
                         <span class="w-1/3 font-medium">Nomor Telepon:</span>
-                        <span>{{ $pesanan->user->telepon }}</span>
+                        <span>: {{ $pesanan->user->telepon }}</span>
                     </div>
                     @if($pesanan->status === 'ditolak' && $pesanan->alasan_tolak)
                     <div class="flex">
                         <span class="w-1/3 font-medium">Alasan Penolakan:</span>
-                        <span class="text-red-600">{{ $pesanan->alasan_tolak }}</span>
+                        <span class="text-red-600">: {{ $pesanan->alasan_tolak }}</span>
                     </div>
                     @endif
                 </div>
@@ -57,21 +59,24 @@
                 <h3 class="text-lg font-semibold mb-4 border-b pb-2">Informasi Pembayaran</h3>
                 <div class="space-y-3">
                     <div class="flex">
-                        <span class="w-1/3 font-medium">Total Harga:</span>
-                        <span>Rp{{ number_format($pesanan->total_harga, 0, ',', '.') }}</span>
+                        <span class="w-1/3 font-medium">Total Harga</span>
+                        <span>: Rp{{ number_format($pesanan->total_harga, 0, ',', '.') }}</span>
                     </div>
                     <div class="flex">
-                        <span class="w-1/3 font-medium">Metode Bayar:</span>
-                        <span>{{ $pesanan->pembayaran->metode_bayar ?? '-' }}</span>
+                        <span class="w-1/3 font-medium">Metode Bayar</span>
+                        <span>: {{ $pesanan->pembayaran->metode_bayar ?? '-' }}</span>
                     </div>
                     <div class="flex">
-                        <span class="w-1/3 font-medium">Status Pembayaran:</span>
-                        <span>{{ $pesanan->pembayaran->status ?? '-' }}</span>
+                        <span class="w-1/3 font-medium">Status Pembayaran</span>
+                        <span>: {{ $pesanan->pembayaran->status ?? '-' }}</span>
                     </div>
                     
                     @if($pesanan->bukti_transaksi)
                     <div class="mt-4">
-                        <div class="font-medium mb-2">Bukti Transfer:</div>
+                        <div class="font-medium mb-2 flex">
+                            <span class="w-1/3 font-medium">Bukti Transfer</span>
+                            <span>:</span>
+                        </div>
                         <img src="{{ asset('storage/' . $pesanan->bukti_transaksi) }}" 
                              alt="Bukti Transfer" 
                              class="max-w-full h-auto border rounded">
