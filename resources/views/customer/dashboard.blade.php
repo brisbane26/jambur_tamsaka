@@ -3,7 +3,7 @@
 <!-- Personalized Header -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
             <div>
-                <h1 class="text-3xl font-bold text-gray-800">Halo, [Nama Pelanggan]!</h1>
+                <h1 class="text-3xl font-bold text-gray-800">Selamat Datang {{ auth()->user()->username }}</h1>
                 <p class="text-gray-600 mt-2">Selamat datang kembali di dashboard Anda</p>
             </div>
         </div>
