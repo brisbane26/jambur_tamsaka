@@ -94,7 +94,7 @@
                                 </div>
 
                                 <!-- Kategori -->
-                                {{-- <div class="mb-4">
+                                <div class="mb-4">
                                     <label for="kategori_id" class="block text-gray-600">Kategori</label>
                                     <select name="kategori_id" id="kategori_id"
                                         class="w-full p-2 border border-gray-300 rounded-md" required>
@@ -106,7 +106,7 @@
                                             </option>
                                         @endforeach
                                     </select>
-                                </div> --}}
+                                </div>
 
                                 <!-- Deskripsi -->
                                 <div class="mb-4">
