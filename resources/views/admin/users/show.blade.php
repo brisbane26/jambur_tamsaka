@@ -3,22 +3,39 @@
         <h1 class="text-2xl font-bold">User Details</h1>
     </x-slot>
 
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+    <div class="bg-white dark:bg-white p-6 rounded-lg shadow-md">
         <div class="mb-4">
-            <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">User Information</h2>
-            <p class="mt-2 text-gray-600 dark:text-gray-400">Username: <span class="font-medium">{{ $user->username }}</span></p>
-            <p class="mt-2 text-gray-600 dark:text-gray-400">Nama Lengkap: <span class="font-medium">{{ $user->nama_lengkap }}</span></p>
-            <p class="mt-2 text-gray-600 dark:text-gray-400">Email: <span class="font-medium">{{ $user->email }}</span></p>
-            <p class="mt-2 text-gray-600 dark:text-gray-400">Nomor Telepon: <span class="font-medium">{{ $user->telepon }}</span></p>
-            <p class="mt-2 text-gray-600 dark:text-gray-400">Email diverifikasi: <span class="font-medium">{{ $user->email_verified_at }}</span></p>
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-800">User Information</h2>
+            <div class="mt-2 space-y-2 text-gray-600 dark:text-gray-800">
+                <div class="grid grid-cols-3 gap-2">
+                    <span>Username</span>
+                    <span class="col-span-2">: <span class="font-medium">{{ $user->username }}</span></span>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <span>Nama Lengkap</span>
+                    <span class="col-span-2">: <span class="font-medium">{{ $user->nama_lengkap }}</span></span>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <span>Email</span>
+                    <span class="col-span-2">: <span class="font-medium">{{ $user->email }}</span></span>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <span>Nomor Telepon</span>
+                    <span class="col-span-2">: <span class="font-medium">{{ $user->telepon }}</span></span>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <span>Email diverifikasi</span>
+                    <span class="col-span-2">: <span class="font-medium">{{ $user->email_verified_at }}</span></span>
+                </div>
+            </div>
         </div>
 
         <div class="mb-4">
-            <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">Roles</h2>
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-800">Roles</h2>
             @if($user->roles->isEmpty())
-                <p class="mt-2 text-gray-600 dark:text-gray-400">No roles assigned.</p>
+                <p class="mt-2 text-gray-600 dark:text-gray-800">No roles assigned.</p>
             @else
-                <ul class="list-disc list-inside mt-2 text-gray-600 dark:text-gray-400">
+                <ul class="list-disc list-inside mt-2 text-gray-600 dark:text-gray-800">
                     @foreach($user->roles as $role)
                         <li>{{ $role->name }}</li>
                     @endforeach
@@ -27,8 +44,8 @@
         </div>
 
         <div class="flex items-center justify-between mt-4">
-            <a href="{{ route('admin.users.index') }}" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
-                Back to Users List
+            <a href="{{ route('admin.users.index') }}" class="text-gray-600 dark:text-gray-800 hover:text-gray-900 dark:hover:text-gray-500">
+                Kembali 
             </a>
         </div>
     </div>

@@ -15,7 +15,6 @@ class Pembayaran extends Model
     protected $fillable = [
         'pesanan_id',
         'metode_bayar',
-        'status',
     ];
 
     public function pesanan(): BelongsTo

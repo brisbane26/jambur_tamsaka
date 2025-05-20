@@ -21,12 +21,20 @@ class PaketController extends Controller
                 
     }
 
-public function dashboard()
+public function dashboard(Request $request)
 {
-    $pakets = Paket::with('kategori')->get();
+    $query = Paket::with('kategori');
+
+    if ($request->has('kategori') && $request->kategori != '') {
+        $query->where('kategori_id', $request->kategori);
+    }
+
+    $pakets = $query->get();
     $kategoris = Kategori::all();
+
     return view('welcome', compact('pakets', 'kategoris'));
 }
+
 
 
     public function create()

@@ -3,7 +3,7 @@
 <!-- Personalized Header -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
             <div>
-                <h1 class="text-3xl font-bold text-gray-800">Selamat Datang {{ auth()->user()->username }}</h1>
+                <h1 class="text-3xl font-bold text-gray-800">Halo, {{ auth()->user()->username }}</h1>
                 <p class="text-gray-600 mt-2">Selamat datang kembali di dashboard Anda</p>
             </div>
         </div>
@@ -81,48 +81,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Current Orders -->
-        <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
-            <div class="p-6 border-b border-gray-200 flex justify-between items-center">
-                <h3 class="text-xl font-semibold text-gray-800">Pesanan Saat Ini</h3>
-                <a href="#" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Lihat Semua</a>
-            </div>
-            <div class="divide-y divide-gray-200">
-                <!-- Order 1 -->
-                <div class="p-6 flex flex-col md:flex-row md:items-center md:justify-between">
-                    <div class="mb-4 md:mb-0">
-                        <div class="flex items-center">
-                            <div class="bg-blue-100 p-2 rounded-lg mr-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h4 class="font-medium text-gray-800">Gedung</h4>
-                                <p class="text-sm text-gray-600">#ORD-2023-015</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-6">
-                        <div>
-                            <p class="text-sm text-gray-500">Status</p>
-                            <span class="px-3 py-1 text-sm font-medium rounded-full bg-yellow-100 text-yellow-800">Dalam Proses</span>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">Estimasi Selesai</p>
-                            <p class="font-medium">Hari Ini, 16:00</p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500">Total</p>
-                            <p class="font-medium">Rp 150.000</p>
-                        </div>
-                        <a href="#" class="text-blue-600 hover:text-blue-800 text-sm font-medium self-end md:self-center">Detail</a>
-                    </div>
-                </div>
-            </div>
-        </div>
             
             <!-- Recommended Services -->
             <div class="lg:col-span-2">
@@ -166,11 +124,12 @@
             </div>
         </div>
     </div>
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    {{ __("You're logged in as csustomer!") }}
+            <div class="bg-white dark:bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-800">
+                    {{ __("Kamu login sebagai customer!") }}
                 </div>
             </div>
         </div>

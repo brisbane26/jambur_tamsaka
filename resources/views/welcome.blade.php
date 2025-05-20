@@ -92,22 +92,25 @@
   <div class="container mx-auto px-8 max-w-7xl">
     <h2 class="text-3xl font-bold mb-6 text-center" style="color:#5c1515;">Paket</h2>
 
-   <div class="mb-8 flex justify-end">
+<form method="GET" action="#services" class="flex justify-end mb-8">
   <label for="kategori" class="flex items-center text-lg font-medium text-gray-700 space-x-2">
     <span>Pilih Kategori:</span>
-    <select id="kategori" class="px-3 py-1 rounded border border-[#5c1515] shadow-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#5c1515] w-40">
-      <option value="all">Semua</option>
+    <select name="kategori" id="kategori" onchange="this.form.submit()" class="px-3 py-1 rounded border border-[#5c1515] shadow-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#5c1515] w-40">
+      <option value="">Semua</option>
       @foreach ($kategoris as $kategori)
-        <option value="{{ strtolower($kategori->nama_kategori) }}">{{ $kategori->nama_kategori }}</option>
+        <option value="{{ $kategori->id }}" {{ request('kategori') == $kategori->id ? 'selected' : '' }}>
+          {{ $kategori->nama_kategori }}
+        </option>
       @endforeach
     </select>
   </label>
-</div>
+</form>
+
 
     <div id="all-content" class="grid grid-cols-1 md:grid-cols-3 gap-8 justify-center">
   @foreach ($pakets as $paket)
     <div class="category-item {{ strtolower($paket->kategori->nama_kategori) }} bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-      <img src="{{ $paket->gambar_url }}" class="w-full h-56 object-cover" alt="{{ $paket->nama_paket }}">
+      <img src="{{ asset('images/' . $paket->gambar) }}" class="w-full h-56 object-cover" alt="{{ $paket->nama_paket }}">
       <div class="p-6 text-center">
         <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">{{ $paket->nama_paket }}</h4>
         <p class="font-semibold text-base" style="color:#5c1515;">Rp {{ number_format($paket->harga_jual, 0, ',', '.') }}</p>

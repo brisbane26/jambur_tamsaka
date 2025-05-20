@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('pesanan_id')->constrained('pesanans')->onDelete('cascade');
             $table->string('metode_bayar');
-            $table->enum('status', ['Pending', 'Sukses', 'Gagal'])->default('Pending');
             $table->timestamps();
         });
     }
