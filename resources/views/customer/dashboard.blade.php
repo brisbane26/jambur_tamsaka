@@ -8,16 +8,20 @@
             </div>
         </div>
 
-    <div class="p-6">
-        <!-- Banner Jambur & Pesan Sekarang -->
-        <div class="relative w-full h-[260px] md:h-[320px] rounded-xl overflow-hidden mb-8 shadow-lg">
-            <img src="{{ asset('images/Jambur.jpg') }}" alt="Jambur Tamsaka" class="object-cover object-center w-full h-full mix-blend-overlay opacity-90" />
-            <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-                <h1 class="font-bold text-3xl md:text-5xl text-white drop-shadow-lg mb-2">Jambur Tamsaka</h1>
-                <p class="text-lg md:text-2xl text-white mb-6 drop-shadow">Tempat kawin terbaik</p>
-                <a href="{{ route('paket.index') }}" class="px-8 py-3 bg-white text-red-700 font-bold rounded-full shadow hover:bg-red-100 transition duration-200 text-lg">Pesan Sekarang</a>
-            </div>
+   <div class="p-6">
+    <!-- Banner Jambur & Pesan Sekarang -->
+    <div class="relative w-full h-[320px] md:h-[380px] rounded-xl overflow-hidden mb-8 shadow-lg">
+        <img 
+            src="{{ asset('images/Jambur.jpg') }}" 
+            alt="Jambur Tamsaka" 
+            class="object-cover object-[center_32%] w-full h-full" 
+        />
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center bg-black/30">
+            <h1 class="font-bold text-3xl md:text-5xl text-white drop-shadow-lg mb-2">Jambur Tamsaka</h1>
+            <p class="text-lg md:text-2xl text-white mb-6 drop-shadow">Solusi lengkap untuk semua kebutuhan acara Anda, dari adat hingga modern.</p>
+            <a href="{{ route('paket.index') }}" class="px-8 py-3 bg-white text-red-700 font-bold rounded-full shadow hover:bg-red-100 transition duration-200 text-lg">Pesan Sekarang</a>
         </div>
+    </div>
 
         <!-- Status Cards -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
