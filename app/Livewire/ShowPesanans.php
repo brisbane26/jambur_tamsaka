@@ -43,27 +43,27 @@ class ShowPesanans extends Component
         $this->showCancelModal = true;
     }
 
-public function cancelPesanan()
-{
-    $pesanan = Pesanan::find($this->selectedPesananId);
+    public function cancelPesanan()
+    {
+        $pesanan = Pesanan::find($this->selectedPesananId);
 
-    if ($pesanan && in_array($pesanan->status, ['menunggu', 'disetujui'])) {
-        $pesanan->status = 'dibatalkan';
-        $pesanan->save();
+        if ($pesanan && in_array($pesanan->status, ['menunggu', 'disetujui'])) {
+            $pesanan->status = 'dibatalkan';
+            $pesanan->save();
 
-        session()->flash('notification', [
-            'message' => 'Pesanan berhasil dibatalkan',
-            'alert-type' => 'success'
-        ]);
-    } else {
-        session()->flash('notification', [
-            'message' => 'Pesanan tidak dapat dibatalkan',
-            'alert-type' => 'error'
-        ]);
+            session()->flash('notification', [
+                'message' => 'Pesanan berhasil dibatalkan',
+                'alert-type' => 'success'
+            ]);
+        } else {
+            session()->flash('notification', [
+                'message' => 'Pesanan tidak dapat dibatalkan',
+                'alert-type' => 'error'
+            ]);
+        }
+
+        $this->showCancelModal = false;
+        $this->selectedPesananId = null;
     }
-
-    $this->showCancelModal = false;
-    $this->selectedPesananId = null;
-}
 
 }

@@ -1,9 +1,8 @@
 <x-admin-layout>
-    <h3 class="text-gray-700 text-3xl font-medium">Tables</h3>
+    <h3 class="text-gray-700 text-3xl font-medium">Paket</h3>
 
-    <div class="mt-8">
-        <div class="flex justify-between items-center">
-            <h4 class="text-gray-600">Daftar Paket</h4>
+    <div class="mt-2">
+        <div class="flex justify-between items-center"> 
             @role('admin')
                 <button class="px-6 py-3 bg-blue-600 rounded-md text-white font-medium tracking-wide hover:bg-blue-500">
                     <a href="{{ route('paket.create') }}">Tambah Paket</a>
