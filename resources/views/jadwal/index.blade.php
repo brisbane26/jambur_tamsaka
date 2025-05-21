@@ -58,7 +58,7 @@
 
             /* Kotak tanggal biru jika ada event */
             .fc-day.has-event {
-                background-color: #007bff !important;
+                background-color: #5C1515 !important;
                 color: #fff !important;
                 position: relative;
             }

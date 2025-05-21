@@ -19,6 +19,10 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
+                <!-- Toastr CSS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+        <!-- Toastr JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     </head>
     <body>
         <!-- Tostr Link -->
@@ -89,6 +93,18 @@
             }
         @endif
         </script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    @if (session('notification'))
+                        toastr.options = {
+                            "closeButton": true,
+                            "progressBar": true
+                        };
+
+                        toastr["{{ session('notification')['alert-type'] }}"]("{{ session('notification')['message'] }}");
+                    @endif
+                });
+            </script>
 
 
     </body>

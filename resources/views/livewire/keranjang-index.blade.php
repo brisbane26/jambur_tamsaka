@@ -18,7 +18,7 @@
             <tr class="border-t border-gray-200 hover:bg-gray-50">
                 <td class="py-3 px-4 border">{{ $loop->iteration }}</td>
                 <td class="py-3 px-4 border">
-                    <img src="{{ $keranjang->paket->gambar_url }}" alt="{{ $keranjang->paket->nama_paket }}" class="w-20 h-20 object-cover rounded">
+                    <img src="{{ asset('images/' . $keranjang->paket->gambar) }}" alt="{{ $keranjang->paket->nama_paket }}" class="w-20 h-20 object-cover rounded">
                 </td>
                 <td class="py-3 px-4 border">{{ $keranjang->paket->nama_paket }}</td>
                 <td class="py-3 px-4 border">
