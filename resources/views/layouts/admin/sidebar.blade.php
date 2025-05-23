@@ -28,6 +28,17 @@
     <span class="mx-3">Dashboard</span>
 </a>
 
+<a 
+    class="flex items-center px-6 py-2 mt-2 rounded transition-colors duration-200
+        {{ request()->is('laporan') ? 'bg-[#907878] text-white' : 'bg-[#5C1515] text-white' }}
+        hover:bg-[#6d3d3d]" 
+    href="/laporan">
+
+    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2a4 4 0 018 0v2M5 20h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v11a2 2 0 002 2z" />
+    </svg>
+    <span class="mx-3">Laporan</span>
+</a>
 @endrole
 
 @role('customer')

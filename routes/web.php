@@ -138,8 +138,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 
-    Route::get('/contact-us', function () {
-        $title = "Contact Us"; // Atur nilai variabel title
-        return view('contact.index', compact('title')); // Kirim variabel ke view
-    });
+Route::get('/contact-us', function () {
+    $title = "Contact Us"; // Atur nilai variabel title
+    return view('contact.index', compact('title')); // Kirim variabel ke view
+});
+
+Route::get('/laporan', [PesananController::class, 'laporan'])->name('laporan.index');
+Route::get('/{pesanan}', [PesananController::class, 'detail'])->name('laporan.detail');
+Route::get('/paket/search', [PaketController::class, 'search'])->name('paket.search');
+
 require __DIR__.'/auth.php';
