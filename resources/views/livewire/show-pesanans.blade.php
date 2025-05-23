@@ -124,29 +124,5 @@
     <div class="mt-4">
         {{ $pesanans->links() }}
     </div>
-        @if(session()->has('notification'))
-        <div class="fixed top-4 right-4 z-50">
-            <div class="px-4 py-3 rounded shadow-lg 
-                @if(session('notification.alert-type') === 'success') bg-green-100 text-green-800 border-green-200
-                @elseif(session('notification.alert-type') === 'error') bg-red-100 text-red-800 border-red-200
-                @else bg-blue-100 text-blue-800 border-blue-200 @endif
-                border">
-                <p>{{ session('notification.message') }}</p>
-            </div>
-        </div>
         
-        <script>
-document.addEventListener('livewire:load', function () {
-    Livewire.hook('message.processed', (message, component) => {
-        const notif = document.querySelector('.fixed.top-4.right-4');
-        if (notif) {
-            setTimeout(() => {
-                notif.remove();
-            }, 3000);
-        }
-    });
-});
-
-        </script>
-    @endif
 </div>

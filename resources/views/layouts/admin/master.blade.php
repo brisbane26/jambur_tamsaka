@@ -1,52 +1,54 @@
 <!DOCTYPE html>
 <html lang="{{ $page->language ?? 'en' }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <meta name="referrer" content="always">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="referrer" content="always">
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <title>{{ config('app.name', 'Laravel') }}</title>
 
-        <!-- Icons -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-        @livewireStyles
-                <!-- Toastr CSS -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
-        <!-- Toastr JS -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    </head>
-    <body>
-        <!-- Tostr Link -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
-        <div x-data="{ sidebarOpen: false }" class="flex h-screen bg-gray-200 font-roboto">
-            @include('layouts.admin.sidebar')
-            
-            <div class="flex-1 flex flex-col overflow-hidden">
-                @include('layouts.admin.header')
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
+    <!-- Toastr CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+</head>
 
-                <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
-                    <div class="container mx-auto px-6 py-8">
-                        {{ $slot }}
-                        @livewireScripts
-                    </div>
-                </main>
-            </div>
+<body>
+    <!-- Tostr Link -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+
+    <div x-data="{ sidebarOpen: false }" class="flex h-screen bg-gray-200 font-roboto">
+        @include('layouts.admin.sidebar')
+
+        <div class="flex-1 flex flex-col overflow-hidden">
+            @include('layouts.admin.header')
+
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
+                <div class="container mx-auto px-6 py-8">
+                    {{ $slot }}
+                    @livewireScripts
+                </div>
+            </main>
         </div>
-        
-        <!-- Toastr -->
-        <script>
+    </div>
+
+    <!-- Toastr -->
+    <script>
         function toggleDeleteModal(id) {
             const modalDelete = document.getElementById('deleteModal' + id);
             modalDelete.classList.toggle('hidden');
@@ -92,25 +94,37 @@
                     break;
             }
         @endif
-        </script>
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    @if (session('notification'))
-                        toastr.options = {
-                            "closeButton": true,
-                            "progressBar": true
-                        };
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('notification'))
+                toastr.options = {
+                    "closeButton": true,
+                    "progressBar": true
+                };
 
-                        toastr["{{ session('notification')['alert-type'] }}"]("{{ session('notification')['message'] }}");
-                    @endif
-                });
+                toastr["{{ session('notification')['alert-type'] }}"]("{{ session('notification')['message'] }}");
+            @endif
+        });
 
-                        document.addEventListener('livewire:initialized', () => {
+        document.addEventListener('livewire:initialized', () => {
             Livewire.on('show-toast', (event) => {
                 toastr[event.type](event.message);
             });
-            </script>
+
+            Livewire.on('showToast', (event) => { // Tambahkan handler untuk event 'showToast'
+                toastr.options = {
+                    "closeButton": true,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "timeOut": 5000
+                };
+                toastr[event.type](event.message);
+            });
+        });
+    </script>
 
 
-    </body>
+</body>
+
 </html>
