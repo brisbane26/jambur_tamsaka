@@ -11,6 +11,7 @@ use App\Models\Pembayaran;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class PesananController extends Controller
 {
@@ -155,5 +156,46 @@ public function history(Request $request)
 
     return view('pesanan.history', compact('pesanans', 'statusFilter'));
 }
+
+public function laporan(Request $request)
+{
+    $filter = $request->input('filter'); // minggu, bulan, tahun
+
+    $query = Pesanan::with(['user', 'jadwal'])->where('status', 'selesai');
+
+    if ($filter === 'minggu') {
+        $query->whereBetween('created_at', [
+            Carbon::now()->startOfWeek(),
+            Carbon::now()->endOfWeek()
+        ]);
+    } elseif ($filter === 'bulan') {
+        $query->whereMonth('created_at', Carbon::now()->month)
+              ->whereYear('created_at', Carbon::now()->year);
+    } elseif ($filter === 'tahun') {
+        $query->whereYear('created_at', Carbon::now()->year);
+    }
+
+    $pesanans = $query->orderBy('created_at', 'desc')->get();
+
+    $totalPendapatan = $pesanans->sum('total_keuntungan');
+
+    return view('laporan.index', compact('pesanans', 'filter', 'totalPendapatan'));
+}
+
+
+ public function detail(Pesanan $pesanan)
+    {
+        // Authorization dengan @role di blade atau middleware
+        if (Auth::user()->hasRole('customer') && $pesanan->user_id != Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $pesanan->load(['detailPesanan.paket', 'jadwal', 'pembayaran']);
+
+        return view('laporan.detail', [
+            'pesanan' => $pesanan,
+            'isAdmin' => Auth::user()->hasRole('admin')
+        ]);
+    }
 
 }
