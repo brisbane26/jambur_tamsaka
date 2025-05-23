@@ -11,15 +11,23 @@ class PaketController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $paket = Paket::with('kategori')->get();
-        
+public function index(Request $request)
+{
+    $query = Paket::with('kategori'); // eager loading kategori
 
-        $kategori = Kategori::all();
-        return view('paket.index', compact('paket', 'kategori'));
-                
+    if ($request->has('search') && $request->search != '') {
+        $search = $request->search;
+        $query->where('nama_paket', 'like', "%{$search}%");
+        // bisa juga cari di deskripsi, misal:
+        // ->orWhere('deskripsi', 'like', "%{$search}%");
     }
+
+    $paket = $query->get();
+
+    $kategori = Kategori::all();
+    return view('paket.index', compact('paket', 'kategori'));
+}
+
 
 public function dashboard(Request $request)
 {
