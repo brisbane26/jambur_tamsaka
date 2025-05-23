@@ -14,8 +14,8 @@
 <body class="bg-gray-100 text-gray-800">
 
   <!-- nav bar section - Changed to red theme -->
-<nav class="flex flex-wrap items-center justify-between p-3" style="background-color:#5c1515;color:white;">
-    <div class="text-xl font-bold">Tamsaka</div>
+<nav class="flex flex-wrap items-center justify-between p-3 sticky top-0 z-50 transition-all duration-500" style="background-color:#5c1515;color:white;">
+    <div class="text-xl font-bold cursor-pointer" onclick="scrollToSection('home')">Tamsaka</div>
     <div class="flex md:hidden">
         <button id="hamburger">
           <img class="toggle block" src="https://img.icons8.com/fluent-systems-regular/2x/menu-squared-2.png" width="40" height="40" />
@@ -23,11 +23,11 @@
         </button>
     </div>
     <div class="toggle hidden w-full md:w-auto md:flex text-right text-bold mt-5 md:mt-0 md:border-none">
-        <a href="#home" class="block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none">Home</a>
-        <a href="#services" class="block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none">Paket</a>
-        <a href="#aboutus" class="block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none">About us</a>
-        <a href="#gallery" class="block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none">Gallery</a>
-        <a href="#contactUs" class="block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none">Visit Us</a>
+        <a href="#home" class="nav-link block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none transition-colors duration-300">Home</a>
+        <a href="#services" class="nav-link block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none transition-colors duration-300">Paket</a>
+        <a href="#aboutus" class="nav-link block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none transition-colors duration-300">About us</a>
+        <a href="#gallery" class="nav-link block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none transition-colors duration-300">Gallery</a>
+        <a href="#contactUs" class="nav-link block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none transition-colors duration-300">Visit Us</a>
     </div>
 
     <div class="toggle w-full text-end hidden md:flex md:w-auto px-2 py-2 md:rounded">
@@ -82,6 +82,33 @@
       <!-- Gambar -->
       <div class="mt-12 md:mt-0">
         <img src="https://images.unsplash.com/photo-1531973576160-7125cd663d86" alt="About Us Image" class="object-cover rounded-lg shadow-md w-full border-4 border-red-100">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Aturan Pemesanan Section -->
+<section class="py-12 bg-white flex justify-center">
+  <div class="w-full max-w-7xl px-4">
+    <div class="relative rounded-2xl shadow-lg bg-gradient-to-br from-[#f8d7da] via-[#fff] to-[#f3eaea] border-l-8 border-[#5c1515] mx-auto" style="width:100%;">
+      <div class="p-8">
+        <h2 class="text-2xl md:text-3xl font-bold mb-4 text-[#5c1515] flex items-center">
+          <svg class="w-8 h-8 mr-2 text-[#5c1515]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Aturan Pemesanan Jambur
+        </h2>
+        <ul class="list-disc pl-6 text-gray-800 text-lg space-y-2">
+          <li><span class="font-semibold text-[#5c1515]">Pemesanan gedung</span> hanya dapat dilakukan minimal <span class="font-bold">3 hari setelah hari ini</span>.</li>
+          <li><span class="font-semibold text-[#5c1515]">Pembatalan pesanan</span> hanya dapat dilakukan maksimal <span class="font-bold">H-2 sebelum hari acara</span>.</li>
+          <li><span class="font-semibold text-[#5c1515]">Pembayaran cash</span> wajib dilakukan <span class="font-bold">langsung di kantor Jambur</span> (tidak menerima pembayaran cash secara online).</li>
+        </ul>
+        <div class="mt-6 flex items-center bg-[#f3eaea] rounded-lg p-4">
+          <svg class="w-6 h-6 text-[#a94442] mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7" />
+          </svg>
+          <span class="text-[#5c1515] font-medium">Untuk pembayaran cash, silakan datang ke kantor Jambur Tamsaka sesuai jam kerja.</span>
+        </div>
       </div>
     </div>
   </div>
@@ -152,9 +179,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
       <!-- Wedding Card 1 -->
       <div class="gallery-item wedding bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-        <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" 
-             alt="Wedding at Jambur Tamsaka" 
-             class="w-full h-56 object-cover">
+        <img src="{{ asset('images/perayaan_pernikahan.jpg') }}" alt="Wedding at Jambur Tamsaka" class="w-full h-56 object-cover">
         <div class="p-6 text-center">
           <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Wedding Celebration</h4>
           <p class="text-gray-700 text-base">Beautiful wedding moments at our venue</p>
@@ -163,31 +188,25 @@
 
       <!-- Wedding Card 2 -->
       <div class="gallery-item wedding bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-        <img src="https://images.unsplash.com/photo-1523438885200-e635ba2c371e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" 
-             alt="Wedding Decoration" 
-             class="w-full h-56 object-cover">
+        <img src="{{ asset('images/dekorasi.jpg') }}" alt="Wedding Decoration" class="w-full h-56 object-cover">
         <div class="p-6 text-center">
-          <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Wedding Decoration</h4>
+          <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Dekorasi</h4>
           <p class="text-gray-700 text-base">Elegant decoration setup</p>
         </div>
       </div>
 
       <!-- Event Card 1 -->
       <div class="gallery-item event bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-        <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" 
-             alt="Cultural Event" 
-             class="w-full h-56 object-cover">
+        <img src="{{ asset('images/adat_sip.png') }}" alt="Cultural Event" class="w-full h-56 object-cover">
         <div class="p-6 text-center">
-          <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Cultural Event</h4>
+          <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Adat</h4>
           <p class="text-gray-700 text-base">Traditional performances</p>
         </div>
       </div>
 
       <!-- Event Card 2 -->
       <div class="gallery-item event bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-        <img src="https://images.unsplash.com/photo-1492681290082-e932832941e6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" 
-             alt="Music Performance" 
-             class="w-full h-56 object-cover">
+        <img src="{{ asset('images/musik.png') }}" alt="Music Performance" class="w-full h-56 object-cover">
         <div class="p-6 text-center">
           <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Music Performance</h4>
           <p class="text-gray-700 text-base">Live music entertainment</p>
@@ -196,79 +215,60 @@
 
       <!-- Venue Card 1 -->
       <div class="gallery-item venue bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-        <img src="https://images.unsplash.com/photo-1575425186775-b8de9a427e67?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" 
-             alt="Venue Overview" 
-             class="w-full h-56 object-cover">
+        <img src="{{ asset('images/katering.png') }}" alt="Venue Overview" class="w-full h-56 object-cover">
         <div class="p-6 text-center">
-          <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Venue Overview</h4>
+          <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Katering</h4>
           <p class="text-gray-700 text-base">Our beautiful venue space</p>
         </div>
       </div>
 
       <!-- Venue Card 2 -->
       <div class="gallery-item venue bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-        <img src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" 
-             alt="Outdoor Area" 
-             class="w-full h-56 object-cover">
+        <img src="{{ asset('images/outdoor.jpg') }}" alt="Outdoor Area" class="w-full h-56 object-cover">
         <div class="p-6 text-center">
           <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Outdoor Area</h4>
           <p class="text-gray-700 text-base">Spacious outdoor setting</p>
         </div>
       </div>
     </div>
-
-    <!-- View More Button -->
-    <div class="text-center mt-10">
-      <button class="px-6 py-3 font-bold rounded-full hover:bg-[#7a2323] transition duration-200" style="background-color:#5c1515;color:white;">
-        View More Photos
-      </button>
-    </div>
   </div>
 </section>
 
 <!-- Facility Section - Updated with red theme -->
-<div class="mt-20 px-4 bg-gray-50 py-12">
-  <h2 class="text-3xl font-bold text-center mb-10" style="color:#5c1515;">Facility</h2>
+<div class="px-4 bg-gray-50 py-12">
+  <h2 class="text-3xl font-bold text-center mb-10" style="color:#5c1515;">Fasilitas</h2>
   
-  <!-- Baris pertama: 4 card ukuran sama seperti gallery -->
+  <!-- Baris pertama: 4 card ukuran sedikit lebih besar -->
   <div class="flex justify-center flex-wrap gap-8 mb-8 max-w-screen-xl mx-auto">
-    <div class="bg-white w-64 h-64 rounded-lg shadow-md hover:shadow-lg transition p-6 text-center border-t-4" style="border-color:#5c1515;">
-      <div class="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4" style="background-color:#f3eaea;">
-        <svg class="w-8 h-8" style="color:#5c1515;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-        </svg>
+    <div class="bg-white w-72 h-72 rounded-lg shadow-md hover:shadow-lg transition p-7 text-center border-t-4" style="border-color:#5c1515;">
+      <div class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 overflow-hidden bg-[#f3eaea]">
+        <img src="{{ asset('images/kantor.jpg') }}" alt="Spacious Hall" class="object-cover w-full h-full" />
       </div>
-      <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Spacious Hall</h3>
+      <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Kantor</h3>
       <p class="text-gray-700">Large area for various events</p>
     </div>
     
-    <div class="bg-white w-64 h-64 rounded-lg shadow-md hover:shadow-lg transition p-6 text-center border-t-4" style="border-color:#5c1515;">
-      <div class="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4" style="background-color:#f3eaea;">
-        <svg class="w-8 h-8" style="color:#5c1515;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-        </svg>
+    <div class="bg-white w-72 h-72 rounded-lg shadow-md hover:shadow-lg transition p-7 text-center border-t-4" style="border-color:#5c1515;">
+      <div class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 overflow-hidden bg-[#f3eaea]">
+        <img src="{{ asset('images/kamar_mandi.jpg') }}" alt="Complete Equipment" class="object-cover w-full h-full" />
       </div>
-      <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Complete Equipment</h3>
+      <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Kamar Mandi</h3>
       <p class="text-gray-700">Tables, chairs, and sound system</p>
     </div>
     
-    <div class="bg-white w-64 h-64 rounded-lg shadow-md hover:shadow-lg transition p-6 text-center border-t-4" style="border-color:#5c1515;">
-      <div class="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4" style="background-color:#f3eaea;">
-        <svg class="w-8 h-8" style="color:#5c1515;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
+    <div class="bg-white w-72 h-72 rounded-lg shadow-md hover:shadow-lg transition p-7 text-center border-t-4" style="border-color:#5c1515;">
+      <div class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 overflow-hidden bg-[#f3eaea]">
+        <img src="{{ asset('images/kantin.jpg') }}" alt="Affordable Price" class="object-cover w-full h-full" />
       </div>
-      <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Affordable Price</h3>
+      <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Kantin</h3>
       <p class="text-gray-700">Competitive packages</p>
     </div>
     
-    <div class="bg-white w-64 h-64 rounded-lg shadow-md hover:shadow-lg transition p-6 text-center border-t-4" style="border-color:#5c1515;">
-      <div class="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4" style="background-color:#f3eaea;">
-        <svg class="w-8 h-8" style="color:#5c1515;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
-        </svg>
+    <div class="bg-white w-72 h-72 rounded-lg shadow-md hover:shadow-lg transition p-7 text-center border-t-4" style="border-color:#5c1515;">
+      <div class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 overflow-hidden bg-[#f3eaea]">
+        <img src="{{ asset('images/parkiran.jpg') }}" alt="Decoration" class="object-cover w-full h-full" />
       </div>
-      <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Decoration</h3>
+      <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Parkiran</h3>
       <p class="text-gray-700">Beautiful setup options</p>
     </div>
   </div>
@@ -278,7 +278,7 @@
 <section class="bg-gray-50">
     <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:py-20 lg:px-8">
         <div class="max-w-2xl lg:max-w-4xl mx-auto text-center">
-            <h2 class="text-3xl font-extrabold text-red-700" id="contactUs">Visit Our Location</h2>
+            <h2 class="text-3xl font-bold mb-4" style="color:#5c1515;" id="contactUs">Visit Our Location</h2>
             <p class="mt-3 text-lg text-gray-600">Let us serve you the best</p>
         </div>
         <div class="mt-8 lg:mt-20">
@@ -286,11 +286,11 @@
                 <div>
                     <div class="max-w-full mx-auto rounded-lg overflow-hidden bg-white shadow-md p-6">
                         <div class="border-b border-gray-200 px-6 py-4">
-                            <h3 class="text-xl font-bold text-red-700">Contact</h3>
+                            <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Contact</h3>
                             <p class="mt-2 font-bold text-gray-600"><a href="tel:+123" class="hover:text-red-700">Phone: +61 811 1111 1111</a></p>
                         </div>
                         <div class="px-6 py-4">
-                            <h3 class="text-xl font-bold text-red-700">Our Address</h3>
+                            <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Our Address</h3>
                             <p class="mt-2 text-gray-700">Jl. Jamin Ginting No.KM.11, RW.5, Kemenangan Tani, Kec. Medan Tuntungan, Kota Medan, Sumatera Utara 20135</p>
                         </div>
                     </div>
@@ -349,7 +349,33 @@
     </footer>
 </section>
 
+<!-- Tombol Back to Top -->
+<button id="backToTop" class="fixed bottom-8 right-8 z-50 bg-[#5c1515] text-white p-3 rounded-full shadow-lg hover:bg-[#a94442] transition-all duration-300 hidden" title="Back to Top">
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+  </svg>
+</button>
+
 <script>
+    // Smooth scroll for nav links
+    function scrollToSection(id) {
+      const el = document.getElementById(id) || document.querySelector(`[id='${id}']`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          e.preventDefault();
+          const id = href.replace('#', '');
+          scrollToSection(id);
+        }
+      });
+    });
+
+    // Hamburger menu
     document.getElementById("hamburger").onclick = function toggleMenu() {
         const navToggle = document.getElementsByClassName("toggle");
         for (let i = 0; i < navToggle.length; i++) {
@@ -360,11 +386,9 @@
     // Gallery filter functionality
     const galleryFilters = document.querySelectorAll('.gallery-filter');
     const galleryItems = document.querySelectorAll('.gallery-item');
-    
     galleryFilters.forEach(filter => {
       filter.addEventListener('click', function() {
         const filterValue = this.getAttribute('data-filter');
-        
         // Update active button
         galleryFilters.forEach(f => {
           if (f === this) {
@@ -375,7 +399,6 @@
             f.classList.add('text-red-700', 'hover:bg-red-50');
           }
         });
-        
         // Filter items
         galleryItems.forEach(item => {
           if (filterValue === 'all' || item.classList.contains(filterValue)) {
@@ -385,6 +408,19 @@
           }
         });
       });
+    });
+
+    // Back to Top button functionality
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 400) {
+        backToTop.classList.remove('hidden');
+      } else {
+        backToTop.classList.add('hidden');
+      }
+    });
+    backToTop.addEventListener('click', function() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 </script>
 </body>
