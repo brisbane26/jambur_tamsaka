@@ -104,6 +104,11 @@
                         toastr["{{ session('notification')['alert-type'] }}"]("{{ session('notification')['message'] }}");
                     @endif
                 });
+
+                        document.addEventListener('livewire:initialized', () => {
+            Livewire.on('show-toast', (event) => {
+                toastr[event.type](event.message);
+            });
             </script>
 
 

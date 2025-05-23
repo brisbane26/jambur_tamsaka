@@ -22,16 +22,29 @@ class KeranjangController extends Controller
         return view('keranjang.index', compact('keranjangs', 'totalHarga'));
     }
 
-public function checkout_index(){
-    $keranjangs = Keranjang::with('paket')
+public function checkout_index()
+{
+    $keranjangs = Keranjang::with(['paket', 'paket.kategori'])
         ->where('user_id', Auth::id())
         ->get();
         
+    // Validasi minimal satu paket gedung
+    $hasGedung = $keranjangs->contains(function ($item) {
+        return $item->paket->kategori->nama_kategori === 'Gedung';
+    });
+
+    if (!$hasGedung) {
+        return redirect()->back()->with([
+            'message' => 'Silakan pilih minimal satu paket gedung',
+            'alert-type' => 'error'
+        ]);
+    }
+
     $totalHarga = $keranjangs->sum(function($item) {
         return $item->paket->harga_jual * $item->kuantitas;
     });
 
-    $banks = Bank::all(); // Ambil data bank dari database
+    $banks = Bank::all();
 
     return view('checkout.index', compact('keranjangs', 'totalHarga', 'banks'));
 }
@@ -43,33 +56,72 @@ public function checkout_store(Request $request)
         'tanggal_acara' => 'required|date|after_or_equal:' . now()->addDays(3)->toDateString(),
         'metode_bayar' => 'required|in:cash,transfer',
         'bukti_transfer' => 'required_if:metode_bayar,transfer|image|mimes:jpeg,png,jpg|max:2048',
-    ], [
-        'tanggal_acara.after_or_equal' => 'Tanggal acara minimal harus 3 hari setelah hari ini.',
     ]);
 
-    // Check date availability
-    $isBooked = Jadwal::where('tanggal', $request->tanggal_acara)->exists();
+    // Ambil ID gedung utama dan resepsi
+    $gedungUtamaId = Paket::where('nama_paket', 'Gedung Utama')->value('id');
+    $gedungResepsiId = Paket::where('nama_paket', 'Gedung Resepsi')->value('id');
 
-    if ($isBooked) {
-        return redirect()->back()->withErrors([
-            'tanggal_acara' => 'Tanggal ini sudah dipesan oleh orang lain.'
-        ])->withInput();
+    // Cek ketersediaan gedung di tanggal yang diminta
+    $gedungUtamaTerpakai = DetailPesanan::whereHas('pesanan.jadwal', function($q) use ($request) {
+            $q->where('tanggal', $request->tanggal_acara);
+        })
+        ->where('paket_id', $gedungUtamaId)
+        ->exists();
+
+    $gedungResepsiTerpakai = DetailPesanan::whereHas('pesanan.jadwal', function($q) use ($request) {
+            $q->where('tanggal', $request->tanggal_acara);
+        })
+        ->where('paket_id', $gedungResepsiId)
+        ->exists();
+
+    // Cek gedung yang dipesan di keranjang
+    $keranjangGedung = Keranjang::where('user_id', auth()->id())
+        ->whereHas('paket.kategori', function($q) {
+            $q->where('nama_kategori', 'Gedung');
+        })
+        ->pluck('paket_id')
+        ->toArray();
+
+    $pesanGedungUtama = in_array($gedungUtamaId, $keranjangGedung);
+    $pesanGedungResepsi = in_array($gedungResepsiId, $keranjangGedung);
+
+    // Validasi ketersediaan
+    if ($gedungUtamaTerpakai && $gedungResepsiTerpakai) {
+        if ($pesanGedungUtama || $pesanGedungResepsi) {
+            return back()->withErrors([
+                'tanggal_acara' => 'Gedung utama dan gedung resepsi sudah dipesan pada tanggal yang sama'
+            ]);
+        }
+    } elseif ($gedungUtamaTerpakai && $pesanGedungUtama) {
+        return back()->withErrors([
+            'tanggal_acara' => 'Gedung utama sudah dipesan pada tanggal yang sama'
+        ]);
+    } elseif ($gedungResepsiTerpakai && $pesanGedungResepsi) {
+        return back()->withErrors([
+            'tanggal_acara' => 'Gedung resepsi sudah dipesan pada tanggal yang sama'
+        ]);
     }
 
-    // Handle bukti transfer upload
+    // Validasi minimal 1 gedung dipesan
+    if (!$pesanGedungUtama && !$pesanGedungResepsi) {
+        return back()->withErrors([
+            'tanggal_acara' => 'Anda harus memesan minimal 1 gedung'
+        ]);
+    }
+
+    // Proses checkout
     $buktiPath = null;
     if ($request->hasFile('bukti_transfer')) {
         $buktiPath = $request->file('bukti_transfer')->store('bukti_transfer', 'public');
     }
     
-    // Create jadwal
     $jadwal = Jadwal::create([
         'tanggal' => $request->tanggal_acara,
         'nama_acara' => $request->nama_acara,
         'user_id' => Auth::id(),
     ]);
 
-    // Create pesanan
     $pesanan = Pesanan::create([
         'user_id' => Auth::id(),
         'jadwal_id' => $jadwal->id,
@@ -77,16 +129,13 @@ public function checkout_store(Request $request)
         'bukti_transaksi' => $buktiPath,
     ]);
 
-    // Create pembayaran
-    $pembayaran = Pembayaran::create([
+    Pembayaran::create([
         'pesanan_id' => $pesanan->id,
         'metode_bayar' => $request->metode_bayar,
         'status' => $request->metode_bayar == 'cash' ? 'Pending' : 'Pending',
     ]);
 
-    // Attach pakets to pesanan
-    $keranjangs = Keranjang::where('user_id', Auth::id())->get();
-    foreach ($keranjangs as $keranjang) {
+    foreach (Keranjang::where('user_id', Auth::id())->get() as $keranjang) {
         DetailPesanan::create([
             'pesanan_id' => $pesanan->id,
             'paket_id' => $keranjang->paket_id,
@@ -95,7 +144,6 @@ public function checkout_store(Request $request)
         ]);
     }
 
-    // Clear cart
     Keranjang::where('user_id', Auth::id())->delete();
 
     return redirect()->route('pesanan.index')->with([
@@ -103,7 +151,6 @@ public function checkout_store(Request $request)
         'alert-type' => 'success'
     ]);
 }
-
     public function store(Request $request)
 {
     $request->validate([
@@ -152,10 +199,30 @@ public function checkout_store(Request $request)
         return redirect()->route('keranjang.index');
     }
 
-    public function checkout(){
+public function checkout()
+{
+    // Cek apakah ada paket gedung di keranjang
+    $hasGedung = $this->keranjangs->contains(function ($item) {
+        // Debug: log isi paket dan kategori
+        \Log::debug('Paket:', [
+            'nama' => $item->paket->nama_paket,
+            'kategori' => $item->paket->kategori->nama_kategori ?? 'null'
+        ]);
+        
+        return $item->paket->kategori->nama_kategori === 'Gedung';
+    });
 
-
+    if (!$hasGedung) {
+        \Log::debug('Tidak ada paket gedung');
+        $this->dispatch('show-toast', [
+            'message' => 'Silakan pilih minimal satu paket gedung',
+            'type' => 'error'
+        ]);
+        return;
     }
+
+    return redirect()->route('checkout.index');
+}
 
     public function destroy(Keranjang $keranjang)
     {

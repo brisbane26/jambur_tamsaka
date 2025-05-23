@@ -25,14 +25,14 @@ class KeranjangIndex extends Component
         $this->loadKeranjang();
     }
 
-    public function loadKeranjang()
-    {
-        $this->keranjangs = Keranjang::where('user_id', auth()->id())
-            ->with('paket')
-            ->get();
+public function loadKeranjang()
+{
+    $this->keranjangs = Keranjang::where('user_id', auth()->id())
+        ->with(['paket', 'paket.kategori']) // Pastikan kategori dimuat
+        ->get();
 
-        $this->calculateTotal();
-    }
+    $this->calculateTotal();
+}
 
     public function calculateTotal()
     {
