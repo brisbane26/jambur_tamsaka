@@ -238,39 +238,34 @@
 <!-- Facility Section - Updated with red theme -->
 <div class="px-4 bg-gray-50 py-12">
   <h2 class="text-3xl font-bold text-center mb-10" style="color:#5c1515;">Fasilitas</h2>
-  
-  <!-- Baris pertama: 4 card ukuran sedikit lebih besar -->
   <div class="flex justify-center flex-wrap gap-8 mb-8 max-w-screen-xl mx-auto">
-    <div class="bg-white w-72 h-72 rounded-lg shadow-md hover:shadow-lg transition p-7 text-center border-t-4" style="border-color:#5c1515;">
-      <div class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 overflow-hidden bg-[#f3eaea]">
-        <img src="{{ asset('images/kantor.jpg') }}" alt="Spacious Hall" class="object-cover w-full h-full" />
+    <div class="bg-white w-72 h-80 rounded-lg shadow-md hover:shadow-lg transition p-0 text-center border-t-4 flex flex-col" style="border-color:#5c1515;">
+      <img src="{{ asset('images/kantor.jpg') }}" alt="Kantor" class="object-cover w-full h-48 rounded-t-lg" />
+      <div class="p-6 flex-1 flex flex-col justify-center">
+        <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Kantor</h3>
+        <p class="text-gray-700">Large area for various events</p>
       </div>
-      <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Kantor</h3>
-      <p class="text-gray-700">Large area for various events</p>
     </div>
-    
-    <div class="bg-white w-72 h-72 rounded-lg shadow-md hover:shadow-lg transition p-7 text-center border-t-4" style="border-color:#5c1515;">
-      <div class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 overflow-hidden bg-[#f3eaea]">
-        <img src="{{ asset('images/kamar_mandi.jpg') }}" alt="Complete Equipment" class="object-cover w-full h-full" />
+    <div class="bg-white w-72 h-80 rounded-lg shadow-md hover:shadow-lg transition p-0 text-center border-t-4 flex flex-col" style="border-color:#5c1515;">
+      <img src="{{ asset('images/kamar_mandi.jpg') }}" alt="Kamar Mandi" class="object-cover w-full h-48 rounded-t-lg" />
+      <div class="p-6 flex-1 flex flex-col justify-center">
+        <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Kamar Mandi</h3>
+        <p class="text-gray-700">Tables, chairs, and sound system</p>
       </div>
-      <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Kamar Mandi</h3>
-      <p class="text-gray-700">Tables, chairs, and sound system</p>
     </div>
-    
-    <div class="bg-white w-72 h-72 rounded-lg shadow-md hover:shadow-lg transition p-7 text-center border-t-4" style="border-color:#5c1515;">
-      <div class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 overflow-hidden bg-[#f3eaea]">
-        <img src="{{ asset('images/kantin.jpg') }}" alt="Affordable Price" class="object-cover w-full h-full" />
+    <div class="bg-white w-72 h-80 rounded-lg shadow-md hover:shadow-lg transition p-0 text-center border-t-4 flex flex-col" style="border-color:#5c1515;">
+      <img src="{{ asset('images/kantin.jpg') }}" alt="Kantin" class="object-cover w-full h-48 rounded-t-lg" />
+      <div class="p-6 flex-1 flex flex-col justify-center">
+        <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Kantin</h3>
+        <p class="text-gray-700">Competitive packages</p>
       </div>
-      <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Kantin</h3>
-      <p class="text-gray-700">Competitive packages</p>
     </div>
-    
-    <div class="bg-white w-72 h-72 rounded-lg shadow-md hover:shadow-lg transition p-7 text-center border-t-4" style="border-color:#5c1515;">
-      <div class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-4 overflow-hidden bg-[#f3eaea]">
-        <img src="{{ asset('images/parkiran.jpg') }}" alt="Decoration" class="object-cover w-full h-full" />
+    <div class="bg-white w-72 h-80 rounded-lg shadow-md hover:shadow-lg transition p-0 text-center border-t-4 flex flex-col" style="border-color:#5c1515;">
+      <img src="{{ asset('images/parkiran.jpg') }}" alt="Parkiran" class="object-cover w-full h-48 rounded-t-lg" />
+      <div class="p-6 flex-1 flex flex-col justify-center">
+        <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Parkiran</h3>
+        <p class="text-gray-700">Beautiful setup options</p>
       </div>
-      <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Parkiran</h3>
-      <p class="text-gray-700">Beautiful setup options</p>
     </div>
   </div>
 </div>

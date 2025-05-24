@@ -23,7 +23,7 @@
         </div>
 
         <!-- Status Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
             <!-- Pesanan Diproses -->
             <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
                 <div class="flex items-center">
@@ -72,7 +72,7 @@
     </div>
 
     <!-- Aturan Pemesanan Section -->
-<section class="py-12 bg-white flex justify-center">
+<section class="flex justify-center">
   <div class="w-full max-w-7xl px-4">
     <div class="relative rounded-2xl shadow-lg bg-gradient-to-br from-[#f8d7da] via-[#fff] to-[#f3eaea] border-l-8 border-[#5c1515] mx-auto" style="width:100%;">
       <div class="p-8">

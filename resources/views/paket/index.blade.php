@@ -95,7 +95,7 @@
                 <div id="deleteModal{{ $pkt->id }}" class="fixed inset-0 hidden overflow-y-auto bg-black/50">
                     <div class="flex items-center justify-center min-h-screen px-4">
                         <div class="relative w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
-                            <h2 class="text-lg mb-4 font-semibold">Apakah kamu yakin untuk menghapus?</h2>
+                            <h2 class="text-lg mb-4 font-semibold">Apakah Anda yakin untuk menghapus?</h2>
                             <div class="flex justify-end space-x-2">
                                 <button type="button" onclick="toggleDeleteModal({{ $pkt->id }})"
                                     class="px-4 py-2 text-gray-700 bg-gray-200 rounded hover:bg-gray-300">Cancel</button>
