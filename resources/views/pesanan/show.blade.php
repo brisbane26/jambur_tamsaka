@@ -34,21 +34,32 @@
                         <span>: {{ $pesanan->jadwal->nama_acara }}</span>
                     </div>
                     <div class="flex">
-                        <span class="w-1/3 font-medium">Tanggal Acara:</span>
-                        <span>: {{ $pesanan->jadwal->tanggal }}</span>
+                        <span class="w-1/3 font-medium">Tanggal Acara</span>
+                        <span>: {{ \Carbon\Carbon::parse($pesanan->jadwal->tanggal)->format('d M Y') }}</span>
                     </div>
                     <div class="flex">
-                        <span class="w-1/3 font-medium">Nama Pemesan:</span>
+                        <span class="w-1/3 font-medium">Nama Pemesan</span>
                         <span>: {{ $pesanan->user->nama_lengkap }}</span>
                     </div>
                     <div class="flex">
-                        <span class="w-1/3 font-medium">Nomor Telepon:</span>
+                        <span class="w-1/3 font-medium">Nomor Telepon</span>
                         <span>: {{ $pesanan->user->telepon }}</span>
                     </div>
                     @if($pesanan->status === 'ditolak' && $pesanan->alasan_tolak)
                     <div class="flex">
-                        <span class="w-1/3 font-medium">Alasan Penolakan:</span>
+                        <span class="w-1/3 font-medium">Alasan Penolakan</span>
                         <span class="text-red-600">: {{ $pesanan->alasan_tolak }}</span>
+                    </div>
+                    @endif
+                    @if($pesanan->detailPesanan->first()->catatan)
+                    <div class="mt-3">
+                        <div class="flex">
+                            <span class="w-1/3 font-medium">Catatan Admin</span>
+                            <span>:</span>
+                        </div>
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-1">
+                            <p class="text-blue-700 whitespace-pre-line">{{ $pesanan->detailPesanan->first()->catatan }}</p>
+                        </div>
                     </div>
                     @endif
                 </div>

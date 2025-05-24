@@ -26,44 +26,47 @@
                                     </span>
                                 @endforeach
                             </td>
-                            <td class="px-6 py-4">
-                                <div class="flex space-x-4">
-                                    <a href="{{ route('admin.users.show', $user) }}"
-                                       class="text-blue-600 hover:text-blue-800 font-medium">Lihat</a>
+<td class="px-6 py-4">
+    <div class="flex space-x-4">
+        <a href="{{ route('admin.users.show', $user) }}"
+           class="text-blue-600 hover:text-blue-800 font-medium">Lihat</a>
 
-                                    <!-- Trigger Delete Modal -->
-                                    <button type="button"
-                                            data-user-id="{{ $user->id }}"
-                                            data-user-name="{{ $user->username }}"
-                                            class="text-red-600 hover:text-red-800 font-medium"
-                                            onclick="openModal({{ $user->id }}, '{{ $user->username }}')">
-                                        Hapus
-                                    </button>
-                                </div>
+        <!-- Hanya tampilkan tombol hapus jika user BUKAN admin -->
+        @if(!$user->hasRole('admin'))
+            <button type="button"
+                    data-user-id="{{ $user->id }}"
+                    data-user-name="{{ $user->username }}"
+                    class="text-red-600 hover:text-red-800 font-medium"
+                    onclick="openModal({{ $user->id }}, '{{ $user->username }}')">
+                Hapus
+            </button>
+        @endif
+    </div>
 
-                                <!-- Modal Delete -->
-                                <div id="modal-{{ $user->id }}" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 z-50 flex items-center justify-center">
-                                    <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-                                        <h2 class="text-lg font-semibold mb-4">Konfirmasi Penghapusan</h2>
-                                        <p>Apakah Anda yakin ingin menghapus pengguna <strong>{{ $user->username }}</strong>?</p>
+    <!-- Modal Delete - Hanya ditampilkan jika user BUKAN admin -->
+    @if(!$user->hasRole('admin'))
+    <div id="modal-{{ $user->id }}" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
+            <h2 class="text-lg font-semibold mb-4">Konfirmasi Penghapusan</h2>
+            <p>Apakah Anda yakin ingin menghapus pengguna <strong>{{ $user->username }}</strong>?</p>
 
-                                        <div class="mt-6 flex justify-end space-x-4">
-                                            <button onclick="closeModal({{ $user->id }})"
-                                                    class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 text-sm">
-                                                Batal
-                                            </button>
-                                            <form action="{{ route('admin.users.destroy', $user) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm">
-                                                    Hapus
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Modal -->
-                            </td>
+            <div class="mt-6 flex justify-end space-x-4">
+                <button onclick="closeModal({{ $user->id }})"
+                        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 text-sm">
+                    Batal
+                </button>
+                <form action="{{ route('admin.users.destroy', $user) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm">
+                        Hapus
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endif
+</td>
                         </tr>
                     @empty
                         <tr>

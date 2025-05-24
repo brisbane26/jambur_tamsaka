@@ -56,9 +56,9 @@
                 min-width: 80px;
             }
 
-            /* Kotak tanggal biru jika ada event */
+            /* Kotak tanggal merah jika ada event */
             .fc-day.has-event {
-                background-color: #5C1515 !important;
+                background-color: #f87272 !important;
                 color: #fff !important;
                 position: relative;
             }
@@ -189,7 +189,7 @@
                         return false;
                     },
                     eventRender: function(event, element) {
-                        // Kotak tanggal biru untuk tanggal yang ada event
+                        // Kotak tanggal merah untuk tanggal yang ada event
                         var dateString = moment(event.start).format('YYYY-MM-DD');
                         var cell = $(".fc-day[data-date='" + dateString + "']");
                         cell.addClass('has-event');

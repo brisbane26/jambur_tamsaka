@@ -56,6 +56,7 @@ public function checkout_store(Request $request)
         'tanggal_acara' => 'required|date|after_or_equal:' . now()->addDays(3)->toDateString(),
         'metode_bayar' => 'required|in:cash,transfer',
         'bukti_transfer' => 'required_if:metode_bayar,transfer|image|mimes:jpeg,png,jpg|max:2048',
+        'catatan' => 'nullable|string|max:1000'
     ]);
 
     // Ambil ID gedung utama dan resepsi
@@ -141,6 +142,7 @@ public function checkout_store(Request $request)
             'paket_id' => $keranjang->paket_id,
             'kuantitas' => $keranjang->kuantitas,
             'harga' => $keranjang->paket->harga_jual,
+            'catatan' => Auth::user()->hasRole('admin') ? $request->catatan : null
         ]);
     }
 

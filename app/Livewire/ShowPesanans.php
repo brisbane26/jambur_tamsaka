@@ -28,7 +28,7 @@ class ShowPesanans extends Component
                 $query->where('status', $this->status);
             })
             ->whereNotIn('status', ['dibatalkan', 'ditolak'])
-            ->latest();
+            ->orderBy('id', 'asc');
 
         return view('livewire.show-pesanans', [
             'pesanans' => $query->paginate(10)
