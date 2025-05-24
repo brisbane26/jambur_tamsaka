@@ -121,6 +121,27 @@
             </div>
         </div>
 
+        <!-- Modal konfirmasi hapus -->
+        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Konfirmasi Hapus</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                Apakah Anda yakin ingin membatalkan acara ini?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Hapus</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
@@ -148,7 +169,7 @@
                 var calendar = $('#calendar').fullCalendar({
                     events: SITEURL + "/jadwal",
                     displayEventTime: false,
-                    selectable: false, // Nonaktifkan seleksi tanggal
+                    selectable: false,
                     editable: false,
                     eventDurationEditable: false,
                     header: {
@@ -157,15 +178,12 @@
                         right: 'month,agendaWeek,agendaDay'
                     },
                     dayClick: function(date, jsEvent, view) {
-                        // Hanya admin yang bisa interaksi
                         if (!isAdmin) return false;
                         
-                        // Cari event di tanggal yang diklik
                         var events = $('#calendar').fullCalendar('clientEvents', function(event) {
                             return moment(event.start).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD');
                         });
                         
-                        // Jika ada event, tampilkan modal edit
                         if (events.length > 0) {
                             var event = events[0];
                             $('#eventModalLabel').text('Kelola Acara');
@@ -189,16 +207,14 @@
                         return false;
                     },
                     eventRender: function(event, element) {
-                        // Kotak tanggal merah untuk tanggal yang ada event
                         var dateString = moment(event.start).format('YYYY-MM-DD');
                         var cell = $(".fc-day[data-date='" + dateString + "']");
                         cell.addClass('has-event');
-                        // Label acara putih, tulisan hitam
                         element.find('.fc-title').wrap('<span class="event-label"></span>');
                     }
                 });
 
-                // Handle update event
+                // Tombol Update Event
                 $('#updateEvent').click(function() {
                     var eventName = $('#eventName').val().trim();
                     var eventId = $('#eventId').val();
@@ -232,29 +248,34 @@
                     });
                 });
 
-                // Handle hapus event
+                // Tombol Hapus di modal utama → buka modal konfirmasi hapus
                 $('#deleteEvent').click(function() {
-                    if (confirm('Apakah Anda yakin ingin membatalkan acara ini?')) {
-                        var eventId = $('#eventId').val();
+                    $('#confirmDeleteModal').modal('show');
+                });
 
-                        $.ajax({
-                            url: SITEURL + "/jadwal",
-                            data: {
-                                id: eventId,
-                                type: 'delete'
-                            },
-                            type: "POST",
-                            success: function () {
-                                calendar.fullCalendar('removeEvents', eventId);
-                                $('#eventModal').modal('hide');
-                                toastr.success("Acara berhasil dibatalkan");
-                            },
-                            error: function (xhr) {
-                                var error = JSON.parse(xhr.responseText);
-                                toastr.error(error.error);
-                            }
-                        });
-                    }
+                // Tombol Hapus di modal konfirmasi → eksekusi hapus AJAX
+                $('#confirmDeleteBtn').click(function() {
+                    var eventId = $('#eventId').val();
+
+                    $.ajax({
+                        url: SITEURL + "/jadwal",
+                        data: {
+                            id: eventId,
+                            type: 'delete'
+                        },
+                        type: "POST",
+                        success: function () {
+                            calendar.fullCalendar('removeEvents', eventId);
+                            $('#eventModal').modal('hide');
+                            $('#confirmDeleteModal').modal('hide');
+                            toastr.success("Acara berhasil dibatalkan");
+                        },
+                        error: function (xhr) {
+                            var error = JSON.parse(xhr.responseText);
+                            toastr.error(error.error);
+                            $('#confirmDeleteModal').modal('hide');
+                        }
+                    });
                 });
             });
         </script>

@@ -40,6 +40,29 @@ public function checkout_index()
         ]);
     }
 
+     foreach ($keranjangs as $item) {
+        $kategori = $item->paket->kategori->nama_kategori;
+        $qty = $item->kuantitas;
+
+        $batas = [
+            'Catering' => ['min' => 50, 'max' => 2000],
+            'Salon' => ['min' => 1, 'max' => 1],
+            'Music' => ['min' => 1, 'max' => 1],
+            'Dekor' => ['min' => 1, 'max' => 1],
+            'Gedung' => ['min' => 1, 'max' => 1],
+        ];
+
+        $min = $batas[$kategori]['min'] ?? 1;
+        $max = $batas[$kategori]['max'] ?? 1000;
+
+        if ($qty < $min || $qty > $max) {
+            return redirect()->back()->with([
+                'message' => "Kuantitas paket {$item->paket->nama_paket} harus antara {$min} sampai {$max}.",
+                'alert-type' => 'error'
+            ]);
+        }
+    }
+
     $totalHarga = $keranjangs->sum(function($item) {
         return $item->paket->harga_jual * $item->kuantitas;
     });
