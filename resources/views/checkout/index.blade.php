@@ -41,6 +41,15 @@
                         @enderror
                     </div>
 
+                    @role('admin')
+                    <div class="mb-4">
+                        <label for="catatan" class="block text-gray-700 mb-2">Catatan Khusus (Untuk Pesanan Offline)</label>
+                        <textarea id="catatan" name="catatan" rows="3"
+                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Masukkan detail customer (nama, kontak, dll)"></textarea>
+                    </div>
+                    @endrole
+
                     <!-- Metode Pembayaran -->
                     <div class="mb-6">
                         <label class="block text-gray-700 mb-2">Metode Pembayaran</label>

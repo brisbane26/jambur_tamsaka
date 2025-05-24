@@ -151,7 +151,7 @@ public function history(Request $request)
         ->when($statusFilter, function ($query) use ($statusFilter) {
             $query->where('status', $statusFilter);
         })
-        ->latest()
+         ->orderBy('id', 'asc')
         ->paginate(10); // tambahkan pagination agar lebih rapi
 
     return view('pesanan.history', compact('pesanans', 'statusFilter'));

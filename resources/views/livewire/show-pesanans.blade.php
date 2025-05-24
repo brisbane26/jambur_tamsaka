@@ -18,14 +18,14 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        ID Pesanan
+                    </th>
                     @role('admin')
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Customer
                     </th>
                     @endrole
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        ID Pesanan
-                    </th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Tanggal Pesan
                     </th>
@@ -49,14 +49,14 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse ($pesanans as $pesanan)
                     <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            #{{ $pesanan->id }}
+                        </td>
                         @role('admin')
                         <td class="px-6 py-4 whitespace-nowrap">
                             {{ $pesanan->user->nama_lengkap }}
                         </td>
                         @endrole
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            #{{ $pesanan->id }}
-                        </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             {{ $pesanan->created_at->format('d M Y') }}
                         </td>
@@ -64,7 +64,7 @@
                             {{ $pesanan->jadwal->nama_acara }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            {{ $pesanan->jadwal->tanggal }}
+                        {{ \Carbon\Carbon::parse($pesanan->jadwal->tanggal)->format('d M Y') }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             Rp{{ number_format($pesanan->total_harga, 0, ',', '.') }}
@@ -124,29 +124,5 @@
     <div class="mt-4">
         {{ $pesanans->links() }}
     </div>
-        @if(session()->has('notification'))
-        <div class="fixed top-4 right-4 z-50">
-            <div class="px-4 py-3 rounded shadow-lg 
-                @if(session('notification.alert-type') === 'success') bg-green-100 text-green-800 border-green-200
-                @elseif(session('notification.alert-type') === 'error') bg-red-100 text-red-800 border-red-200
-                @else bg-blue-100 text-blue-800 border-blue-200 @endif
-                border">
-                <p>{{ session('notification.message') }}</p>
-            </div>
-        </div>
         
-        <script>
-document.addEventListener('livewire:load', function () {
-    Livewire.hook('message.processed', (message, component) => {
-        const notif = document.querySelector('.fixed.top-4.right-4');
-        if (notif) {
-            setTimeout(() => {
-                notif.remove();
-            }, 3000);
-        }
-    });
-});
-
-        </script>
-    @endif
 </div>

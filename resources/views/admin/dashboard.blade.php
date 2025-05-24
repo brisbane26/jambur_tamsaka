@@ -60,14 +60,14 @@
     <!-- Tabel Paket Terlaris Dinamis -->
     <div class="mt-8">
         <div class="bg-white rounded-lg shadow p-6">
-            <h4 class="text-lg font-semibold mb-4 text-gray-700">Paket Paling Sering Terjual</h4>
+            <h4 class="text-lg font-semibold mb-4 text-gray-700">Paket Paling Sering Dipesan</h4>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Paket</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Terjual</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">

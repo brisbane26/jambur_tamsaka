@@ -28,7 +28,7 @@ class ShowPesanans extends Component
                 $query->where('status', $this->status);
             })
             ->whereNotIn('status', ['dibatalkan', 'ditolak'])
-            ->latest();
+            ->orderBy('id', 'asc');
 
         return view('livewire.show-pesanans', [
             'pesanans' => $query->paginate(10)
@@ -44,26 +44,27 @@ class ShowPesanans extends Component
     }
 
     public function cancelPesanan()
-    {
-        $pesanan = Pesanan::find($this->selectedPesananId);
+{
+    $pesanan = Pesanan::find($this->selectedPesananId);
 
-        if ($pesanan && in_array($pesanan->status, ['menunggu', 'disetujui'])) {
-            $pesanan->status = 'dibatalkan';
-            $pesanan->save();
+    if ($pesanan && in_array($pesanan->status, ['menunggu', 'disetujui'])) {
+        $pesanan->status = 'dibatalkan';
+        $pesanan->save();
 
-            session()->flash('notification', [
-                'message' => 'Pesanan berhasil dibatalkan',
-                'alert-type' => 'success'
-            ]);
-        } else {
-            session()->flash('notification', [
-                'message' => 'Pesanan tidak dapat dibatalkan',
-                'alert-type' => 'error'
-            ]);
-        }
-
-        $this->showCancelModal = false;
-        $this->selectedPesananId = null;
+        // Menggunakan dispatch event Livewire
+        $this->dispatch('showToast', 
+            type: 'success',
+            message: 'Pesanan berhasil dibatalkan'
+        );
+    } else {
+        $this->dispatch('showToast', 
+            type: 'error',
+            message: 'Pesanan tidak dapat dibatalkan'
+        );
     }
+
+    $this->showCancelModal = false;
+    $this->selectedPesananId = null;
+}
 
 }
