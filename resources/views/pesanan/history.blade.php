@@ -10,7 +10,7 @@
         </div>
         <form method="GET" class="mb-4 flex items-center gap-4">
     <label for="status" class="font-medium">Filter Status:</label>
-    <select name="status" id="status" onchange="this.form.submit()" class="border rounded px-3 py-1">
+    <select name="status" id="status" onchange="this.form.submit()" class="border rounded px-3 py-1 w-40">
         <option value="">Semua</option>
         <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
         <option value="dibatalkan" {{ request('status') == 'dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
@@ -28,7 +28,7 @@
                             </th>
                             @role('admin')
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Customer
+                                Pemesan
                             </th>
                             @endrole
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">

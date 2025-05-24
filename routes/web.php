@@ -49,9 +49,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Route khusus customer
 Route::middleware(['auth', 'verified', 'role:customer'])->group(function () {
-    Route::get('/customer/dashboard', function () {
-        return view('customer.dashboard');
-    })->name('customer.dashboard');
+    // Route::get('/customer/dashboard', function () {
+    //     return view('customer.dashboard');
+    // })->name('customer.dashboard');
+
+    Route::get('/customer/dashboard', [PesananController::class, 'dashboard'])->name('customer.dashboard');
     
     // Route lain untuk customer bisa ditambahkan di sini
 });

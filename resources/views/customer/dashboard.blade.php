@@ -1,31 +1,30 @@
 <x-admin-layout>
-    
-<!-- Personalized Header -->
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-800">Halo, {{ auth()->user()->username }}</h1>
-                <p class="text-gray-600 mt-2">Selamat datang kembali di dashboard Anda</p>
-            </div>
-        </div>
-
-   <div class="p-6">
-    <!-- Banner Jambur & Pesan Sekarang -->
-    <div class="relative w-full h-[320px] md:h-[380px] rounded-xl overflow-hidden mb-8 shadow-lg">
-        <img 
-            src="{{ asset('images/Jambur.jpg') }}" 
-            alt="Jambur Tamsaka" 
-            class="object-cover object-[center_32%] w-full h-full" 
-        />
-        <div class="absolute inset-0 flex flex-col items-center justify-center text-center bg-black/30">
-            <h1 class="font-bold text-3xl md:text-5xl text-white drop-shadow-lg mb-2">Jambur Tamsaka</h1>
-            <p class="text-lg md:text-2xl text-white mb-6 drop-shadow">Solusi lengkap untuk semua kebutuhan acara Anda, dari adat hingga modern.</p>
-            <a href="{{ route('paket.index') }}" class="px-8 py-3 bg-white text-red-700 font-bold rounded-full shadow hover:bg-red-100 transition duration-200 text-lg">Pesan Sekarang</a>
+    <!-- Personalized Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">Halo, {{ auth()->user()->username }}</h1>
+            <p class="text-gray-600 mt-2">Selamat datang kembali di dashboard Anda</p>
         </div>
     </div>
 
+    <div class="p-6">
+        <!-- Banner Jambur -->
+        <div class="relative w-full h-[320px] md:h-[380px] rounded-xl overflow-hidden mb-8 shadow-lg">
+            <img 
+                src="{{ asset('images/Jambur.jpg') }}" 
+                alt="Jambur Tamsaka" 
+                class="object-cover object-[center_32%] w-full h-full" 
+            />
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-center bg-black/30">
+                <h1 class="font-bold text-3xl md:text-5xl text-white drop-shadow-lg mb-2">Jambur Tamsaka</h1>
+                <p class="text-lg md:text-2xl text-white mb-6 drop-shadow">Solusi lengkap untuk semua kebutuhan acara Anda, dari adat hingga modern.</p>
+                <a href="{{ route('paket.index') }}" class="px-8 py-3 bg-white text-red-700 font-bold rounded-full shadow hover:bg-red-100 transition duration-200 text-lg">Pesan Sekarang</a>
+            </div>
+        </div>
+
         <!-- Status Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <!-- Active Orders -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Pesanan Diproses -->
             <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
                 <div class="flex items-center">
                     <div class="bg-blue-100 p-3 rounded-full mr-4">
@@ -35,12 +34,12 @@
                     </div>
                     <div>
                         <p class="text-gray-500 text-sm">Pesanan Diproses</p>
-                        <p class="text-2xl font-bold text-gray-800">3</p>
+                        <p class="text-2xl font-bold text-gray-800">{{ $pesananDiproses }}</p>
                     </div>
                 </div>
             </div>
-            
-            <!-- Completed Orders -->
+
+            <!-- Pesanan Selesai -->
             <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500">
                 <div class="flex items-center">
                     <div class="bg-green-100 p-3 rounded-full mr-4">
@@ -50,12 +49,12 @@
                     </div>
                     <div>
                         <p class="text-gray-500 text-sm">Pesanan Selesai</p>
-                        <p class="text-2xl font-bold text-gray-800">15</p>
+                        <p class="text-2xl font-bold text-gray-800">{{ $pesananSelesai }}</p>
                     </div>
                 </div>
             </div>
-            
-            <!-- Total Spending -->
+
+            <!-- Total Pengeluaran -->
             <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-500">
                 <div class="flex items-center">
                     <div class="bg-purple-100 p-3 rounded-full mr-4">
@@ -63,72 +62,43 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
-                    <div>
+                    <div class="overflow-x-auto">
                         <p class="text-gray-500 text-sm">Total Pengeluaran</p>
-                        <p class="text-2xl font-bold text-gray-800">Rp 3.250.000</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Loyalty Points -->
-            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-amber-500">
-                <div class="flex items-center">
-                    <div class="bg-amber-100 p-3 rounded-full mr-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-gray-500 text-sm">Review (kalo ada)</p>
-                        <p class="text-2xl font-bold text-gray-800">1.250</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-            
-            <!-- Recommended Services -->
-            <div class="lg:col-span-2">
-                <h3 class="text-xl font-semibold text-gray-800 mb-4">Rekomendasi Untuk Anda</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Service 1 -->
-                    <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition duration-300">
-                        <div class="relative">
-                            <img src="{{ asset('images/jus.jpg') }}" alt="Cuci Mobil Premium" class="w-full h-40 object-cover">
-                            <span class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">Populer</span>
-                        </div>
-                        <div class="p-4">
-                            <h4 class="font-semibold text-lg mb-1">Jus</h4>
-                            <p class="text-gray-600 text-sm mb-3">Jeruk</p>
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <span class="font-bold text-blue-600">Rp 150.000</span>
-                                    <span class="text-gray-400 text-sm line-through ml-2">Rp 175.000</span>
-                                </div>
-                                <a href="#" class="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition">Pesan</a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Service 2 -->
-                    <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition duration-300">
-                        <div class="relative">
-                            <img src="{{ asset('images/saksang.jpg') }}" alt="Detailing Interior" class="w-full h-40 object-cover">
-                            <span class="absolute top-2 right-2 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">Baru</span>
-                        </div>
-                        <div class="p-4">
-                            <h4 class="font-semibold text-lg mb-1">Saksang</h4>
-                            <p class="text-gray-600 text-sm mb-3">Enak</p>
-                            <div class="flex justify-between items-center">
-                                <span class="font-bold text-blue-600">Rp 300.000</span>
-                                <a href="#" class="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition">Pesan</a>
-                            </div>
-                        </div>
+                        <p class="text-2xl font-bold text-gray-800 break-words max-w-full">Rp {{ number_format($totalPengeluaran, 0, ',', '.') }}</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Aturan Pemesanan Section -->
+<section class="py-12 bg-white flex justify-center">
+  <div class="w-full max-w-7xl px-4">
+    <div class="relative rounded-2xl shadow-lg bg-gradient-to-br from-[#f8d7da] via-[#fff] to-[#f3eaea] border-l-8 border-[#5c1515] mx-auto" style="width:100%;">
+      <div class="p-8">
+        <h2 class="text-2xl md:text-3xl font-bold mb-4 text-[#5c1515] flex items-center">
+          <svg class="w-8 h-8 mr-2 text-[#5c1515]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Aturan Pemesanan Jambur
+        </h2>
+        <ul class="list-disc pl-6 text-gray-800 text-lg space-y-2">
+          <li><span class="font-semibold text-[#5c1515]">Pemesanan gedung</span> hanya dapat dilakukan minimal <span class="font-bold">3 hari setelah hari ini</span>.</li>
+          <li><span class="font-semibold text-[#5c1515]">Pembatalan pesanan</span> hanya dapat dilakukan maksimal <span class="font-bold">H-2 sebelum hari acara</span>.</li>
+          <li><span class="font-semibold text-[#5c1515]">Pembayaran cash (tunai)</span> wajib dilakukan <span class="font-bold">langsung di kantor Jambur.</span></li>
+        </ul>
+        <div class="mt-6 flex items-center bg-[#f3eaea] rounded-lg p-4">
+          <svg class="w-6 h-6 text-[#a94442] mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7" />
+          </svg>
+          <span class="text-[#5c1515] font-medium">Untuk pembayaran cash, silakan datang ke kantor Jambur Tamsaka sesuai jam kerja.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <!-- Info Login -->
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-white overflow-hidden shadow-sm sm:rounded-lg">

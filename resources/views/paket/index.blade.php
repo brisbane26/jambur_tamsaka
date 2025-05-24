@@ -52,7 +52,7 @@
                 <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
                     <div class="h-56 bg-gray-100 flex items-center justify-center overflow-hidden">
                         @if ($pkt->gambar_url)
-                            <img src="{{ asset('images/' . $pkt->gambar) }}" alt="Gambar Paket" class="object-cover w-full h-full">
+                            <img src="{{ asset('images/' . $pkt->gambar) }}" alt="Gambar Paket" class="object-cover w-full h-full transition duration-300 ease-in-out hover:brightness-50">
                         @else
                             <span class="text-base text-gray-500">No Image</span>
                         @endif
@@ -68,7 +68,7 @@
                             <!-- Tombol Delete -->
                             <button onclick="toggleDeleteModal({{ $pkt->id }})"
                                 class="flex items-center justify-center px-2 py-1 bg-red-500 text-white text-xs font-semibold rounded-md hover:bg-red-600 transition duration-300 ease-in-out min-h-[28px]">
-                                <i class="bi bi-trash-fill mr-1"></i> Delete
+                                <i class="bi bi-trash-fill mr-1"></i> Hapus
                             </button>
 
                             <!-- Tombol Edit -->
@@ -84,7 +84,7 @@
                                 <input type="hidden" name="paket_id" value="{{ $pkt->id }}">
                                 <button type="submit"
                                     class="flex items-center justify-center w-full px-2 py-1 bg-green-500 text-white text-xs font-semibold rounded-md hover:bg-green-600 transition duration-300 ease-in-out min-h-[28px] whitespace-nowrap">
-                                    <i class="bi bi-cart-plus-fill mr-1"></i> Add to Cart
+                                    <i class="bi bi-cart-plus-fill mr-1"></i> Keranjang
                                 </button>
                             </form>
                         </div>
