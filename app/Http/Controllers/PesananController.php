@@ -25,7 +25,7 @@ class PesananController extends Controller
                 $query->where('user_id', $user->id);
             })
             ->whereIn('status', ['menunggu', 'disetujui'])
-            ->latest()
+            ->orderBy('id', 'asc')
             ->get();
 
         return view('pesanan.index', [
@@ -175,7 +175,7 @@ public function laporan(Request $request)
         $query->whereYear('created_at', Carbon::now()->year);
     }
 
-    $pesanans = $query->orderBy('created_at', 'desc')->get();
+    $pesanans = $query->orderBy('created_at', 'asc')->get();
 
     $totalPendapatan = $pesanans->sum('total_keuntungan');
 
@@ -197,5 +197,43 @@ public function laporan(Request $request)
             'isAdmin' => Auth::user()->hasRole('admin')
         ]);
     }
+
+    public function dashboardData()
+{
+    $user = Auth::user();
+
+    // Jumlah pesanan diproses (status menunggu)
+    $pesananDiproses = Pesanan::where('user_id', $user->id)
+        ->where('status', 'menunggu')
+        ->count();
+
+    // Jumlah pesanan selesai
+    $pesananSelesai = Pesanan::where('user_id', $user->id)
+        ->where('status', 'selesai')
+        ->count();
+
+    // Total pengeluaran user: jumlah semua harga paket * kuantitas dari detail pesanan pesanan user
+    // Kita join detailPesanan dan paket
+    $totalPengeluaran = Pesanan::where('user_id', $user->id)
+        ->whereIn('status', ['menunggu', 'disetujui', 'selesai']) // status pesanan yang dihitung (sesuaikan)
+        ->with('detailPesanan.paket')
+        ->get()
+        ->flatMap(function($pesanan) {
+            return $pesanan->detailPesanan;
+        })
+        ->reduce(function($carry, $detail) {
+            return $carry + ($detail->harga * $detail->kuantitas);
+        }, 0);
+
+    return compact('pesananDiproses', 'pesananSelesai', 'totalPengeluaran');
+}
+
+public function dashboard()
+{
+    $data = $this->dashboardData();
+    return view('customer.dashboard', $data);
+}
+
+
 
 }

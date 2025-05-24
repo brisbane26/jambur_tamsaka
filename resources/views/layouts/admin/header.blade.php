@@ -1,4 +1,4 @@
-<header class="flex items-center justify-between px-6 py-4 bg-white border-b-2 border-[#5C1515]">
+<header class="flex print:hidden items-center justify-between px-6 py-4 bg-white border-b-2 border-[#5C1515]">
     <div class="flex items-center">
         <!-- Sidebar Toggle Button -->
         <button @click="sidebarOpen = true" class="text-gray-500 focus:outline-none lg:hidden">

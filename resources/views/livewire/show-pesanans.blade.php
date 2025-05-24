@@ -3,9 +3,9 @@
             
 
 <div class="mb-4">
-            <label for="status" class="text-sm font-medium text-gray-700">Filter Status:</label>
+            <label for="status" class="font-medium text-gray-700">Filter Status:</label>
             <select wire:model.live="status"
-                class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring focus:ring-blue-200">
+                class="border border-gray-300 rounded-md px-3 py-2 focus:ring w-40 focus:ring-blue-200">
                 <option value="">Semua</option>
                 <option value="selesai">Selesai</option>
                 <option value="menunggu">Menunggu</option>
@@ -23,7 +23,7 @@
                     </th>
                     @role('admin')
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Customer
+                        Pemesan
                     </th>
                     @endrole
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">

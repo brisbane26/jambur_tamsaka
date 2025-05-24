@@ -1,13 +1,51 @@
+<style>
+@media print {
+    /* Gunakan seluruh lebar halaman kertas */
+    body {
+        zoom: 75%;
+    }
+
+    table {
+        width: 100%;
+        table-layout: auto;
+        font-size: 12px;
+    }
+
+    th, td {
+        padding: 4px 6px;
+        word-wrap: break-word;
+    }
+
+    .print\:hidden {
+        display: none !important;
+    }
+
+    .whitespace-nowrap {
+        white-space: normal !important;
+    }
+
+    /* Hapus pembatas atau margin yang menghalangi tabel */
+    .p-6, .px-6, .py-4 {
+        padding: 2px !important;
+    }
+
+    /* Gunakan font kecil agar semua kolom muat */
+    body, table {
+        font-size: 10px;
+    }
+}
+</style>
+
 <x-admin-layout>
     <div class="p-6">
         <div class="mb-6">
-            <h2 class="text-2xl font-bold">Laporan Pesanan</h2>
+            <h2 class="text-2xl font-bold">Laporan Keuntungan</h2>
             <div class="flex items-center justify-end mb-5">
             </div>
             <form action="{{ route('laporan.index') }}" method="GET" class="mb-4 flex items-center gap-4">
                 <label for="status" class="font-medium">Filter Waktu:</label>
                 <select name="filter" onchange="this.form.submit()"
-                    class="border rounded px-3 py-1">
+                    class="border rounded px-3 py-1 w-40">
                     <option value="">Semua</option>
                     <option value="minggu" {{ request('filter') == 'minggu' ? 'selected' : '' }}>Minggu Ini</option>
                     <option value="bulan" {{ request('filter') == 'bulan' ? 'selected' : '' }}>Bulan Ini</option>
@@ -17,15 +55,15 @@
         </div>
 
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
-            <div class="overflow-x-auto">
+            <div>
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Customer
+                                ID Pesanan
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                ID Pesanan
+                                Pemesan
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Nama Acara
@@ -34,15 +72,12 @@
                                 Tanggal Acara
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Pendapatan Bersih
-                            </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Pendapatan Kotor
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Status
+                                Pendapatan Bersih
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-6 py-3 print:hidden text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Aksi
                             </th>
                         </tr>
@@ -51,10 +86,10 @@
                         @forelse ($pesanans as $pesanan)
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    {{ $pesanan->user->nama_lengkap }}
+                                    #{{ $pesanan->id }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    #{{ $pesanan->id }}
+                                    {{ $pesanan->user->nama_lengkap }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     {{ $pesanan->jadwal->nama_acara }}
@@ -63,46 +98,45 @@
                                     {{ $pesanan->jadwal->tanggal }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    Rp{{ number_format($pesanan->total_keuntungan, 0, ',', '.') }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
                                     Rp{{ number_format($pesanan->total_harga, 0, ',', '.') }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                        @if($pesanan->status === 'menunggu') bg-yellow-100 text-yellow-800
-                                        @elseif($pesanan->status === 'disetujui') bg-blue-100 text-blue-800
-                                        @elseif($pesanan->status === 'ditolak') bg-red-100 text-red-800
-                                        @elseif($pesanan->status === 'selesai') bg-green-100 text-green-800
-                                        @elseif($pesanan->status === 'dibatalkan') bg-gray-100 text-gray-800
-                                        @else bg-gray-100 text-gray-800 @endif">
-                                        {{ ucfirst($pesanan->status) }}
-                                    </span>
+                                    Rp{{ number_format($pesanan->total_keuntungan, 0, ',', '.') }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm print:hidden font-medium">
                                     <a href="{{ route('laporan.detail', $pesanan->id) }}" class="text-blue-600 hover:text-blue-900">
                                         Detail
                                     </a>
                                 </td>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="8" class="text-center py-4">
-                                    Tidak ada data pesanan untuk laporan.
+                            @empty
+                                <tr>
+                                    <td colspan="8" class="text-center py-4">
+                                        Tidak ada data pesanan untuk laporan.
+                                    </td>
+                                </tr>
+                            @endforelse
+
+                            {{-- Tambahkan baris total di sini --}}
+                            <tr class="bg-gray-100 ">
+                                <td colspan="5" class="px-6 py-4 text-right">
+                                    Total Pendapatan Bersih:
                                 </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    Rp{{ number_format($totalPendapatan, 0, ',', '.') }}
+                                </td>
+                                <td></td>
                             </tr>
-                        @endforelse
                     </tbody>
                 </table>
             </div>
         </div>
-    </div>
-    <div class="p-4">
-        <div class="text-right text-lg font-semibold text-gray-700">
-            Total Pendapatan Bersih: 
-        <span class="text-green-600">
-            Rp{{ number_format($totalPendapatan, 0, ',', '.') }}
-        </span>
+
+        {{-- Tambahan tombol print di kiri dan total pendapatan di kanan, align sesuai kolom --}}
+        <div class="flex justify-between items-center mt-4">
+            <button onclick="window.print()" class="ml-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 print:hidden">
+                Print
+            </button>
         </div>
     </div>
 </x-admin-layout>
