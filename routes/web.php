@@ -107,6 +107,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('pesanan')->name('pesanan.')->group(function () {
         Route::get('/', [PesananController::class, 'index'])->name('index');
         Route::get('/{pesanan}', [PesananController::class, 'show'])->name('show');
+        Route::get('/{pesanan}', [PesananController::class, 'detail'])->name('laporan.detail');
 
         
         // Hanya admin yang bisa update status
@@ -144,7 +145,6 @@ Route::get('/contact-us', function () {
 });
 
 Route::get('/laporan', [PesananController::class, 'laporan'])->name('laporan.index');
-Route::get('/{pesanan}', [PesananController::class, 'detail'])->name('laporan.detail');
 Route::get('/paket/search', [PaketController::class, 'search'])->name('paket.search');
 
 require __DIR__.'/auth.php';
