@@ -47,8 +47,7 @@
     @if(!$user->hasRole('admin'))
     <div id="modal-{{ $user->id }}" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 z-50 flex items-center justify-center">
         <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-            <h2 class="text-lg font-semibold mb-4">Konfirmasi Penghapusan</h2>
-            <p>Apakah Anda yakin ingin menghapus pengguna <strong>{{ $user->username }}</strong>?</p>
+            <h2 class="text-lg mb-4 font-semibold">Apakah Anda yakin ingin menghapus pengguna <strong>{{ $user->username }}</strong>?</h2>
 
             <div class="mt-6 flex justify-end space-x-4">
                 <button onclick="closeModal({{ $user->id }})"

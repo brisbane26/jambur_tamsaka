@@ -34,10 +34,29 @@
                 <td class="py-3 px-4 border">Rp {{ number_format($keranjang->paket->harga_jual, 0, ',', '.') }}</td>
                 <td class="py-3 px-4 border">Rp {{ number_format($keranjang->paket->harga_jual * $keranjang->kuantitas, 0, ',', '.') }}</td>
                 <td class="py-3 px-4 border">
-                    <button wire:click="removeItem({{ $keranjang->id }})" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+                    <!-- Tombol untuk membuka modal konfirmasi -->
+                    <button onclick="openModal({{ $keranjang->id }})"
+                        class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
                         <i class="bi bi-trash3-fill"></i>
                     </button>
                 </td>
+                <div id="modal-{{ $keranjang->id }}" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+                    <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
+                        <h2 class="text-lg mb-4 font-semibold">Apakah Anda yakin ingin menghapus item ini dari keranjang?</h2>
+
+                        <div class="mt-6 flex justify-end space-x-4">
+                            <button onclick="closeModal({{ $keranjang->id }})"
+                                    class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 text-sm">
+                                Batal
+                            </button>
+                            <button wire:click="removeItem({{ $keranjang->id }})"
+                                    onclick="closeModal({{ $keranjang->id }})"
+                                    class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm">
+                                Hapus
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </tr>
             @endforeach
             <tr class="bg-gray-100 font-semibold">
@@ -56,4 +75,14 @@
         </a>
     </div>
 </div>
+<script>
+    function openModal(id) {
+        document.getElementById('modal-' + id).classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+        document.getElementById('modal-' + id).classList.add('hidden');
+    }
+</script>
+
 </div>

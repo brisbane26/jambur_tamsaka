@@ -81,7 +81,7 @@
       </div>
       <!-- Gambar -->
       <div class="mt-12 md:mt-0">
-        <img src="https://images.unsplash.com/photo-1531973576160-7125cd663d86" alt="About Us Image" class="object-cover rounded-lg shadow-md w-full border-4 border-red-100">
+        <img src="{{ asset('images/gedung.jpg') }}" alt="About Us Image" class="object-cover rounded-lg shadow-md w-full border-4 border-red-100">
       </div>
     </div>
   </div>
