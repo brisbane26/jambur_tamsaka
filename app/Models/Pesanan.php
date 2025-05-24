@@ -59,10 +59,23 @@ class Pesanan extends Model
         return $query->with(['user', 'jadwal', 'detailPesanan.paket']);
     }
 
+    public function getTotalModalAttribute()
+{
+    return $this->detailPesanan->sum(function($item) {
+        return $item->paket->modal * $item->kuantitas;
+    });
+}
+
     // Scope untuk customer
     public function scopeForCustomer($query, $userId)
     {
         return $query->where('user_id', $userId)
             ->with(['jadwal', 'detailPesanan.paket']);
     }
+
+    public function getTotalKeuntunganAttribute()
+{
+    return $this->total_harga - $this->total_modal;
+}
+
 }

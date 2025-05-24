@@ -107,7 +107,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('pesanan')->name('pesanan.')->group(function () {
         Route::get('/', [PesananController::class, 'index'])->name('index');
         Route::get('/{pesanan}', [PesananController::class, 'show'])->name('show');
-
         
         // Hanya admin yang bisa update status
         Route::middleware(['role:admin'])->group(function () {
@@ -126,6 +125,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
+Route::get('/laporan/{pesanan}', [PesananController::class, 'detail'])->name('laporan.detail');
 
 // Route::controller(JadwalController::class)->group(function(){
 //     Route::get('full-calender', 'index');
@@ -138,8 +138,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 
-    Route::get('/contact-us', function () {
-        $title = "Contact Us"; // Atur nilai variabel title
-        return view('contact.index', compact('title')); // Kirim variabel ke view
-    });
+Route::get('/contact-us', function () {
+    $title = "Contact Us"; // Atur nilai variabel title
+    return view('contact.index', compact('title')); // Kirim variabel ke view
+});
+
+Route::get('/laporan', [PesananController::class, 'laporan'])->name('laporan.index');
+Route::get('/paket/search', [PaketController::class, 'search'])->name('paket.search');
+
 require __DIR__.'/auth.php';

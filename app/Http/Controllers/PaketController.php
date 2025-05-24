@@ -140,4 +140,16 @@ public function dashboard(Request $request)
 
         return redirect()->route('paket.index')->with($notifications);
     }
+
+    public function search(Request $request)
+{
+    $query = $request->get('q', '');
+    $result = Paket::where('nama_paket', 'like', "%{$query}%")
+                   ->select('id', 'nama_paket')
+                   ->limit(10)
+                   ->get();
+
+    return response()->json($result);
+}
+
 }
