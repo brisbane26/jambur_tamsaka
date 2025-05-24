@@ -107,8 +107,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('pesanan')->name('pesanan.')->group(function () {
         Route::get('/', [PesananController::class, 'index'])->name('index');
         Route::get('/{pesanan}', [PesananController::class, 'show'])->name('show');
-        Route::get('/{pesanan}', [PesananController::class, 'detail'])->name('laporan.detail');
-
         
         // Hanya admin yang bisa update status
         Route::middleware(['role:admin'])->group(function () {
@@ -127,6 +125,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
+Route::get('/laporan/{pesanan}', [PesananController::class, 'detail'])->name('laporan.detail');
 
 // Route::controller(JadwalController::class)->group(function(){
 //     Route::get('full-calender', 'index');
