@@ -25,9 +25,9 @@
     <div class="toggle hidden w-full md:w-auto md:flex text-right text-bold mt-5 md:mt-0 md:border-none">
         <a href="#home" class="nav-link block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none transition-colors duration-300">Home</a>
         <a href="#services" class="nav-link block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none transition-colors duration-300">Paket</a>
-        <a href="#aboutus" class="nav-link block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none transition-colors duration-300">About us</a>
-        <a href="#gallery" class="nav-link block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none transition-colors duration-300">Gallery</a>
-        <a href="#contactUs" class="nav-link block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none transition-colors duration-300">Visit Us</a>
+        <a href="#aboutus" class="nav-link block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none transition-colors duration-300">Tentang Kami</a>
+        <a href="#gallery" class="nav-link block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none transition-colors duration-300">Galeri</a>
+        <a href="#contactUs" class="nav-link block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none transition-colors duration-300">Kunjungi Kami</a>
     </div>
 
     <div class="toggle w-full text-end hidden md:flex md:w-auto px-2 py-2 md:rounded">
@@ -81,7 +81,7 @@
       </div>
       <!-- Gambar -->
       <div class="mt-12 md:mt-0">
-        <img src="https://images.unsplash.com/photo-1531973576160-7125cd663d86" alt="About Us Image" class="object-cover rounded-lg shadow-md w-full border-4 border-red-100">
+        <img src="{{ asset('images/gedung3.jpg') }}" alt="About Us Image" class="object-cover rounded-lg shadow-md w-full border-4 border-red-100">
       </div>
     </div>
   </div>
@@ -102,6 +102,7 @@
           <li><span class="font-semibold text-[#5c1515]">Pemesanan gedung</span> hanya dapat dilakukan minimal <span class="font-bold">3 hari setelah hari ini</span>.</li>
           <li><span class="font-semibold text-[#5c1515]">Pembatalan pesanan</span> hanya dapat dilakukan maksimal <span class="font-bold">H-2 sebelum hari acara</span>.</li>
           <li><span class="font-semibold text-[#5c1515]">Pembayaran cash (tunai)</span> wajib dilakukan <span class="font-bold">langsung di kantor Jambur.</span></li>
+          <li><span class="font-semibold text-[#5c1515]">Pengembalian uang</span> dilakukan dengan <span class="font-bold">menghubungi admin.</span></li>
         </ul>
         <div class="mt-6 flex items-center bg-[#f3eaea] rounded-lg p-4">
           <svg class="w-6 h-6 text-[#a94442] mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -153,24 +154,24 @@
 <section class="py-16 bg-white" id="gallery">
   <div class="container mx-auto px-8 max-w-7xl">
     <div class="text-center mb-12">
-      <h2 class="text-3xl font-bold mb-4" style="color:#5c1515;">Our Gallery</h2>
-      <p class="text-lg text-gray-600 max-w-2xl mx-auto">Explore beautiful moments captured at Jambur Tamsaka</p>
+      <h2 class="text-3xl font-bold mb-4" style="color:#5c1515;">Galeri Kami</h2>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">Momen indah yang diambil di Jambur Tamsaka</p>
     </div>
 
     <!-- Gallery Filter -->
     <div class="flex justify-center mb-8">
       <div class="inline-flex rounded-md shadow-sm" role="group">
         <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium rounded-l-lg border" style="background-color:#5c1515;color:white;border-color:#5c1515;" data-filter="all">
-          All
+          Semua
         </button>
         <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium border-t border-b" style="color:#5c1515;border-color:#5c1515;" data-filter="wedding">
-          Wedding
+          Pernikahan
         </button>
         <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium border" style="color:#5c1515;border-color:#5c1515;" data-filter="event">
-          Events
+          Acara Adat
         </button>
         <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium rounded-r-lg border" style="color:#5c1515;border-color:#5c1515;" data-filter="venue">
-          Venue
+          Lainnya
         </button>
       </div>
     </div>
@@ -191,7 +192,7 @@
         <img src="{{ asset('images/dekorasi.jpg') }}" alt="Wedding Decoration" class="w-full h-56 object-cover">
         <div class="p-6 text-center">
           <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Dekorasi</h4>
-          <p class="text-gray-700 text-base">Elegant decoration setup</p>
+          <p class="text-gray-700 text-base">Dekorasi pernikahan elegan</p>
         </div>
       </div>
 
@@ -200,7 +201,7 @@
         <img src="{{ asset('images/adat_sip.png') }}" alt="Cultural Event" class="w-full h-56 object-cover">
         <div class="p-6 text-center">
           <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Adat</h4>
-          <p class="text-gray-700 text-base">Traditional performances</p>
+          <p class="text-gray-700 text-base">Acara adat Karo</p>
         </div>
       </div>
 
@@ -208,8 +209,8 @@
       <div class="gallery-item event bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
         <img src="{{ asset('images/musik.png') }}" alt="Music Performance" class="w-full h-56 object-cover">
         <div class="p-6 text-center">
-          <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Music Performance</h4>
-          <p class="text-gray-700 text-base">Live music entertainment</p>
+          <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Musik</h4>
+          <p class="text-gray-700 text-base">Musik Karo komplit</p>
         </div>
       </div>
 
@@ -217,8 +218,8 @@
       <div class="gallery-item venue bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
         <img src="{{ asset('images/katering.png') }}" alt="Venue Overview" class="w-full h-56 object-cover">
         <div class="p-6 text-center">
-          <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Katering</h4>
-          <p class="text-gray-700 text-base">Our beautiful venue space</p>
+          <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Catering</h4>
+          <p class="text-gray-700 text-base">Catering dari Jambur</p>
         </div>
       </div>
 
@@ -227,7 +228,7 @@
         <img src="{{ asset('images/outdoor.jpg') }}" alt="Outdoor Area" class="w-full h-56 object-cover">
         <div class="p-6 text-center">
           <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Outdoor Area</h4>
-          <p class="text-gray-700 text-base">Spacious outdoor setting</p>
+          <p class="text-gray-700 text-base">Bagian luar Jambur</p>
         </div>
       </div>
     </div>
@@ -321,7 +322,7 @@
                     <a href="/privacy" class="hover:text-[#a94442] transition">Privacy Policy</a>
                 </li>
                 <li>
-                    <a href="#aboutus" class="hover:text-[#a94442] transition">About Us</a>
+                    <a href="#aboutus" class="hover:text-[#a94442] transition">Tentang Kami</a>
                 </li>
                 <li>
                     <a href="#gallery" class="hover:text-[#a94442] transition">Gallery</a>
