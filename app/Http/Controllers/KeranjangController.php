@@ -47,13 +47,15 @@ public function checkout_index()
         $batas = [
             'Catering' => ['min' => 50, 'max' => 2000],
             'Salon' => ['min' => 1, 'max' => 1],
-            'Music' => ['min' => 1, 'max' => 1],
-            'Dekor' => ['min' => 1, 'max' => 1],
+            'Musik' => ['min' => 1, 'max' => 1],
+            'Dekorasi' => ['min' => 1, 'max' => 1],
             'Gedung' => ['min' => 1, 'max' => 1],
+            'Dokumentasi' => ['min' => 1, 'max' => 1],
+            'Lainnya' => ['min' => 1, 'max' => 1],
         ];
 
         $min = $batas[$kategori]['min'] ?? 1;
-        $max = $batas[$kategori]['max'] ?? 1000;
+        $max = $batas[$kategori]['max'] ?? 1;
 
         if ($qty < $min || $qty > $max) {
             return redirect()->back()->with([
