@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Jambur Tamsaka</title>
+  <link rel="icon" type="image/png" href="{{ asset('images/favicon-removebg-preview.png') }}" />
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     html {
@@ -40,7 +41,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M6.75 3v2.25M17.25 3v2.25M3 8.25h18M4.5 7.5v11.25A2.25 2.25 0 006.75 21h10.5A2.25 2.25 0 0019.5 18.75V7.5M16.5 12.75h.008v.008H16.5v-.008z" />
                 </svg>
-                Book now
+                Pesan Sekarang
             </div>
         </div>
     </a>
@@ -182,8 +183,8 @@
       <div class="gallery-item wedding bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
         <img src="{{ asset('images/perayaan_pernikahan.jpg') }}" alt="Wedding at Jambur Tamsaka" class="w-full h-56 object-cover">
         <div class="p-6 text-center">
-          <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Wedding Celebration</h4>
-          <p class="text-gray-700 text-base">Beautiful wedding moments at our venue</p>
+          <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Acara Pernikahan</h4>
+          <p class="text-gray-700 text-base">Perayaan pernikahan yang indah.</p>
         </div>
       </div>
 
@@ -192,7 +193,7 @@
         <img src="{{ asset('images/dekorasi.jpg') }}" alt="Wedding Decoration" class="w-full h-56 object-cover">
         <div class="p-6 text-center">
           <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Dekorasi</h4>
-          <p class="text-gray-700 text-base">Dekorasi pernikahan elegan</p>
+          <p class="text-gray-700 text-base">Dekorasi pernikahan elegan.</p>
         </div>
       </div>
 
@@ -201,7 +202,7 @@
         <img src="{{ asset('images/adat_sip.png') }}" alt="Cultural Event" class="w-full h-56 object-cover">
         <div class="p-6 text-center">
           <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Adat</h4>
-          <p class="text-gray-700 text-base">Acara adat Karo</p>
+          <p class="text-gray-700 text-base">Acara adat Karo.</p>
         </div>
       </div>
 
@@ -210,7 +211,7 @@
         <img src="{{ asset('images/musik.png') }}" alt="Music Performance" class="w-full h-56 object-cover">
         <div class="p-6 text-center">
           <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Musik</h4>
-          <p class="text-gray-700 text-base">Musik Karo komplit</p>
+          <p class="text-gray-700 text-base">Musik Karo komplit.</p>
         </div>
       </div>
 
@@ -219,7 +220,7 @@
         <img src="{{ asset('images/katering.png') }}" alt="Venue Overview" class="w-full h-56 object-cover">
         <div class="p-6 text-center">
           <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Catering</h4>
-          <p class="text-gray-700 text-base">Catering dari Jambur</p>
+          <p class="text-gray-700 text-base">Catering dari Jambur.</p>
         </div>
       </div>
 
@@ -228,7 +229,7 @@
         <img src="{{ asset('images/outdoor.jpg') }}" alt="Outdoor Area" class="w-full h-56 object-cover">
         <div class="p-6 text-center">
           <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Outdoor Area</h4>
-          <p class="text-gray-700 text-base">Bagian luar Jambur</p>
+          <p class="text-gray-700 text-base">Bagian luar Jambur.</p>
         </div>
       </div>
     </div>
@@ -243,28 +244,28 @@
       <img src="{{ asset('images/kantor.jpg') }}" alt="Kantor" class="object-cover w-full h-48 rounded-t-lg" />
       <div class="p-6 flex-1 flex flex-col justify-center">
         <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Kantor</h3>
-        <p class="text-gray-700">Large area for various events</p>
+        <p class="text-gray-700">Tempat mengurus segala keperluan acara.</p>
       </div>
     </div>
     <div class="bg-white w-72 h-80 rounded-lg shadow-md hover:shadow-lg transition p-0 text-center border-t-4 flex flex-col" style="border-color:#5c1515;">
       <img src="{{ asset('images/kamar_mandi.jpg') }}" alt="Kamar Mandi" class="object-cover w-full h-48 rounded-t-lg" />
       <div class="p-6 flex-1 flex flex-col justify-center">
         <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Kamar Mandi</h3>
-        <p class="text-gray-700">Tables, chairs, and sound system</p>
+        <p class="text-gray-700">Kamar mandi yang bersih.</p>
       </div>
     </div>
     <div class="bg-white w-72 h-80 rounded-lg shadow-md hover:shadow-lg transition p-0 text-center border-t-4 flex flex-col" style="border-color:#5c1515;">
       <img src="{{ asset('images/kantin.jpg') }}" alt="Kantin" class="object-cover w-full h-48 rounded-t-lg" />
       <div class="p-6 flex-1 flex flex-col justify-center">
         <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Kantin</h3>
-        <p class="text-gray-700">Competitive packages</p>
+        <p class="text-gray-700">Tempat menjual makanan ringan dan minuman.</p>
       </div>
     </div>
     <div class="bg-white w-72 h-80 rounded-lg shadow-md hover:shadow-lg transition p-0 text-center border-t-4 flex flex-col" style="border-color:#5c1515;">
       <img src="{{ asset('images/parkiran.jpg') }}" alt="Parkiran" class="object-cover w-full h-48 rounded-t-lg" />
       <div class="p-6 flex-1 flex flex-col justify-center">
         <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Parkiran</h3>
-        <p class="text-gray-700">Beautiful setup options</p>
+        <p class="text-gray-700">Parkiran mobil yang luas.</p>
       </div>
     </div>
   </div>
@@ -274,7 +275,7 @@
 <section class="bg-gray-50">
     <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:py-20 lg:px-8">
         <div class="max-w-2xl lg:max-w-4xl mx-auto text-center">
-            <h2 class="text-3xl font-bold mb-4" style="color:#5c1515;" id="contactUs">Visit Our Location</h2>
+            <h2 class="text-3xl font-bold mb-4" style="color:#5c1515;" id="contactUs">Kunjungi Kami</h2>
             <p class="mt-3 text-lg text-gray-600">Let us serve you the best</p>
         </div>
         <div class="mt-8 lg:mt-20">
@@ -282,11 +283,11 @@
                 <div>
                     <div class="max-w-full mx-auto rounded-lg overflow-hidden bg-white shadow-md p-6">
                         <div class="border-b border-gray-200 px-6 py-4">
-                            <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Contact</h3>
+                            <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Kontak</h3>
                             <p class="mt-2 font-bold text-gray-600"><a href="tel:+123" class="hover:text-red-700">Phone: +61 811 1111 1111</a></p>
                         </div>
                         <div class="px-6 py-4">
-                            <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Our Address</h3>
+                            <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Alamat Kami</h3>
                             <p class="mt-2 text-gray-700">Jl. Jamin Ginting No.KM.11, RW.5, Kemenangan Tani, Kec. Medan Tuntungan, Kota Medan, Sumatera Utara 20135</p>
                         </div>
                     </div>
@@ -306,7 +307,7 @@
             <!-- Brand & Copyright -->
             <div class="flex flex-col items-center md:items-start">
                 <span class="text-lg font-bold tracking-wide">Jambur Tamsaka</span>
-                <span class="text-xs text-red-200 mt-1">&copy; 2024 All Rights Reserved</span>
+                <span class="text-xs text-red-200 mt-1">&copy; 2025 All Rights Reserved</span>
             </div>
             <!-- Navigation -->
             <ul class="flex flex-wrap gap-6 justify-center md:justify-end mt-4 md:mt-0">

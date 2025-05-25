@@ -22,10 +22,10 @@
             <!-- Header Section -->
             <div class="text-center mb-12">
                 <h1 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-                    Contact Our Team
+                    Hubungi Kami
                 </h1>
                 <p class="mt-4 text-xl text-gray-600">
-                    We're here to help with your agenda consultation needs
+                    Kami ada untuk membantu Anda dalam konsultasi, pertanyaan, dan informasi lebih lanjut tentang layanan kami.
                 </p>
             </div>
 
@@ -41,7 +41,7 @@
                             <div class="ml-4">
                                 <h3 class="text-lg leading-6 font-medium text-gray-900">WhatsApp Chat</h3>
                                 <p class="mt-1 text-sm text-gray-500">
-                                    Fast response for instant support
+                                    Untuk respon cepat dan praktis
                                 </p>
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                             <div class="ml-4">
                                 <h3 class="text-lg leading-6 font-medium text-gray-900">Email Us</h3>
                                 <p class="mt-1 text-sm text-gray-500">
-                                    For detailed inquiries and documentation
+                                    Untuk detail dan dokumentasi lebih lanjut
                                 </p>
                             </div>
                         </div>
@@ -82,7 +82,7 @@
             <!-- Additional Information -->
             <div class="bg-white shadow overflow-hidden rounded-lg">
                 <div class="px-4 py-5 sm:p-6">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">Our Contact Information</h3>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Kontak Informasi Kami</h3>
                     <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div class="flex items-start">
                             <div class="flex-shrink-0">
