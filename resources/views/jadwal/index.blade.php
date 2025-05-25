@@ -1,3 +1,4 @@
+  <link rel="icon" type="image/png" href="{{ asset('images/favicon-removebg-preview.png') }}" />
 <x-admin-layout>
     <head>
         <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -85,7 +86,7 @@
 
     <body>
         <div class="container p-6">
-            <h1 class="text-2xl font-bold mb-4">Kalender Acara</h1>
+            <h3 class="text-gray-700 text-3xl font-medium">Kalender Acara</h3>
             <div id='calendar'></div>
         </div>
 

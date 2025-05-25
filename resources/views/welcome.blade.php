@@ -7,10 +7,31 @@
   <link rel="icon" type="image/png" href="{{ asset('images/favicon-removebg-preview.png') }}" />
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    html {
-      scroll-behavior: smooth;
-    }
-  </style>
+  html {
+    scroll-behavior: smooth;
+  }
+  /* Hover efek untuk gambar paket */
+  .paket-img-hover {
+    transition: transform 0.3s, box-shadow 0.3s, filter 0.3s;
+  }
+  .paket-img-hover:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 32px 0 rgba(92,21,21,0.18);
+    filter: brightness(0.92) saturate(1.2);
+    z-index: 2;
+  }
+
+  /* Hover efek untuk gambar fasilitas */
+  .fasilitas-img-hover {
+    transition: transform 0.3s, box-shadow 0.3s, filter 0.3s;
+  }
+  .fasilitas-img-hover:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 32px 0 rgba(92,21,21,0.18);
+    filter: brightness(0.92) saturate(1.2);
+    z-index: 2;
+  }
+</style>
 </head>
 <body class="bg-gray-100 text-gray-800">
 
@@ -69,7 +90,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-6">
       <!-- Teks -->
       <div class="max-w-xl">
-        <h2 class="text-3xl font-bold mb-8 text-left" style="color:#5c1515;">About Us</h2>
+        <h2 class="text-3xl font-bold mb-8 text-left" style="color:#5c1515;">Tentang Kami</h2>
         <p class="mt-4 text-gray-700 text-lg">
           Jambur Tamsaka adalah tempat yang disediakan untuk menyelenggarakan 
           berbagai acara penting dalam kehidupan masyarakat, seperti pesta pernikahan, 
@@ -139,7 +160,7 @@
     <div id="all-content" class="grid grid-cols-1 md:grid-cols-3 gap-8 justify-center">
   @foreach ($pakets as $paket)
     <div class="category-item {{ strtolower($paket->kategori->nama_kategori) }} bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-      <img src="{{ asset('images/' . $paket->gambar) }}" class="w-full h-56 object-cover" alt="{{ $paket->nama_paket }}">
+      <img src="{{ asset('images/' . $paket->gambar) }}" class="w-full h-56 object-cover transition duration-300 ease-in-out hover:brightness-50" alt="{{ $paket->nama_paket }}">
       <div class="p-6 text-center">
         <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">{{ $paket->nama_paket }}</h4>
         <p class="font-semibold text-base" style="color:#5c1515;">Rp {{ number_format($paket->harga_jual, 0, ',', '.') }}</p>
@@ -161,17 +182,17 @@
 
     <!-- Gallery Filter -->
     <div class="flex justify-center mb-8">
-      <div class="inline-flex rounded-md shadow-sm" role="group">
-        <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium rounded-l-lg border" style="background-color:#5c1515;color:white;border-color:#5c1515;" data-filter="all">
+      <div class="inline-flex rounded-md shadow-sm" role="group" id="gallery-filter-group">
+        <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium rounded-l-lg border bg-[#5c1515] text-white border-[#5c1515]" data-filter="all">
           Semua
         </button>
-        <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium border-t border-b" style="color:#5c1515;border-color:#5c1515;" data-filter="wedding">
+        <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium border-t border-b text-[#5c1515] border-[#5c1515]" data-filter="wedding">
           Pernikahan
         </button>
-        <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium border" style="color:#5c1515;border-color:#5c1515;" data-filter="event">
+        <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium border text-[#5c1515] border-[#5c1515]" data-filter="event">
           Acara Adat
         </button>
-        <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium rounded-r-lg border" style="color:#5c1515;border-color:#5c1515;" data-filter="venue">
+        <button type="button" class="gallery-filter px-4 py-2 text-sm font-medium rounded-r-lg border text-[#5c1515] border-[#5c1515]" data-filter="venue">
           Lainnya
         </button>
       </div>
@@ -181,7 +202,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
       <!-- Wedding Card 1 -->
       <div class="gallery-item wedding bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-        <img src="{{ asset('images/perayaan_pernikahan.jpg') }}" alt="Wedding at Jambur Tamsaka" class="w-full h-56 object-cover">
+        <img src="{{ asset('images/perayaan_pernikahan.jpg') }}" alt="Wedding at Jambur Tamsaka" class="w-full h-56 object-cover transition duration-300 ease-in-out hover:brightness-50">
         <div class="p-6 text-center">
           <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Acara Pernikahan</h4>
           <p class="text-gray-700 text-base">Perayaan pernikahan yang indah.</p>
@@ -190,7 +211,7 @@
 
       <!-- Wedding Card 2 -->
       <div class="gallery-item wedding bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-        <img src="{{ asset('images/dekorasi.jpg') }}" alt="Wedding Decoration" class="w-full h-56 object-cover">
+        <img src="{{ asset('images/dekorasi.jpg') }}" alt="Wedding Decoration" class="w-full h-56 object-cover transition duration-300 ease-in-out hover:brightness-50">
         <div class="p-6 text-center">
           <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Dekorasi</h4>
           <p class="text-gray-700 text-base">Dekorasi pernikahan elegan.</p>
@@ -199,7 +220,7 @@
 
       <!-- Event Card 1 -->
       <div class="gallery-item event bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-        <img src="{{ asset('images/adat_sip.png') }}" alt="Cultural Event" class="w-full h-56 object-cover">
+        <img src="{{ asset('images/adat_sip.png') }}" alt="Cultural Event" class="w-full h-56 object-cover transition duration-300 ease-in-out hover:brightness-50">
         <div class="p-6 text-center">
           <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Adat</h4>
           <p class="text-gray-700 text-base">Acara adat Karo.</p>
@@ -208,7 +229,7 @@
 
       <!-- Event Card 2 -->
       <div class="gallery-item event bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-        <img src="{{ asset('images/musik.png') }}" alt="Music Performance" class="w-full h-56 object-cover">
+        <img src="{{ asset('images/musik.png') }}" alt="Music Performance" class="w-full h-56 object-cover transition duration-300 ease-in-out hover:brightness-50">
         <div class="p-6 text-center">
           <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Musik</h4>
           <p class="text-gray-700 text-base">Musik Karo komplit.</p>
@@ -217,7 +238,7 @@
 
       <!-- Venue Card 1 -->
       <div class="gallery-item venue bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-        <img src="{{ asset('images/katering.png') }}" alt="Venue Overview" class="w-full h-56 object-cover">
+        <img src="{{ asset('images/katering.png') }}" alt="Venue Overview" class="w-full h-56 object-cover transition duration-300 ease-in-out hover:brightness-50">
         <div class="p-6 text-center">
           <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Catering</h4>
           <p class="text-gray-700 text-base">Catering dari Jambur.</p>
@@ -226,7 +247,7 @@
 
       <!-- Venue Card 2 -->
       <div class="gallery-item venue bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-        <img src="{{ asset('images/outdoor.jpg') }}" alt="Outdoor Area" class="w-full h-56 object-cover">
+        <img src="{{ asset('images/outdoor.jpg') }}" alt="Outdoor Area" class="w-full h-56 object-cover transition duration-300 ease-in-out hover:brightness-50">
         <div class="p-6 text-center">
           <h4 class="text-xl font-bold mb-2" style="color:#5c1515;">Outdoor Area</h4>
           <p class="text-gray-700 text-base">Bagian luar Jambur.</p>
@@ -241,28 +262,28 @@
   <h2 class="text-3xl font-bold text-center mb-10" style="color:#5c1515;">Fasilitas</h2>
   <div class="flex justify-center flex-wrap gap-8 mb-8 max-w-screen-xl mx-auto">
     <div class="bg-white w-72 h-80 rounded-lg shadow-md hover:shadow-lg transition p-0 text-center border-t-4 flex flex-col" style="border-color:#5c1515;">
-      <img src="{{ asset('images/kantor.jpg') }}" alt="Kantor" class="object-cover w-full h-48 rounded-t-lg" />
+      <img src="{{ asset('images/kantor.jpg') }}" alt="Kantor" class="object-cover w-full h-48 rounded-t-lg fasilitas-img-hover" />
       <div class="p-6 flex-1 flex flex-col justify-center">
         <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Kantor</h3>
         <p class="text-gray-700">Tempat mengurus segala keperluan acara.</p>
       </div>
     </div>
     <div class="bg-white w-72 h-80 rounded-lg shadow-md hover:shadow-lg transition p-0 text-center border-t-4 flex flex-col" style="border-color:#5c1515;">
-      <img src="{{ asset('images/kamar_mandi.jpg') }}" alt="Kamar Mandi" class="object-cover w-full h-48 rounded-t-lg" />
+      <img src="{{ asset('images/kamar_mandi.jpg') }}" alt="Kamar Mandi" class="object-cover w-full h-48 rounded-t-lg fasilitas-img-hover" />
       <div class="p-6 flex-1 flex flex-col justify-center">
         <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Kamar Mandi</h3>
         <p class="text-gray-700">Kamar mandi yang bersih.</p>
       </div>
     </div>
     <div class="bg-white w-72 h-80 rounded-lg shadow-md hover:shadow-lg transition p-0 text-center border-t-4 flex flex-col" style="border-color:#5c1515;">
-      <img src="{{ asset('images/kantin.jpg') }}" alt="Kantin" class="object-cover w-full h-48 rounded-t-lg" />
+      <img src="{{ asset('images/kantin.jpg') }}" alt="Kantin" class="object-cover w-full h-48 rounded-t-lg fasilitas-img-hover" />
       <div class="p-6 flex-1 flex flex-col justify-center">
         <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Kantin</h3>
         <p class="text-gray-700">Tempat menjual makanan ringan dan minuman.</p>
       </div>
     </div>
     <div class="bg-white w-72 h-80 rounded-lg shadow-md hover:shadow-lg transition p-0 text-center border-t-4 flex flex-col" style="border-color:#5c1515;">
-      <img src="{{ asset('images/parkiran.jpg') }}" alt="Parkiran" class="object-cover w-full h-48 rounded-t-lg" />
+      <img src="{{ asset('images/parkiran.jpg') }}" alt="Parkiran" class="object-cover w-full h-48 rounded-t-lg fasilitas-img-hover" />
       <div class="p-6 flex-1 flex flex-col justify-center">
         <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Parkiran</h3>
         <p class="text-gray-700">Parkiran mobil yang luas.</p>
@@ -276,7 +297,7 @@
     <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:py-20 lg:px-8">
         <div class="max-w-2xl lg:max-w-4xl mx-auto text-center">
             <h2 class="text-3xl font-bold mb-4" style="color:#5c1515;" id="contactUs">Kunjungi Kami</h2>
-            <p class="mt-3 text-lg text-gray-600">Let us serve you the best</p>
+            <p class="mt-3 text-lg text-gray-600">Kami memberi layanan terbaik</p>
         </div>
         <div class="mt-8 lg:mt-20">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -284,7 +305,7 @@
                     <div class="max-w-full mx-auto rounded-lg overflow-hidden bg-white shadow-md p-6">
                         <div class="border-b border-gray-200 px-6 py-4">
                             <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Kontak</h3>
-                            <p class="mt-2 font-bold text-gray-600"><a href="tel:+123" class="hover:text-red-700">Phone: +61 811 1111 1111</a></p>
+                            <p class="mt-2 font-bold text-gray-600"><a href="tel:+123" class="hover:text-red-700">Telepon : +62 812-6067-9408</a></p>
                         </div>
                         <div class="px-6 py-4">
                             <h3 class="text-xl font-bold mb-2" style="color:#5c1515;">Alamat Kami</h3>
@@ -388,14 +409,11 @@
         const filterValue = this.getAttribute('data-filter');
         // Update active button
         galleryFilters.forEach(f => {
-          if (f === this) {
-            f.classList.add('bg-red-700', 'text-white');
-            f.classList.remove('text-red-700', 'hover:bg-red-50');
-          } else {
-            f.classList.remove('bg-red-700', 'text-white');
-            f.classList.add('text-red-700', 'hover:bg-red-50');
-          }
+          f.classList.remove('bg-[#5c1515]', 'text-white');
+          f.classList.add('text-[#5c1515]');
         });
+        this.classList.add('bg-[#5c1515]', 'text-white');
+        this.classList.remove('text-[#5c1515]');
         // Filter items
         galleryItems.forEach(item => {
           if (filterValue === 'all' || item.classList.contains(filterValue)) {

@@ -1,7 +1,6 @@
+  <link rel="icon" type="image/png" href="{{ asset('images/favicon-removebg-preview.png') }}" />
 <x-admin-layout>
-    <x-slot name="header">
-        <h1 class="text-2xl font-bold">Users List</h1>
-    </x-slot>
+    <h3 class="text-gray-700 text-3xl font-medium">User List</h3>
 
     <div class="p-6">
         <div class="bg-white shadow-md rounded-lg overflow-x-auto">

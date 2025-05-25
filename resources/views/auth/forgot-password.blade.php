@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Forgot Password</title>
+  <title>Lupa Password</title>
+  <link rel="icon" type="image/png" href="{{ asset('images/favicon-removebg-preview.png') }}" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -33,7 +34,7 @@
         <x-auth-session-status class="mb-4 text-sm text-green-600 text-center" :status="session('status')" />
 
         <div class="mb-4 text-sm text-gray-600 text-center">
-            {{ __('Forgot your password? Enter your email and we will send you a password reset link.') }}
+            {{ __('Lupa Password Anda? Masukkan Email Anda dan Kami Akan Mengirim Link untuk Mereset Password Anda.') }}
         </div>
 
         <form method="POST" action="{{ route('password.email') }}">
