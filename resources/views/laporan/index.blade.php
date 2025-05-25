@@ -135,7 +135,7 @@
         {{-- Tambahan tombol print di kiri dan total pendapatan di kanan, align sesuai kolom --}}
         <div class="flex justify-between items-center mt-4">
             <button onclick="window.print()" class="ml-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 print:hidden">
-                Print
+                Cetak
             </button>
         </div>
     </div>
