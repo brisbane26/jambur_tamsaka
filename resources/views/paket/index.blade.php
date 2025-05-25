@@ -1,3 +1,4 @@
+  <link rel="icon" type="image/png" href="{{ asset('images/favicon-removebg-preview.png') }}" />
 <x-admin-layout>
     <h3 class="text-gray-700 text-3xl font-medium">Paket</h3>
 

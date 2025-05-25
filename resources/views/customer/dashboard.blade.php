@@ -1,8 +1,9 @@
+  <link rel="icon" type="image/png" href="{{ asset('images/favicon-removebg-preview.png') }}" />
 <x-admin-layout>
     <!-- Personalized Header -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
         <div>
-            <h1 class="text-3xl font-bold text-gray-800">Halo, {{ auth()->user()->username }}</h1>
+            <h3 class="text-gray-700 text-3xl font-medium">Halo, {{ auth()->user()->username }}</h3>
             <p class="text-gray-600 mt-2">Selamat datang kembali di dashboard Anda</p>
         </div>
     </div>
@@ -99,15 +100,4 @@
     </div>
   </div>
 </section>
-
-    <!-- Info Login -->
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-800">
-                    {{ __("Kamu login sebagai customer!") }}
-                </div>
-            </div>
-        </div>
-    </div>
 </x-admin-layout>

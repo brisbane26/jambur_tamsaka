@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login</title>
+  <link rel="icon" type="image/png" href="{{ asset('images/favicon-removebg-preview.png') }}" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -39,7 +40,7 @@
 
           <!-- Email -->
           <div class="mb-4">
-            <input type="email" id="email" name="email" placeholder="Username or email" required
+            <input type="email" id="email" name="email" placeholder="Email" required
               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 outline-none" />
           </div>
 
@@ -56,7 +57,7 @@
             <label class="flex items-center text-sm text-gray-600">
               <input type="checkbox" name="remember" class="mr-2"> Remember me
             </label>
-            <a href="/forgot-password" class="text-sm text-red-600 hover:text-red-800">Forgot password?</a>
+            <a href="/forgot-password" class="text-sm text-red-600 hover:text-red-800">Lupa Password Anda?</a>
           </div>
 
           <!-- Submit -->
@@ -66,7 +67,7 @@
           </button>
 
           <div class="mt-4 text-center text-sm text-gray-600">
-            New here? <a href="/register" class="text-red-600 hover:text-red-800">Create an Account</a>
+            Belum Punya Akun? <a href="/register" class="text-red-600 hover:text-red-800">Daftar di Sini.</a>
           </div>
         </form>
       </div>

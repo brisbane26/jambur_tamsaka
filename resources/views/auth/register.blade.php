@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Form Registrasi Bertahap</title>
+  <link rel="icon" type="image/png" href="{{ asset('images/favicon-removebg-preview.png') }}" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -27,7 +28,7 @@
 
     <!-- Bagian Form Kanan -->
     <div class="md:w-1/2 p-8">
-      <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">Sign Up</h2>
+      <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">Daftar</h2>
 
       <form id="registerForm" method="POST" action="{{ route('register') }}">
         @csrf
@@ -59,7 +60,7 @@
           </button>
 
           <div class="mt-4 text-center text-sm text-gray-600">
-            Already have account? <a href="/login" class="text-red-600 hover:text-red-800">Login</a>
+            Sudah Punya Akun? <a href="/login" class="text-red-600 hover:text-red-800">Login</a>
           </div>
         </div>
 

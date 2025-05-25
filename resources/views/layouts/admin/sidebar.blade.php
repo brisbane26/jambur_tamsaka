@@ -12,10 +12,10 @@
         </div>
     </div>
 
-    <nav class="mt-10">
+    <nav class="mt-10 flex flex-col gap-0">
 @role('admin')
 <a 
-    class="flex items-center px-6 py-2 mt-4 rounded transition-colors duration-200
+    class="flex items-center px-6 py-2 mt-2 rounded transition-colors duration-200
         {{ request()->is('admin/dashboard') ? 'bg-[#907878] text-white' : 'bg-[#5C1515] text-white' }}
         hover:bg-[#6d3d3d]" 
     href="{{ route('dashboard') }}">
@@ -43,7 +43,7 @@
 
 @role('customer')
 <a 
-    class="flex items-center px-6 py-2 mt-4 text-white 
+    class="flex items-center px-6 py-2 mt-2 text-white 
         {{ request()->is('customer/dashboard') ? 'bg-[#907878]' : 'bg-[#5C1515]' }} 
         hover:bg-[#6d3d3d] transition-colors duration-200 rounded" 
     href="{{ route('dashboard') }}">
@@ -61,7 +61,7 @@
         
         @role('admin')
 <a 
-    class="flex items-center px-6 py-2 mt-4 rounded transition-colors duration-200 
+    class="flex items-center px-6 py-2 mt-2 rounded transition-colors duration-200 
         {{ Route::currentRouteNamed('admin.users.index') ? 'bg-[#907878] text-white' : 'bg-[#5C1515] text-white' }} 
         hover:bg-[#6d3d3d]" 
     href="{{ route('admin.users.index') }}">
@@ -76,7 +76,7 @@
         @endrole
 
         <a 
-        class="flex items-center px-6 py-2 mt-4 text-white 
+        class="flex items-center px-6 py-2 mt-2 text-white 
         {{ request()->is('paket*') ? 'bg-[#907878]' : 'bg-[#5C1515]' }} 
         hover:bg-[#6d3d3d] transition-colors duration-200 rounded" 
         href="{{ route('paket.index') }}">
@@ -89,9 +89,9 @@
         </a>
 
         <a 
-        class="flex items-center px-6 py-2 mt-4 text-white 
+        class="flex items-center px-6 py-2 mt-2 text-white 
         {{ request()->is('keranjang*') ? 'bg-[#907878]' : 'bg-[#5C1515]' }} 
-        hover:bg-[#6d3d3d] transition-colors duration-200 rounded" 
+        hover:bg-[#6d3d3d] transition-colors duration-200 rounded"
         href="{{ route('keranjang.index') }}">
 
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -103,8 +103,9 @@
 
        
         <a 
-        class="flex items-center px-6 py-3 mt-2 rounded-lg transition-all duration-200 text-white
-        {{ request()->routeIs('pesanan.index') ? 'bg-[#907878]' : 'bg-[#5C1515] hover:bg-[#6d3d3d]' }}" 
+        class="flex items-center px-6 py-2 mt-2 text-white 
+        {{ request()->routeIs('pesanan.index') ? 'bg-[#907878]' : 'bg-[#5C1515] hover:bg-[#6d3d3d]' }} 
+        hover:bg-[#6d3d3d] transition-colors duration-200 rounded" 
         href="{{ route('pesanan.index') }}">
 
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -121,8 +122,9 @@
 
         <!-- Menu Item: History -->
         <a 
-        class="flex items-center px-6 py-3 mt-2 rounded-lg transition-all duration-200 text-white
-        {{ request()->routeIs('pesanan.history') ? 'bg-[#907878]' : 'bg-[#5C1515] hover:bg-[#6d3d3d]' }}" 
+        class="flex items-center px-6 py-2 mt-2 text-white 
+        {{ request()->routeIs('pesanan.history') ? 'bg-[#907878]' : 'bg-[#5C1515] hover:bg-[#6d3d3d]' }} 
+        hover:bg-[#6d3d3d] transition-colors duration-200 rounded" 
         href="{{ route('pesanan.history') }}">
 
         <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -135,7 +137,7 @@
 
 
         <a 
-        class="flex items-center px-6 py-3 mt-2 text-white
+        class="flex items-center px-6 py-2 mt-2 text-white 
         {{ request()->routeIs('jadwal.index') ? 'bg-[#907878]' : 'bg-[#5C1515]' }}
         hover:bg-[#6d3d3d] transition-colors duration-200 rounded"
         href="{{ route('jadwal.index') }}">
@@ -162,6 +164,23 @@
 @endrole
         
     </nav>
+    <!-- Pesan login sticky di bawah -->
+    <div class="absolute bottom-0 left-0 w-full">
+    @role('customer')
+    <div class="px-0 pb-0 w-full">
+        <div class="bg-white text-[#5c1515] font-bold shadow p-3 text-center w-full">
+            {{ __("Kamu login sebagai customer!") }}
+        </div>
+    </div>
+    @endrole
+    @role('admin')
+    <div class="px-0 pb-0 w-full">
+        <div class="bg-white text-[#5c1515] font-bold shadow p-3 text-center w-full">
+            {{ __("Kamu login sebagai admin!") }}
+        </div>
+    </div>
+    @endrole
+</div>
 </div>
 
  

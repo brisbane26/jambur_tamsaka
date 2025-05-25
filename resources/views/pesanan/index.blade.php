@@ -1,7 +1,8 @@
+  <link rel="icon" type="image/png" href="{{ asset('images/favicon-removebg-preview.png') }}" />
 <x-admin-layout>
     <div class="p-6">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold">Daftar Pesanan</h2>
+            <h3 class="text-gray-700 text-3xl font-medium">Daftar Pesanan</h3>
             @role('customer')
             <a href="{{ route('paket.index') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
                 Buat Pesanan Baru

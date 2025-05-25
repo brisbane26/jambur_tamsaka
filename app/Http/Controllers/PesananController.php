@@ -157,25 +157,34 @@ public function history(Request $request)
     return view('pesanan.history', compact('pesanans', 'statusFilter'));
 }
 
-public function laporan(Request $request)
+public function laporan(Request $request) 
 {
     $filter = $request->input('filter'); // minggu, bulan, tahun
 
     $query = Pesanan::with(['user', 'jadwal'])->where('status', 'selesai');
 
     if ($filter === 'minggu') {
-        $query->whereBetween('created_at', [
-            Carbon::now()->startOfWeek(),
-            Carbon::now()->endOfWeek()
-        ]);
+        $query->whereHas('jadwal', function ($q) {
+            $q->whereBetween('tanggal', [
+                Carbon::now()->startOfWeek(),
+                Carbon::now()->endOfWeek()
+            ]);
+        });
     } elseif ($filter === 'bulan') {
-        $query->whereMonth('created_at', Carbon::now()->month)
-              ->whereYear('created_at', Carbon::now()->year);
+        $query->whereHas('jadwal', function ($q) {
+            $q->whereMonth('tanggal', Carbon::now()->month)
+              ->whereYear('tanggal', Carbon::now()->year);
+        });
     } elseif ($filter === 'tahun') {
-        $query->whereYear('created_at', Carbon::now()->year);
+        $query->whereHas('jadwal', function ($q) {
+            $q->whereYear('tanggal', Carbon::now()->year);
+        });
     }
 
-    $pesanans = $query->orderBy('created_at', 'asc')->get();
+    // Ambil semua data dengan urutan berdasarkan tanggal dari tabel jadwal
+    $pesanans = $query->get()->sortBy(function ($item) {
+        return $item->jadwal->tanggal;
+    });
 
     $totalPendapatan = $pesanans->sum('total_keuntungan');
 

@@ -1,11 +1,10 @@
+<link rel="icon" type="image/png" href="{{ asset('images/favicon-removebg-preview.png') }}" />
 <x-admin-layout>
-    <x-slot name="header">
-        <h1 class="text-2xl font-bold">User Details</h1>
-    </x-slot>
-
+    <h3 class="text-gray-700 text-3xl font-medium">Detail User</h3>
+    <br>
     <div class="bg-white dark:bg-white p-6 rounded-lg shadow-md">
         <div class="mb-4">
-            <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-800">User Information</h2>
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-800">Informasi User</h2>
             <div class="mt-2 space-y-2 text-gray-600 dark:text-gray-800">
                 <div class="grid grid-cols-3 gap-2">
                     <span>Username</span>

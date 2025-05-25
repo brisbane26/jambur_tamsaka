@@ -1,3 +1,4 @@
+  <link rel="icon" type="image/png" href="{{ asset('images/favicon-removebg-preview.png') }}" />
 <style>
 @media print {
     /* Gunakan seluruh lebar halaman kertas */
@@ -39,7 +40,7 @@
 <x-admin-layout>
     <div class="p-6">
         <div class="mb-6">
-            <h2 class="text-2xl font-bold">Laporan Keuntungan</h2>
+            <h3 class="text-gray-700 text-3xl font-medium">Laporan Keuntungan</h3>
             <div class="flex items-center justify-end mb-5">
             </div>
             <form action="{{ route('laporan.index') }}" method="GET" class="mb-4 flex items-center gap-4">
