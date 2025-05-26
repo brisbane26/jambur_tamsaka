@@ -8,7 +8,9 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="referrer" content="always">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Jambur Tamsaka') }}</title>
+
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon-removebg-preview.png') }}" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
