@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Jambur Tamsaka</title>
   <link rel="icon" type="image/png" href="{{ asset('images/favicon-removebg-preview.png') }}" />
+
+      <!-- Tostr Link -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
   html {
@@ -424,5 +429,17 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 </script>
+
+    <script>
+        @if (Session::has('message'))
+            var type = "{{ Session::get('alert-type', 'info') }}";
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": false,
+                "timeOut": 5000
+            };
+            toastr[type]("{{ Session::get('message') }}");
+        @endif
+    </script>
 </body>
 </html>
