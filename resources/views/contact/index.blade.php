@@ -108,7 +108,7 @@
                             </div>
                             <div class="ml-3">
                                 <p class="text-sm font-medium text-gray-500">Jam Kerja</p>
-                                <p class="text-sm text-gray-900">Mon-Fri: 9AM - 6PM<br>Sat: 10AM - 3PM</p>
+                                <p class="text-sm text-gray-900">Sen-Jum: 9AM - 6PM<br>Sabt: 10AM - 3PM</p>
                             </div>
                         </div>
                         <div class="flex items-start">

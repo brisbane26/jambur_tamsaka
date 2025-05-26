@@ -168,7 +168,7 @@
     <div class="absolute bottom-0 left-0 w-full">
     @role('customer')
     <div class="px-0 pb-0 w-full">
-        <div class="bg-white text-[#5c1515] font-bold shadow p-3 text-center w-full">
+        <div class="bg-white text-[#5c1515] shadow p-3 text-center w-full">
             {{ __("Kamu login sebagai customer!") }}
         </div>
     </div>
