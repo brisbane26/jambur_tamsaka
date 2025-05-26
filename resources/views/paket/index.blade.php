@@ -6,7 +6,7 @@
     <div class="flex justify-between items-center">
         @role('admin')
             <a href="{{ route('paket.create') }}" 
-               class="px-6 py-3 bg-blue-600 rounded-md text-white font-medium tracking-wide hover:bg-blue-500 transition duration-300">
+               class="px-6 py-3 bg-green-600 rounded-md text-white font-medium tracking-wide hover:bg-green-500 transition duration-300">
                 Tambah Paket
             </a>
         @endrole

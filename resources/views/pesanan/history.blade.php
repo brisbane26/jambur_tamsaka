@@ -4,7 +4,7 @@
         <div class="flex justify-between items-center mb-6">
             <h3 class="text-gray-700 text-3xl font-medium">Riwayat Pesanan</h3>
             @role('customer')
-            <a href="{{ route('paket.index') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+            <a href="{{ route('paket.index') }}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
                 Buat Pesanan Baru
             </a>
             @endrole
