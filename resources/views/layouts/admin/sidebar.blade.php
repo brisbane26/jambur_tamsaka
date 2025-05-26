@@ -149,7 +149,7 @@
 
         @role('customer')
         <a 
-    class="flex items-center px-6 py-2 mt-4 text-white
+    class="flex items-center px-6 py-2 mt-2 text-white
         {{ request()->is('contact-us') ? 'bg-[#907878]' : 'bg-[#5C1515]' }}
         hover:bg-[#6d3d3d] transition-colors duration-200 rounded"
     href="/contact-us">

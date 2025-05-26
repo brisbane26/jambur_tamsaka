@@ -38,8 +38,8 @@
 </style>
 
 <x-admin-layout>
-    <div class="p-6">
-        <div class="mb-6">
+    <div class="p-1">
+        <div class="mt-2">
             <h3 class="text-gray-700 text-3xl font-medium">Laporan Keuntungan</h3>
             <div class="flex items-center justify-end mb-5">
             </div>

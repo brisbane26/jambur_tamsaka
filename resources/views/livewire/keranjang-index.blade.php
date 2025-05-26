@@ -1,4 +1,5 @@
-<div class="w-full p-4">
+<link rel="icon" type="image/png" href="{{ asset('images/favicon-removebg-preview.png') }}" />
+<div class="w-full p-1">
     <h3 class="text-gray-700 text-3xl font-medium mb-6">Keranjang Belanja</h3>
 
     <table class="w-full bg-white border border-gray-200 rounded-lg shadow-md">
