@@ -15,7 +15,7 @@
         @endif
 
 
-        <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
+        <form id="formProfile" action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
             @csrf
 
             <div>
@@ -67,21 +67,36 @@
                 @enderror
             </div>
 
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">Password Baru</label>
-                <input id="password" type="password" name="password"
-                    class="w-full mt-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-indigo-500"
-                    placeholder="Kosongkan jika tidak ingin mengganti">
-                @error('password')
-                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
+            <div class="relative">
+    <label for="password" class="block text-sm font-medium text-gray-700">Password Baru</label>
+    <input id="password" type="password" name="password"
+        class="w-full mt-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-indigo-500 pr-20"
+        placeholder="Kosongkan jika tidak ingin mengganti">
 
-            <div>
-                <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Konfirmasi Password</label>
-                <input id="password_confirmation" type="password" name="password_confirmation"
-                    class="w-full mt-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-indigo-500">
-            </div>
+    <button type="button" onclick="togglePw()" id="toggleBtn"
+        class="absolute top-9 right-3 text-sm text-indigo-600 hover:text-indigo-800">
+        Tampilkan
+    </button>
+
+    <ul class="text-sm mt-2 text-gray-600 space-y-1" id="password-rules">
+        <li id="rule-length">Minimal 8 karakter</li>
+        <li id="rule-upper">Huruf besar (A-Z)</li>
+        <li id="rule-lower">Huruf kecil (a-z)</li>
+        <li id="rule-digit">Angka (0-9)</li>
+        <li id="rule-symbol">Simbol (!@#$%^&*)</li>
+    </ul>
+
+    @error('password')
+        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+    @enderror
+</div>
+
+<div>
+    <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Konfirmasi Password</label>
+    <input id="password_confirmation" type="password" name="password_confirmation"
+        class="w-full mt-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-indigo-500">
+</div>
+
 
             <div class="text-right">
                 <button type="submit"
@@ -94,5 +109,59 @@
         
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const passwordInput = document.getElementById('password');
+        const confirmInput = document.getElementById('password_confirmation');
+        const toggleBtn = document.getElementById('toggleBtn');
+        const form = document.getElementById('formProfile');
 
+        // Regex password sesuai aturan
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
+        // Tampilkan indikator kekuatan password saat user mengetik
+        passwordInput.addEventListener('input', () => {
+            const val = passwordInput.value;
+            toggleRule('rule-length', val.length >= 8);
+            toggleRule('rule-upper', /[A-Z]/.test(val));
+            toggleRule('rule-lower', /[a-z]/.test(val));
+            toggleRule('rule-digit', /[0-9]/.test(val));
+            toggleRule('rule-symbol', /[\W_]/.test(val));
+        });
+
+        function toggleRule(id, valid) {
+            document.getElementById(id).style.color = valid ? 'green' : 'gray';
+        }
+
+        function togglePw() {
+            const isHidden = passwordInput.type === 'password';
+            passwordInput.type = isHidden ? 'text' : 'password';
+            toggleBtn.textContent = isHidden ? 'Sembunyikan' : 'Tampilkan';
+        }
+        window.togglePw = togglePw;
+
+        // Validasi saat form disubmit
+        form.addEventListener('submit', function (e) {
+            const password = passwordInput.value.trim();
+            const confirm = confirmInput.value.trim();
+
+            const wantToChange = password !== '' || confirm !== '';
+
+            if (wantToChange) {
+                if (!passwordRegex.test(password)) {
+                    e.preventDefault();
+                    Swal.fire('Password tidak valid', 'Pastikan semua syarat password terpenuhi.', 'error');
+                    return;
+                }
+
+                if (password !== confirm) {
+                    e.preventDefault();
+                    Swal.fire('Konfirmasi salah', 'Password dan konfirmasi tidak sama.', 'error');
+                    return;
+                }
+            }
+        });
+    });
+</script>
 </x-admin-layout>
