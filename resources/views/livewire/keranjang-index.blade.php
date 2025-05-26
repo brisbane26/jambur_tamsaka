@@ -70,10 +70,10 @@
 
     <div class="mt-6 flex justify-end">
         <a href="{{ route('checkout.index') }}" 
-           class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200 
+           class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-200 
                   {{ count($keranjangs) === 0 ? 'opacity-50 cursor-not-allowed' : '' }}"
            @if(count($keranjangs) === 0) onclick="return false;" @endif>
-            <i class="bi bi-cart-check mr-2"></i> Checkout
+            <i class="bi bi-cart-check mr-2"></i> Proses
         </a>
     </div>
 </div>

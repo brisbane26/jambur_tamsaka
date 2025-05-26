@@ -63,14 +63,14 @@
             var type = "{{ Session::get('alert-type', 'info') }}"
             switch (type) {
                 case 'info':
-                    toastr.options.timeOut = 10000;
+                    toastr.options.timeOut = 5000;
                     toastr.info("{{ Session::get('message') }}");
                     var audio = new Audio('audio.mp3');
                     audio.play();
                     break;
                 case 'success':
 
-                    toastr.options.timeOut = 10000;
+                    toastr.options.timeOut =5000;
                     toastr.success("{{ Session::get('message') }}");
                     var audio = new Audio('audio.mp3');
                     audio.play();
@@ -78,7 +78,7 @@
                     break;
                 case 'warning':
 
-                    toastr.options.timeOut = 10000;
+                    toastr.options.timeOut = 5000;
                     toastr.warning("{{ Session::get('message') }}");
                     var audio = new Audio('audio.mp3');
                     audio.play();
@@ -86,7 +86,7 @@
                     break;
                 case 'error':
 
-                    toastr.options.timeOut = 10000;
+                    toastr.options.timeOut = 5000;
                     toastr.error("{{ Session::get('message') }}");
                     var audio = new Audio('audio.mp3');
                     audio.play();
@@ -100,7 +100,7 @@
             @if (session('notification'))
                 toastr.options = {
                     "closeButton": true,
-                    "progressBar": true
+                    "progressBar": false
                 };
 
                 toastr["{{ session('notification')['alert-type'] }}"]("{{ session('notification')['message'] }}");
@@ -115,7 +115,7 @@
             Livewire.on('showToast', (event) => { // Tambahkan handler untuk event 'showToast'
                 toastr.options = {
                     "closeButton": true,
-                    "progressBar": true,
+                    "progressBar": false,
                     "positionClass": "toast-top-right",
                     "timeOut": 5000
                 };
