@@ -94,14 +94,5 @@
         
     </div>
 </div>
-        <script>
-            setTimeout(() => {
-            const alert = document.querySelector('[role="alert"]');
-            if (alert) {
-                alert.style.transition = "opacity 0.5s ease";
-                alert.style.opacity = "0";
-                setTimeout(() => alert.remove(), 500);
-            }
-        }, 4000); // hilang setelah 4 detik
-</script>
+
 </x-admin-layout>

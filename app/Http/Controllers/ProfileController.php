@@ -56,7 +56,10 @@ public function update(Request $request)
 
     $user->save();
 
-    return redirect()->route('profile.edit')->with('status', 'Profil berhasil diperbarui!');
+return redirect()->route('profile.edit')->with('notification', [
+    'alert-type' => 'success',
+    'message' => 'Profil berhasil diperbarui!'
+]);
 }
 
 public function destroy(Request $request): RedirectResponse
