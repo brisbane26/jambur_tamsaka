@@ -1,4 +1,4 @@
-  <link rel="icon" type="image/png" href="{{ asset('images/favicon-removebg-preview.png') }}" />
+<link rel="icon" type="image/png" href="{{ asset('images/favicon-removebg-preview.png') }}" />
 <x-admin-layout>
     <h3 class="text-gray-700 text-3xl font-medium">Paket</h3>
 
@@ -30,7 +30,7 @@
             value="{{ request('search') }}"
             autocomplete="off"
             class="w-full h-10 pl-10 pr-4 rounded-lg border border-gray-300 text-gray-700 placeholder-gray-400
-                focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200"
+                focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600 transition duration-200"
         >
     </div>
 
@@ -63,32 +63,31 @@
                         <p class="text-sm text-gray-600 mb-4">{{ $pkt->deskripsi }}</p>
                         <span class="block text-basem font-bold text-gray-800 mb-3">Rp
                             {{ number_format($pkt->harga_jual, 0, ',', '.') }}</span>
-                        <div class="grid grid-cols-3 gap-2">
-                            @role('admin')
-                                {{-- <span class="text-sm text-gray-500">Kategori: {{ $pkt->kategori->nama_kategori }}</span> --}}
-                            <!-- Tombol Delete -->
-                            <button onclick="toggleDeleteModal({{ $pkt->id }})"
-                                class="flex items-center justify-center px-2 py-1 bg-red-500 text-white text-xs font-semibold rounded-md hover:bg-red-600 transition duration-300 ease-in-out min-h-[28px]">
-                                <i class="bi bi-trash-fill mr-1"></i> Hapus
-                            </button>
+<div class="grid grid-cols-3 gap-2">
+    @role('admin')
+        <!-- Tombol Delete -->
+        <button onclick="toggleDeleteModal({{ $pkt->id }})"
+            class="flex items-center justify-center px-2.5 py-1.5 bg-red-500 text-white text-xs font-semibold rounded-md hover:bg-red-600 transition duration-300 ease-in-out h-[32px]">
+            <i class="bi bi-trash-fill mr-1"></i> Hapus
+        </button>
 
-                            <!-- Tombol Edit -->
-                            <button onclick="toggleEditModal({{ $pkt->id }})"
-                                class="flex items-center justify-center px-2 py-1 bg-yellow-500 text-white text-xs font-semibold rounded-md hover:bg-yellow-600 transition duration-300 ease-in-out min-h-[28px]">
-                                <i class="bi bi-pencil-square mr-1"></i> Edit
-                            </button>
-                            @endrole
+        <!-- Tombol Edit -->
+        <button onclick="toggleEditModal({{ $pkt->id }})"
+            class="flex items-center justify-center px-2.5 py-1.5 bg-yellow-500 text-white text-xs font-semibold rounded-md hover:bg-yellow-600 transition duration-300 ease-in-out h-[32px]">
+            <i class="bi bi-pencil-square mr-1"></i> Edit
+        </button>
+    @endrole
 
-                            <!-- Tombol Add to Cart -->
-                            <form action="{{ route('keranjang.store') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="paket_id" value="{{ $pkt->id }}">
-                                <button type="submit"
-                                    class="flex items-center justify-center w-full px-2 py-1 bg-green-500 text-white text-xs font-semibold rounded-md hover:bg-green-600 transition duration-300 ease-in-out min-h-[28px] whitespace-nowrap">
-                                    <i class="bi bi-cart-plus-fill mr-1"></i> Keranjang
-                                </button>
-                            </form>
-                        </div>
+    <!-- Tombol Add to Cart -->
+    <form action="{{ route('keranjang.store') }}" method="POST">
+        @csrf
+        <input type="hidden" name="paket_id" value="{{ $pkt->id }}">
+        <button type="submit"
+            class="flex items-center justify-center w-full px-2.5 py-1.5 bg-green-500 text-white text-xs font-semibold rounded-md hover:bg-green-600 transition duration-300 ease-in-out h-[32px] whitespace-nowrap">
+            <i class="bi bi-cart-plus-fill mr-1"></i> Keranjang
+        </button>
+    </form>
+</div>
                     </div>
                 </div>
 
@@ -99,12 +98,12 @@
                             <h2 class="text-lg mb-4 font-semibold">Apakah Anda yakin untuk menghapus?</h2>
                             <div class="flex justify-end space-x-2">
                                 <button type="button" onclick="toggleDeleteModal({{ $pkt->id }})"
-                                    class="px-4 py-2 text-gray-700 bg-gray-200 rounded hover:bg-gray-300">Cancel</button>
+                                    class="flex items-center justify-center px-4 py-2 text-gray-700 bg-gray-200 rounded hover:bg-gray-300 w-[80px] h-[40px]">Batal</button>
                                 <form action="{{ route('paket.destroy', $pkt->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
-                                        class="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-700">Delete</button>
+                                        class="flex items-center justify-center px-4 py-2 text-white bg-red-500 rounded hover:bg-red-700 h-[40px]">Hapus</button>
                                 </form>
                             </div>
                         </div>

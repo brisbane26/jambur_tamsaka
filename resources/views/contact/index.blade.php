@@ -107,8 +107,8 @@
                                 <i class="fas fa-clock text-gray-400"></i>
                             </div>
                             <div class="ml-3">
-                                <p class="text-sm font-medium text-gray-500">Jam Kerja</p>
-                                <p class="text-sm text-gray-900">Sen-Jum: 9AM - 6PM<br>Sabt: 10AM - 3PM</p>
+                                <p class="text-sm font-medium text-gray-500">Jam Kerja (WIB)</p>
+                                <p class="text-sm text-gray-900">Senin - Jumat: 09:00 - 18:00<br>Sabtu: 10:00 - 15:00</p>
                             </div>
                         </div>
                         <div class="flex items-start">

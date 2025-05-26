@@ -7,11 +7,8 @@
             <select wire:model.live="status"
                 class="border border-gray-300 rounded-md px-3 py-2 focus:ring w-40 focus:ring-blue-200">
                 <option value="">Semua</option>
-                <option value="selesai">Selesai</option>
                 <option value="menunggu">Menunggu</option>
                 <option value="disetujui">Disetujui</option>
-                <option value="ditolak">Ditolak</option>
-                <option value="dibatalkan">Dibatalkan</option>
             </select>
         </div>
 
@@ -73,8 +70,6 @@
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                                 @if($pesanan->status === 'menunggu') bg-yellow-100 text-yellow-800
                                 @elseif($pesanan->status === 'disetujui') bg-blue-100 text-blue-800
-                                @elseif($pesanan->status === 'ditolak') bg-red-100 text-red-800
-                                @elseif($pesanan->status === 'selesai') bg-green-100 text-green-800
                                 @else bg-gray-100 text-gray-800 @endif">
                                 {{ ucfirst($pesanan->status) }}
                             </span>
