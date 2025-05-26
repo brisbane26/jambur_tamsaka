@@ -56,7 +56,7 @@
           </button>
 
           <div class="mt-4 text-center text-sm text-gray-600">
-            Remember your password? <a href="{{ route('login') }}" class="text-red-600 hover:text-red-800">Sign In</a>
+            Remember your password? <a href="{{ route('login') }}" class="text-red-600 hover:text-red-800">Masuk</a>
           </div>
         </form>
       </div>

@@ -52,7 +52,7 @@
 
                     <div class="mt-6">
                         <button class="py-2 px-4 text-center bg-indigo-600 rounded-md w-full text-white text-sm hover:bg-indigo-500">
-                            Sign in
+                            Masuk
                         </button>
                     </div>
                 </form>
