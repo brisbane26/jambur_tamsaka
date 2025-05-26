@@ -98,7 +98,7 @@
             <button type="button" onclick="prevStep()"
               class="text-gray-600 hover:text-red-600 text-sm">Kembali</button>
             <button type="submit"
-              class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">Register</button>
+            class="w-60 bg-gradient-to-r from-red-600 to-yellow-600 text-white py-2 rounded-md hover:from-red-700 hover:to-yellow-700 transition">Daftar</button>
           </div>
         </div>
       </form>

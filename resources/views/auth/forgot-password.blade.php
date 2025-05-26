@@ -16,7 +16,7 @@
      style="background-image: url('/images/motifkaro.jpeg'); background-size: cover; background-position: left center; background-repeat: no-repeat;">
 
       <h2 class="text-5xl font-bold mb-4 text-yellow-400 text-right">Mejuah-Juah!</h2>
-      <p class="text-xl text-right">Reset your password to access your account</p>
+      <p class="text-xl text-right">Reset password untuk mengakses akun Anda</p>
 
       <!-- Decorative element (optional) -->
       <div class="absolute top-10 right-10">
@@ -42,7 +42,7 @@
 
           <!-- Email -->
           <div class="mb-4">
-            <input type="email" id="email" name="email" placeholder="Your email address" required
+            <input type="email" id="email" name="email" placeholder="Alamat email Anda" required
               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 outline-none" 
               value="{{ old('email') }}"
               autofocus />
@@ -52,11 +52,11 @@
           <!-- Submit -->
           <button type="submit"
             class="w-full bg-gradient-to-r from-red-600 to-yellow-600 text-white py-2 rounded-md hover:from-red-700 hover:to-yellow-700 transition">
-            Send Password Reset Link
+            Kirim Link Reset Password
           </button>
 
           <div class="mt-4 text-center text-sm text-gray-600">
-            Remember your password? <a href="{{ route('login') }}" class="text-red-600 hover:text-red-800">Masuk</a>
+            Ingat password? <a href="{{ route('login') }}" class="text-red-600 hover:text-red-800">Masuk</a>
           </div>
         </form>
       </div>

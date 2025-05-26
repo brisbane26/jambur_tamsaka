@@ -330,21 +330,7 @@
                 <span class="text-lg font-bold tracking-wide">Jambur Tamsaka</span>
                 <span class="text-xs text-red-200 mt-1">&copy; 2025 All Rights Reserved</span>
             </div>
-            <!-- Navigation -->
-            <ul class="flex flex-wrap gap-6 justify-center md:justify-end mt-4 md:mt-0">
-                <li>
-                    <a href="#contactUs" class="hover:text-[#a94442] transition">Contact</a>
-                </li>
-                <li>
-                    <a href="/privacy" class="hover:text-[#a94442] transition">Privacy Policy</a>
-                </li>
-                <li>
-                    <a href="#aboutus" class="hover:text-[#a94442] transition">Tentang Kami</a>
-                </li>
-                <li>
-                    <a href="#gallery" class="hover:text-[#a94442] transition">Gallery</a>
-                </li>
-            </ul>
+
             <!-- Social Media -->
             <div class="flex gap-4 mt-4 md:mt-0">
                 <a href="https://wa.me/6281234567890" target="_blank" class="hover:text-red-200 transition" title="WhatsApp">

@@ -1,6 +1,6 @@
   <link rel="icon" type="image/png" href="{{ asset('images/favicon-removebg-preview.png') }}" />
 <x-admin-layout>
-    <h3 class="text-gray-700 text-3xl font-medium">User List</h3>
+    <h3 class="text-gray-700 text-3xl font-medium">Daftar User</h3>
 
     <div class="p-6">
         <div class="bg-white shadow-md rounded-lg overflow-x-auto">
