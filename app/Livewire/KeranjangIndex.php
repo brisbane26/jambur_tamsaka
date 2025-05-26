@@ -88,4 +88,26 @@ public function loadKeranjang()
         return view('livewire.keranjang-index')
             ->layout('layouts.admin.master');
     }
+
+    public function confirmDelete($id)
+{
+    $keranjang = Keranjang::find($id);
+
+    if ($keranjang) {
+        $keranjang->delete();
+
+        $this->dispatch('showToast', 
+            type: 'success',
+            message: 'Item berhasil dihapus dari keranjang.'
+        );
+
+        $this->loadKeranjang();
+    } else {
+        $this->dispatch('showToast', 
+            type: 'error',
+            message: 'Item tidak ditemukan atau sudah dihapus.'
+        );
+    }
+}
+
 }
