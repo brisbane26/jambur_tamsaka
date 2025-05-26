@@ -18,7 +18,7 @@
 
 
       <h2 class="text-5xl font-bold mb-4 text-yellow-400 text-right">Mejuah-Juah!</h2>
-      <p class="text-xl text-right">Silahkan login menggunakan akun anda</p>
+      <p class="text-xl text-right">Silahkan masuk menggunakan akun anda</p>
 
       <!-- Hiasan dekoratif (opsional, SVG/elemen tambahan) -->
       <div class="absolute top-10 right-10">
@@ -30,7 +30,7 @@
     <div class="w-full lg:w-1/2 flex items-center justify-center p-8" style="background-color: white;">
 
       <div class="w-full max-w-md">
-        <h2 class="text-2xl font-semibold text-gray-800 text-center mb-6">Sign In</h2>
+        <h2 class="text-2xl font-semibold text-gray-800 text-center mb-6">Masuk</h2>
 
         <!-- Session Status -->
         <div id="session-status" class="mb-4 hidden text-sm text-green-600 text-center"></div>
@@ -55,7 +55,7 @@
           <!-- Remember Me -->
           <div class="flex items-center justify-between mb-4">
             <label class="flex items-center text-sm text-gray-600">
-              <input type="checkbox" name="remember" class="mr-2"> Remember me
+              <input type="checkbox" name="remember" class="mr-2"> Ingat Saya
             </label>
             <a href="/forgot-password" class="text-sm text-red-600 hover:text-red-800">Lupa Password Anda?</a>
           </div>
