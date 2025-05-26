@@ -1,6 +1,6 @@
   <link rel="icon" type="image/png" href="{{ asset('images/favicon-removebg-preview.png') }}" />
 <x-admin-layout>
-    <div class="p-6">
+    <div class="p-1">
         <div class="flex justify-between items-center mb-6">
             <h3 class="text-gray-700 text-3xl font-medium">Riwayat Pesanan</h3>
             @role('customer')

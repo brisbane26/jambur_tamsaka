@@ -85,7 +85,7 @@
     </head>
 
     <body>
-        <div class="container p-6">
+        <div class="container p-1">
             <h3 class="text-gray-700 text-3xl font-medium">Kalender Acara</h3>
             <div id='calendar'></div>
         </div>
