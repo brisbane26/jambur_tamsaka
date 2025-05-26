@@ -6,6 +6,16 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
         <style>
+                nav a {
+        text-decoration: none !important;
+        border-bottom: none !important;
+    }
+
+    nav a:hover {
+        text-decoration: none !important;
+        border-bottom: none !important;
+    }
+
             /* Gaya kalender */
             #calendar {
                 background-color: white;
