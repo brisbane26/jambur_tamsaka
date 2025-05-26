@@ -63,7 +63,7 @@
           <!-- Submit -->
           <button type="submit"
             class="w-full bg-gradient-to-r from-red-600 to-yellow-600 text-white py-2 rounded-md hover:from-red-700 hover:to-yellow-700 transition">
-            Sign In
+            Masuk
           </button>
 
           <div class="mt-4 text-center text-sm text-gray-600">

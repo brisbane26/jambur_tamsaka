@@ -72,7 +72,7 @@
            class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200 
                   {{ count($keranjangs) === 0 ? 'opacity-50 cursor-not-allowed' : '' }}"
            @if(count($keranjangs) === 0) onclick="return false;" @endif>
-            <i class="bi bi-cart-check mr-2"></i> Checkout
+            <i class="bi bi-cart-check mr-2"></i> Pesan
         </a>
     </div>
 </div>
