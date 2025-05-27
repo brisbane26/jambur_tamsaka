@@ -40,6 +40,7 @@ class DatabaseSeeder extends Seeder
         $this->call(KategoriSeeder::class);
         $this->call(BankSeeder::class);
         $this->call(PaketSeeder::class);
+        $this->call(PesananComboSeeder::class);
         // $this->call(PermissionsSeeder::class);
     }
 

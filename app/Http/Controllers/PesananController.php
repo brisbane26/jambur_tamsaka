@@ -109,46 +109,64 @@ public function updateStatus(Request $request, Pesanan $pesanan)
     }
 
 public function cancel(Pesanan $pesanan)
-{
-    $user = Auth::user();
+    {
+        $user = Auth::user();
 
-    // Admin bisa batalkan kapan saja
-    if ($user->hasRole('admin')) {
-        $pesanan->update(['status' => 'dibatalkan']);
-        return back()->with('message', 'Pesanan berhasil dibatalkan');
-    }
-
-    // Customer hanya bisa batalkan jika status menunggu/disetujui
-    if ($pesanan->user_id == $user->id && in_array($pesanan->status, ['menunggu', 'disetujui'])) {
-        $tanggalPesanan = $pesanan->jadwal->tanggal;
-        $sekarang = Carbon::now();
-
-        // Hanya boleh membatalkan jika hari H pesanan masih lebih dari 2 hari lagi
-        if (Carbon::parse($tanggalPesanan)->diffInDays($sekarang, false) < -2) {
+        // Admin bisa batalkan kapan saja
+        if ($user->hasRole('admin')) {
             $pesanan->update(['status' => 'dibatalkan']);
-
             $notifications = [
-                'message' => 'Pesanan berhasil dibatalkan',
+                'message' => 'Pesanan berhasil dibatalkan oleh Admin.',
                 'alert-type' => 'success'
             ];
             return back()->with($notifications);
         }
 
-        // Jika sudah lewat batas H-2
+        // Customer hanya bisa batalkan jika status menunggu/disetujui dan dia adalah pemilik pesanan
+        if ($pesanan->user_id == $user->id && in_array($pesanan->status, ['menunggu', 'disetujui'])) {
+            // Pastikan relasi jadwal dimuat untuk mendapatkan tanggal acara
+            $pesanan->load('jadwal'); 
+
+            // Periksa apakah jadwal ada untuk pesanan ini
+            if (!$pesanan->jadwal) {
+                $notifications = [
+                    'message' => 'Informasi jadwal untuk pesanan ini tidak ditemukan.',
+                    'alert-type' => 'error'
+                ];
+                return back()->with($notifications);
+            }
+
+            // Pastikan tanggal acara dan hari ini di awal hari untuk perbandingan yang akurat
+            $tanggalAcara = Carbon::parse($pesanan->jadwal->tanggal)->startOfDay();
+            $hariIni = Carbon::today()->startOfDay();
+
+            // Logika H-3: Tanggal acara harus setelah 2 hari dari hari ini (yaitu, minimal H-3)
+            // Contoh: Jika hari ini 27 Mei, acara harus setelah 29 Mei (yaitu mulai 30 Mei)
+            if ($tanggalAcara->isAfter($hariIni->addDays(2))) {
+                $pesanan->update(['status' => 'dibatalkan']);
+
+                $notifications = [
+                    'message' => 'Pesanan berhasil dibatalkan.',
+                    'alert-type' => 'success'
+                ];
+                return back()->with($notifications);
+            } else {
+                $notifications = [
+                    'message' => 'Pesanan hanya bisa dibatalkan minimal 3 hari sebelum tanggal pelaksanaan (H-3).',
+                    'alert-type' => 'warning'
+                ];
+                return back()->with($notifications);
+            }
+        }
+
+        // Jika tidak memenuhi kriteria di atas (bukan admin, bukan pemilik, atau status tidak valid)
         $notifications = [
-            'message' => 'Pesanan hanya bisa dibatalkan maksimal 2 hari sebelum tanggal pelaksanaan.',
-            'alert-type' => 'warning'
+            'message' => 'Anda tidak dapat membatalkan pesanan ini karena bukan pemilik atau status tidak valid.',
+            'alert-type' => 'alert'
         ];
+
         return back()->with($notifications);
     }
-
-    $notifications = [
-        'message' => 'Anda tidak dapat membatalkan pesanan ini',
-        'alert-type' => 'alert'
-    ];
-
-    return back()->with($notifications);
-}
 
 
 public function history(Request $request)
