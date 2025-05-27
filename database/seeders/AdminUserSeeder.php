@@ -53,16 +53,42 @@ class AdminUserSeeder extends Seeder
         $adminUser->assignRole('admin');
 
         // Buat Customer User
-        $customerUser = User::firstOrCreate(
-            ['email' => 'customer@example.com'],
-            [
-                'username' => 'customer',
-                'nama_lengkap' => 'Customer Jambur',
-                'telepon' => '081234567891',
-                'password' => Hash::make('customer123'),
-                'email_verified_at' => now(),
-            ]
-        );
-        $customerUser->assignRole('customer');
+$customerUsers = [
+    [
+        'email' => 'customer@example.com',
+        'username' => 'customer',
+        'nama_lengkap' => 'Customer Jambur',
+        'telepon' => '081234567891',
+        'password' => Hash::make('customer123'),
+        'email_verified_at' => now(),
+    ],
+    [
+        'email' => 'petra@example.com',
+        'username' => 'petra',
+        'nama_lengkap' => 'Petra Igor',
+        'telepon' => '081234567892',
+        'password' => Hash::make('petra123'),
+        'email_verified_at' => now(),
+    ],
+    [
+        'email' => 'bane@example.com',
+        'username' => 'bane',
+        'nama_lengkap' => 'Bane Jovan',
+        'telepon' => '081234567893',
+        'password' => Hash::make('bane123'),
+        'email_verified_at' => now(),
+    ],
+];
+
+foreach ($customerUsers as $customerData) {
+    $user = User::firstOrCreate(
+        ['email' => $customerData['email']],
+        $customerData
+    );
+
+    $user->assignRole('customer');
+}
+
+        
     }
 }
