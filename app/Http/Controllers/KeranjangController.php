@@ -75,109 +75,125 @@ public function checkout_index()
 }
 
 public function checkout_store(Request $request)
-{
-    $request->validate([
-        'nama_acara' => 'required|string|max:255',
-        'tanggal_acara' => 'required|date|after_or_equal:' . now()->addDays(3)->toDateString(),
-        'metode_bayar' => 'required|in:cash,transfer',
-        'bukti_transfer' => 'required_if:metode_bayar,transfer|image|mimes:jpeg,png,jpg|max:2048',
-        'catatan' => 'nullable|string|max:1000'
-    ]);
+    {
+        $request->validate([
+            'nama_acara' => 'required|string|max:255',
+            'tanggal_acara' => 'required|date|after_or_equal:' . now()->addDays(3)->toDateString(),
+            'metode_bayar' => 'required|in:cash,transfer',
+            'bukti_transfer' => 'required_if:metode_bayar,transfer|image|mimes:jpeg,png,jpg|max:2048',
+            'catatan' => 'nullable|string|max:1000'
+        ], [
+            // Pesan validasi kustom
+            'tanggal_acara.after_or_equal' => 'Tanggal acara harus minimal 3 hari ke depan dari hari ini.',
+            'tanggal_acara.required' => 'Kolom tanggal acara wajib diisi.',
+            'tanggal_acara.date' => 'Format tanggal acara tidak valid.',
+            'nama_acara.required' => 'Kolom nama acara wajib diisi.',
+            'nama_acara.string' => 'Nama acara harus berupa teks.',
+            'nama_acara.max' => 'Nama acara tidak boleh lebih dari :max karakter.',
+            'metode_bayar.required' => 'Metode pembayaran wajib dipilih.',
+            'metode_bayar.in' => 'Metode pembayaran tidak valid.',
+            'bukti_transfer.required_if' => 'Bukti transfer wajib diunggah jika metode pembayaran adalah transfer.',
+            'bukti_transfer.image' => 'File bukti transfer harus berupa gambar.',
+            'bukti_transfer.mimes' => 'Format gambar bukti transfer yang diperbolehkan adalah jpeg, png, jpg.',
+            'bukti_transfer.max' => 'Ukuran gambar bukti transfer tidak boleh lebih dari :max kilobyte.',
+            'catatan.string' => 'Catatan harus berupa teks.',
+            'catatan.max' => 'Catatan tidak boleh lebih dari :max karakter.',
+        ]);
 
-    // Ambil ID gedung utama dan resepsi
-    $gedungUtamaId = Paket::where('nama_paket', 'Gedung Utama')->value('id');
-    $gedungResepsiId = Paket::where('nama_paket', 'Gedung Resepsi')->value('id');
+        // Ambil ID gedung utama dan resepsi
+        $gedungUtamaId = Paket::where('nama_paket', 'Gedung Utama')->value('id');
+        $gedungResepsiId = Paket::where('nama_paket', 'Gedung Resepsi')->value('id');
 
-    // Cek ketersediaan gedung di tanggal yang diminta
-    $gedungUtamaTerpakai = DetailPesanan::whereHas('pesanan.jadwal', function($q) use ($request) {
+        // Cek ketersediaan gedung di tanggal yang diminta
+        $gedungUtamaTerpakai = DetailPesanan::whereHas('pesanan.jadwal', function($q) use ($request) {
             $q->where('tanggal', $request->tanggal_acara);
         })
         ->where('paket_id', $gedungUtamaId)
         ->exists();
 
-    $gedungResepsiTerpakai = DetailPesanan::whereHas('pesanan.jadwal', function($q) use ($request) {
+        $gedungResepsiTerpakai = DetailPesanan::whereHas('pesanan.jadwal', function($q) use ($request) {
             $q->where('tanggal', $request->tanggal_acara);
         })
         ->where('paket_id', $gedungResepsiId)
         ->exists();
 
-    // Cek gedung yang dipesan di keranjang
-    $keranjangGedung = Keranjang::where('user_id', auth()->id())
-        ->whereHas('paket.kategori', function($q) {
-            $q->where('nama_kategori', 'Gedung');
-        })
-        ->pluck('paket_id')
-        ->toArray();
+        // Cek gedung yang dipesan di keranjang
+        $keranjangGedung = Keranjang::where('user_id', auth()->id())
+            ->whereHas('paket.kategori', function($q) {
+                $q->where('nama_kategori', 'Gedung');
+            })
+            ->pluck('paket_id')
+            ->toArray();
 
-    $pesanGedungUtama = in_array($gedungUtamaId, $keranjangGedung);
-    $pesanGedungResepsi = in_array($gedungResepsiId, $keranjangGedung);
+        $pesanGedungUtama = in_array($gedungUtamaId, $keranjangGedung);
+        $pesanGedungResepsi = in_array($gedungResepsiId, $keranjangGedung);
 
-    // Validasi ketersediaan
-    if ($gedungUtamaTerpakai && $gedungResepsiTerpakai) {
-        if ($pesanGedungUtama || $pesanGedungResepsi) {
+        // Validasi ketersediaan
+        if ($gedungUtamaTerpakai && $gedungResepsiTerpakai) {
+            if ($pesanGedungUtama || $pesanGedungResepsi) {
+                return back()->withErrors([
+                    'tanggal_acara' => 'Maaf, Gedung Utama dan Gedung Resepsi sudah dipesan pada tanggal yang Anda pilih.'
+                ]);
+            }
+        } elseif ($gedungUtamaTerpakai && $pesanGedungUtama) {
             return back()->withErrors([
-                'tanggal_acara' => 'Gedung utama dan gedung resepsi sudah dipesan pada tanggal yang sama'
+                'tanggal_acara' => 'Maaf, Gedung Utama sudah dipesan pada tanggal yang Anda pilih.'
+            ]);
+        } elseif ($gedungResepsiTerpakai && $pesanGedungResepsi) {
+            return back()->withErrors([
+                'tanggal_acara' => 'Maaf, Gedung Resepsi sudah dipesan pada tanggal yang Anda pilih.'
             ]);
         }
-    } elseif ($gedungUtamaTerpakai && $pesanGedungUtama) {
-        return back()->withErrors([
-            'tanggal_acara' => 'Gedung utama sudah dipesan pada tanggal yang sama'
+
+        // Validasi minimal 1 gedung dipesan
+        if (!$pesanGedungUtama && !$pesanGedungResepsi) {
+            return back()->withErrors([
+                'tanggal_acara' => 'Anda harus memesan minimal 1 gedung (Gedung Utama atau Gedung Resepsi) untuk melanjutkan.'
+            ]);
+        }
+
+        // Proses checkout
+        $buktiPath = null;
+        if ($request->hasFile('bukti_transfer')) {
+            $buktiPath = $request->file('bukti_transfer')->store('bukti_transfer', 'public');
+        }
+
+        $jadwal = Jadwal::create([
+            'tanggal' => $request->tanggal_acara,
+            'nama_acara' => $request->nama_acara,
+            'user_id' => Auth::id(),
         ]);
-    } elseif ($gedungResepsiTerpakai && $pesanGedungResepsi) {
-        return back()->withErrors([
-            'tanggal_acara' => 'Gedung resepsi sudah dipesan pada tanggal yang sama'
+
+        $pesanan = Pesanan::create([
+            'user_id' => Auth::id(),
+            'jadwal_id' => $jadwal->id,
+            'status' => 'menunggu',
+            'bukti_transaksi' => $buktiPath,
         ]);
-    }
 
-    // Validasi minimal 1 gedung dipesan
-    if (!$pesanGedungUtama && !$pesanGedungResepsi) {
-        return back()->withErrors([
-            'tanggal_acara' => 'Anda harus memesan minimal 1 gedung'
-        ]);
-    }
-
-    // Proses checkout
-    $buktiPath = null;
-    if ($request->hasFile('bukti_transfer')) {
-        $buktiPath = $request->file('bukti_transfer')->store('bukti_transfer', 'public');
-    }
-    
-    $jadwal = Jadwal::create([
-        'tanggal' => $request->tanggal_acara,
-        'nama_acara' => $request->nama_acara,
-        'user_id' => Auth::id(),
-    ]);
-
-    $pesanan = Pesanan::create([
-        'user_id' => Auth::id(),
-        'jadwal_id' => $jadwal->id,
-        'status' => 'menunggu',
-        'bukti_transaksi' => $buktiPath,
-    ]);
-
-    Pembayaran::create([
-        'pesanan_id' => $pesanan->id,
-        'metode_bayar' => $request->metode_bayar,
-        'status' => $request->metode_bayar == 'cash' ? 'Pending' : 'Pending',
-    ]);
-
-    foreach (Keranjang::where('user_id', Auth::id())->get() as $keranjang) {
-        DetailPesanan::create([
+        Pembayaran::create([
             'pesanan_id' => $pesanan->id,
-            'paket_id' => $keranjang->paket_id,
-            'kuantitas' => $keranjang->kuantitas,
-            'harga' => $keranjang->paket->harga_jual,
-            'catatan' => Auth::user()->hasRole('admin') ? $request->catatan : null
+            'metode_bayar' => $request->metode_bayar,
+            'status' => $request->metode_bayar == 'cash' ? 'Pending' : 'Pending',
+        ]);
+
+        foreach (Keranjang::where('user_id', Auth::id())->get() as $keranjang) {
+            DetailPesanan::create([
+                'pesanan_id' => $pesanan->id,
+                'paket_id' => $keranjang->paket_id,
+                'kuantitas' => $keranjang->kuantitas,
+                'harga' => $keranjang->paket->harga_jual,
+                'catatan' => Auth::user()->hasRole('admin') ? $request->catatan : null
+            ]);
+        }
+
+        Keranjang::where('user_id', Auth::id())->delete();
+
+        return redirect()->route('pesanan.index')->with([
+            'message' => 'Pesanan berhasil dibuat',
+            'alert-type' => 'success'
         ]);
     }
-
-    Keranjang::where('user_id', Auth::id())->delete();
-
-    return redirect()->route('pesanan.index')->with([
-        'message' => 'Pesanan berhasil dibuat',
-        'alert-type' => 'success'
-    ]);
-}
     public function store(Request $request)
 {
     $request->validate([
