@@ -20,7 +20,7 @@
 
 
             <h2 class="text-5xl font-bold mb-4 text-yellow-400 text-right">Mejuah-Juah!</h2>
-            <p class="text-xl text-right">Silahkan membuat akun baru anda</p>
+            <p class="text-xl text-right">Silakan membuat akun baru anda</p>
 
             <!-- Hiasan dekoratif (opsional, SVG/elemen tambahan) -->
             <div class="absolute top-10 right-10">
@@ -54,7 +54,7 @@
                         <input type="text" id="telepon" name="telepon" placeholder="Nomor Telepon" required
                             oninput="validatePhone()"
                             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 outline-none" />
-                        <p class="text-sm mt-1 text-gray-500" id="phone-format">Hanya angka yang diperbolehkan.</p>
+                            <p class="text-sm mt-1 text-gray-500" id="phone-format">Hanya angka (minimal 11 digit) yang diperbolehkan.</p>
                     </div>
 
                     <button type="button" onclick="nextStep()"
@@ -124,7 +124,8 @@
             const nama = document.getElementById('nama_lengkap').value.trim();
             const username = document.getElementById('username').value.trim();
             const phone = phoneInput.value.trim();
-            const validPhone = /^[0-9]*$/.test(phone);
+            const validPhone = /^[0-9]{11,}$/.test(phone);
+
 
             if (!nama || !username || !phone) {
                 Swal.fire('Lengkapi Data', 'Semua kolom harus diisi.', 'error');
@@ -132,9 +133,9 @@
             }
 
             if (!validPhone) {
-                Swal.fire('Nomor Telepon tidak valid', 'Hanya angka yang diperbolehkan.', 'error');
-                return;
-            }
+            Swal.fire('Nomor Telepon tidak valid', 'Nomor harus berupa angka dan minimal 11 digit.', 'error');
+            return;
+        }
 
             document.getElementById('step1').classList.add('hidden');
             document.getElementById('step2').classList.remove('hidden');
@@ -154,7 +155,7 @@
 
         emailInput.addEventListener('input', () => {
             const email = emailInput.value.trim();
-            const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            const valid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
             document.getElementById('email-format').style.color = valid ? 'green' : 'gray';
         });
 
@@ -193,7 +194,7 @@
             const password = passwordInput.value;
             const confirm = confirmInput.value;
 
-            const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            const validEmail =/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
             const validPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(password);
 
             if (!validEmail) {

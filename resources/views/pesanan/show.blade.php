@@ -79,10 +79,6 @@
                         <span class="w-1/3 font-medium">Metode Bayar</span>
                         <span>: {{ $pesanan->pembayaran->metode_bayar ?? '-' }}</span>
                     </div>
-                    <div class="flex">
-                        <span class="w-1/3 font-medium">Status Pembayaran</span>
-                        <span>: {{ $pesanan->pembayaran->status ?? '-' }}</span>
-                    </div>
 
                     @if ($pesanan->bukti_transaksi)
                         <div class="mt-4">

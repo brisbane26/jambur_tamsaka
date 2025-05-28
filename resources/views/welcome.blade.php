@@ -57,17 +57,17 @@
         <a href="#contactUs" class="nav-link block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none transition-colors duration-300">Kunjungi Kami</a>
     </div>
 
-    <div class="toggle w-full text-end hidden md:flex md:w-auto px-2 py-2 md:rounded">
+    <div class="toggle w-full text-end hidden md:flex md:w-auto px-4 py-4 md:rounded">
     <a href="{{ route('login') }}">
         <div class="flex justify-end">
-            <div class="flex items-center h-10 w-30 rounded-md bg-white" style="color:#5c1515;font-weight:bold;" p-2 hover:bg-[#f8d7da] transition">
+<div class="flex items-center justify-center h-10 w-[120px] rounded-md bg-white p-2 hover:bg-[#f8d7da] transition" style="color:#5c1515;font-weight:bold;">
                 <!-- Heroicon name: calendar -->
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-6 h-6 mr-1">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M6.75 3v2.25M17.25 3v2.25M3 8.25h18M4.5 7.5v11.25A2.25 2.25 0 006.75 21h10.5A2.25 2.25 0 0019.5 18.75V7.5M16.5 12.75h.008v.008H16.5v-.008z" />
                 </svg>
-                Pesan Sekarang
+                Pesan 
             </div>
         </div>
     </a>
@@ -127,7 +127,8 @@
         </h2>
         <ul class="list-disc pl-6 text-gray-800 text-lg space-y-2">
           <li><span class="font-semibold text-[#5c1515]">Pemesanan gedung</span> hanya dapat dilakukan minimal <span class="font-bold">3 hari setelah hari ini</span>.</li>
-          <li><span class="font-semibold text-[#5c1515]">Pembatalan pesanan</span> hanya dapat dilakukan maksimal <span class="font-bold">H-2 sebelum hari acara</span>.</li>
+          <li><span class="font-semibold text-[#5c1515]">Pembatalan pesanan</span> hanya dapat dilakukan maksimal <span class="font-bold">H-3 sebelum hari acara</span>.</li>
+          <li><span class="font-semibold text-[#5c1515]">Pelanggan wajib memesan gedung</span> untuk dapat <span class="font-bold">memesan paket-paket lain</span>.</li>
           <li><span class="font-semibold text-[#5c1515]">Pembayaran cash (tunai)</span> wajib dilakukan <span class="font-bold">langsung di kantor Jambur.</span></li>
           <li><span class="font-semibold text-[#5c1515]">Pengembalian uang</span> dilakukan dengan <span class="font-bold">menghubungi admin.</span></li>
         </ul>

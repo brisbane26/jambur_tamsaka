@@ -2,8 +2,8 @@
 <x-admin-layout>
     <h3 class="text-gray-700 text-3xl font-medium">Paket</h3>
 
-    <div class="mt-2">
-    <div class="flex justify-between items-center">
+<div class="mt-2">
+    <div class="flex items-center justify-between">
         @role('admin')
             <a href="{{ route('paket.create') }}" 
                class="px-6 py-3 bg-green-600 rounded-md text-white font-medium tracking-wide hover:bg-green-500 transition duration-300">
@@ -12,40 +12,38 @@
         @endrole
 
         @if(request()->routeIs('paket.index'))
-            <form method="GET" action="{{ route('paket.index') }}" class="ml-4 hidden lg:block relative max-w-md">
-    <div class="relative max-w-md w-full">
-    <div class="relative">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
-                viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="7" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-        </span>
-        <input
-            type="text"
-            id="search-paket"
-            name="search"
-            placeholder="Cari paket..."
-            value="{{ request('search') }}"
-            autocomplete="off"
-            class="w-full h-10 pl-10 pr-4 rounded-lg border border-gray-300 text-gray-700 placeholder-gray-400
-                focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600 transition duration-200"
-        >
-    </div>
-
-    <!-- Autocomplete Dropdown -->
-    <ul id="autocomplete-results"
-        class="absolute left-0 right-0 mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto z-50 hidden transition-all duration-200"
-        role="listbox">
-    </ul>
-</div>
-
-</form>
-
+            <div class="ml-auto">
+                <form method="GET" action="{{ route('paket.index') }}" class="hidden lg:block relative max-w-md w-full">
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <circle cx="11" cy="11" r="7" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg>
+                        </span>
+                        <input
+                            type="text"
+                            id="search-paket"
+                            name="search"
+                            placeholder="Cari paket..."
+                            value="{{ request('search') }}"
+                            autocomplete="off"
+                            class="w-full h-10 pl-10 pr-4 rounded-lg border border-gray-300 text-gray-700 placeholder-gray-400
+                                focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600 transition duration-200"
+                        >
+                        <!-- Autocomplete Dropdown -->
+                        <ul id="autocomplete-results"
+                            class="absolute left-0 right-0 mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto z-50 hidden transition-all duration-200"
+                            role="listbox">
+                        </ul>
+                    </div>
+                </form>
+            </div>
         @endif
     </div>
 </div>
+
 
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
