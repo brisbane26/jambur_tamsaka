@@ -131,6 +131,7 @@
           <li><span class="font-semibold text-[#5c1515]">Pelanggan wajib memesan gedung</span> untuk dapat <span class="font-bold">memesan paket-paket lain</span>.</li>
           <li><span class="font-semibold text-[#5c1515]">Pembayaran cash (tunai)</span> wajib dilakukan <span class="font-bold">langsung di kantor Jambur.</span></li>
           <li><span class="font-semibold text-[#5c1515]">Pengembalian uang</span> dilakukan dengan <span class="font-bold">menghubungi admin.</span></li>
+          <li><span class="font-semibold text-[#5c1515]">Pembayaran pesanan</span> tunai atau non tunai <span class="font-bold">harus dibayarkan secara penuh</span></li>
         </ul>
         <div class="mt-6 flex items-center bg-[#f3eaea] rounded-lg p-4">
           <svg class="w-6 h-6 text-[#a94442] mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
