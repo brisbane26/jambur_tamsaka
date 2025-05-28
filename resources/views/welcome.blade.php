@@ -51,8 +51,8 @@
     </div>
     <div class="toggle hidden w-full md:w-auto md:flex text-right text-bold mt-5 md:mt-0 md:border-none">
         <a href="#home" class="nav-link block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none transition-colors duration-300">Home</a>
-        <a href="#services" class="nav-link block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none transition-colors duration-300">Paket</a>
         <a href="#aboutus" class="nav-link block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none transition-colors duration-300">Tentang Kami</a>
+        <a href="#services" class="nav-link block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none transition-colors duration-300">Paket</a>
         <a href="#gallery" class="nav-link block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none transition-colors duration-300">Galeri</a>
         <a href="#contactUs" class="nav-link block md:inline-block hover:text-[#a94442] px-3 py-3 md:border-none transition-colors duration-300">Kunjungi Kami</a>
     </div>
