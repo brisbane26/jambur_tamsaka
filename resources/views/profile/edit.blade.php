@@ -26,6 +26,8 @@
                     <input id="email" type="email" name="email" value="{{ old('email', $user->email) }}"
                         class="w-full mt-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600
 ">
+<p class="text-sm mt-1 text-gray-500" id="email-format">Format email valid (cth:
+                            user@example.com)</p>
                     @error('email')
                         <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                     @enderror
@@ -57,6 +59,8 @@
                     <input id="telepon" type="text" name="telepon" value="{{ old('telepon', $user->telepon) }}"
                         class="w-full mt-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600
 ">
+                            <p class="text-sm mt-1 text-gray-500" id="phone-format">Hanya angka (minimal 11 digit) yang diperbolehkan.</p>
+
                     @error('telepon')
                         <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                     @enderror
@@ -130,8 +134,6 @@
             const confirmInput = document.getElementById('password_confirmation');
             const toggleBtn = document.getElementById('toggleBtn');
             const form = document.getElementById('formProfile');
-
-            // Regex password sesuai aturan
             const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
             // Tampilkan indikator kekuatan password saat user mengetik
@@ -167,8 +169,25 @@
 
             // Validasi saat form disubmit
             form.addEventListener('submit', function(e) {
+                const email = document.getElementById('email').value.trim();
                 const password = passwordInput.value.trim();
                 const confirm = confirmInput.value.trim();
+                const telepon = document.getElementById('telepon').value.trim();
+                const teleponRegex = /^08[0-9]{9,11}$/;
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+                
+                if (!emailRegex.test(email)) {
+                    e.preventDefault();
+                    Swal.fire('Email tidak valid', 'Masukkan email dengan format yang benar.', 'error');
+                    return;
+                }
+
+                if (!teleponRegex.test(telepon)) {
+                    e.preventDefault();
+                    Swal.fire('Nomor telepon tidak valid', 'Gunakan format Indonesia, contoh: 08xxxxxxxxxx.Minimal 11 angka', 'error');
+                    return;
+                }
 
                 const wantToChange = password !== '' || confirm !== '';
 

@@ -18,7 +18,7 @@
 
 
       <h2 class="text-5xl font-bold mb-4 text-yellow-400 text-right">Mejuah-Juah!</h2>
-      <p class="text-xl text-right">Silahkan masuk menggunakan akun anda</p>
+      <p class="text-xl text-right">Silakan masuk menggunakan akun anda</p>
 
       <!-- Hiasan dekoratif (opsional, SVG/elemen tambahan) -->
       <div class="absolute top-10 right-10">
