@@ -8,7 +8,6 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <!-- Informasi Pesanan -->
             <div class="bg-white shadow-md rounded-lg p-6">
                 <h3 class="text-lg font-semibold mb-4 border-b pb-2">Informasi Pesanan</h3>
                 <div class="space-y-3">
@@ -59,15 +58,16 @@
                                 <span>:</span>
                             </div>
                             <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-1">
-                                <p class="text-blue-700 whitespace-pre-line">
-                                    {{ $pesanan->detailPesanan->first()->catatan }}</p>
+                                <p class="text-blue-700">
+                                    {!! nl2br(e(ltrim($pesanan->detailPesanan->first()->catatan))) !!}
+                                </p>
+
                             </div>
                         </div>
                     @endif
                 </div>
             </div>
 
-            <!-- Informasi Pembayaran -->
             <div class="bg-white shadow-md rounded-lg p-6">
                 <h3 class="text-lg font-semibold mb-4 border-b pb-2">Informasi Pembayaran</h3>
                 <div class="space-y-3">
@@ -114,7 +114,6 @@
             </div>
         </div>
 
-        <!-- Form Update Status (Admin Only) -->
         @role('admin')
             <div class="bg-white shadow-md rounded-lg p-6 mb-6">
                 <h3 class="text-lg font-semibold mb-4 border-b pb-2">Update Status Pesanan</h3>
@@ -152,7 +151,6 @@
             </div>
         @endrole
 
-        <!-- Tombol Cancel untuk Customer -->
         <div class="p-6">
             @role('customer')
                 @if (in_array($pesanan->status, ['menunggu', 'disetujui']))
@@ -191,7 +189,6 @@
         </div>
 
 
-        <!-- Detail Paket -->
         <div class="bg-white shadow-md rounded-lg p-6">
             <h3 class="text-lg font-semibold mb-4 border-b pb-2">Detail Paket</h3>
             <div class="overflow-x-auto">
@@ -233,7 +230,6 @@
             </div>
         </div>
 
-        <!-- Invoice/Struk (hanya jika status disetujui) -->
         @if ($pesanan->status === 'disetujui')
             <div class="bg-white shadow-md rounded-lg p-6 mt-6">
                 <h3 class="text-lg font-semibold mb-4 border-b pb-2 flex items-center gap-2">
@@ -316,7 +312,7 @@
                     win.document.write('<html><head><title>Invoice Jambur Tamsaka</title>');
                     win.document.write(
                         '<style>body{font-family:sans-serif;} .p-2{padding:8px;} .text-right{text-align:right;} .text-center{text-align:center;} .font-bold{font-weight:bold;} .bg-gray-100{background:#f3f4f6;} .mt-2{margin-top:8px;} .mb-2{margin-bottom:8px;} .rounded{border-radius:8px;} .border{border:1px solid #e5e7eb;} .w-full{width:100%;} table{border-collapse:collapse;width:100%;} th,td{border:1px solid #e5e7eb;} .text-xs{font-size:12px;}</style>'
-                        );
+                    );
                     win.document.write('</head><body>');
                     win.document.write(printContents);
                     win.document.write('</body></html>');
@@ -331,12 +327,24 @@
         @role('admin')
             @push('scripts')
                 <script>
-                    document.getElementById('status').addEventListener('change', function() {
+                    document.addEventListener('turbo:load', function() {
+                        const statusSelect = document.getElementById('status');
                         const alasanTolakContainer = document.getElementById('alasan-tolak-container');
-                        if (this.value === 'ditolak') {
-                            alasanTolakContainer.classList.remove('hidden');
-                        } else {
-                            alasanTolakContainer.classList.add('hidden');
+
+                        if (statusSelect && alasanTolakContainer) {
+                            statusSelect.addEventListener('change', function() {
+                                if (this.value === 'ditolak') {
+                                    alasanTolakContainer.classList.remove('hidden');
+                                } else {
+                                    alasanTolakContainer.classList.add('hidden');
+                                }
+                            });
+
+                            if (statusSelect.value === 'ditolak') {
+                                alasanTolakContainer.classList.remove('hidden');
+                            } else {
+                                alasanTolakContainer.classList.add('hidden');
+                            }
                         }
                     });
                 </script>

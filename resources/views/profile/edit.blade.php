@@ -26,8 +26,8 @@
                     <input id="email" type="email" name="email" value="{{ old('email', $user->email) }}"
                         class="w-full mt-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600
 ">
-<p class="text-sm mt-1 text-gray-500" id="email-format">Format email valid (cth:
-                            user@example.com)</p>
+                    <p class="text-sm mt-1 text-gray-500" id="email-format">Format email valid (cth:
+                        user@example.com)</p>
                     @error('email')
                         <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                     @enderror
@@ -59,7 +59,7 @@
                     <input id="telepon" type="text" name="telepon" value="{{ old('telepon', $user->telepon) }}"
                         class="w-full mt-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600
 ">
-                            <p class="text-sm mt-1 text-gray-500" id="phone-format">Hanya angka (minimal 11 digit) yang diperbolehkan.</p>
+                    <p class="text-sm mt-1 text-gray-500" id="phone-format">Hanya angka (minimal 11 digit) yang diperbolehkan.</p>
 
                     @error('telepon')
                         <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -84,7 +84,7 @@
                     <label for="password" class="block text-sm font-medium text-gray-700">Password Baru</label>
                     <input id="password" type="password" name="password"
                         class="w-full mt-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600
- pr-20"
+pr-20"
                         placeholder="Kosongkan jika tidak ingin mengganti">
 
                     <button type="button" onclick="togglePw()" id="toggleBtn"
@@ -129,83 +129,105 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        // Fungsi untuk menginisialisasi semua event listener dan fungsionalitas
+        function initializeProfileScripts() {
             const passwordInput = document.getElementById('password');
             const confirmInput = document.getElementById('password_confirmation');
             const toggleBtn = document.getElementById('toggleBtn');
             const form = document.getElementById('formProfile');
             const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
-            // Tampilkan indikator kekuatan password saat user mengetik
-            passwordInput.addEventListener('input', () => {
-                const val = passwordInput.value;
-                toggleRule('rule-length', val.length >= 8);
-                toggleRule('rule-upper', /[A-Z]/.test(val));
-                toggleRule('rule-lower', /[a-z]/.test(val));
-                toggleRule('rule-digit', /[0-9]/.test(val));
-                toggleRule('rule-symbol', /[\W_]/.test(val));
-            });
-
-            function toggleRule(id, valid) {
-                document.getElementById(id).style.color = valid ? 'green' : 'gray';
+            // Pastikan elemen ada sebelum menambahkan event listener
+            if (passwordInput) {
+                passwordInput.addEventListener('input', () => {
+                    const val = passwordInput.value;
+                    toggleRule('rule-length', val.length >= 8);
+                    toggleRule('rule-upper', /[A-Z]/.test(val));
+                    toggleRule('rule-lower', /[a-z]/.test(val));
+                    toggleRule('rule-digit', /[0-9]/.test(val));
+                    toggleRule('rule-symbol', /[\W_]/.test(val));
+                });
             }
 
-            function togglePw() {
+            function toggleRule(id, valid) {
+                const ruleElement = document.getElementById(id);
+                if (ruleElement) { // Pastikan elemen ada
+                    ruleElement.style.color = valid ? 'green' : 'gray';
+                }
+            }
+
+            // Fungsi togglePw dan toggleConfirmPw sudah global di window, jadi tidak perlu diubah
+            // Namun, pastikan elemen toggleBtn dan toggleConfirmBtn ada saat fungsi dipanggil
+
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    const email = document.getElementById('email').value.trim();
+                    const telepon = document.getElementById('telepon').value.trim();
+                    const teleponRegex = /^08[0-9]{9,11}$/;
+                    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+                    if (!emailRegex.test(email)) {
+                        e.preventDefault();
+                        Swal.fire('Email tidak valid', 'Masukkan email dengan format yang benar.', 'error');
+                        return;
+                    }
+
+                    if (!teleponRegex.test(telepon)) {
+                        e.preventDefault();
+                        Swal.fire('Nomor telepon tidak valid', 'Gunakan format Indonesia, contoh: 08xxxxxxxxxx. Minimal 11 angka', 'error');
+                        return;
+                    }
+
+                    const password = passwordInput ? passwordInput.value.trim() : ''; // Handle jika password input tidak ada
+                    const confirm = confirmInput ? confirmInput.value.trim() : ''; // Handle jika confirm input tidak ada
+                    const wantToChange = password !== '' || confirm !== '';
+
+                    if (wantToChange) {
+                        if (!passwordRegex.test(password)) {
+                            e.preventDefault();
+                            Swal.fire('Password tidak valid', 'Pastikan semua syarat password terpenuhi.',
+                                'error');
+                            return;
+                        }
+
+                        if (password !== confirm) {
+                            e.preventDefault();
+                            Swal.fire('Konfirmasi salah', 'Password dan konfirmasi tidak sama.', 'error');
+                            return;
+                        }
+                    }
+                });
+            }
+        }
+
+        // Fungsi togglePw dan toggleConfirmPw tetap global
+        function togglePw() {
+            const passwordInput = document.getElementById('password');
+            const toggleBtn = document.getElementById('toggleBtn');
+            if (passwordInput && toggleBtn) {
                 const isHidden = passwordInput.type === 'password';
                 passwordInput.type = isHidden ? 'text' : 'password';
                 toggleBtn.textContent = isHidden ? 'Sembunyikan' : 'Tampilkan';
             }
-            window.togglePw = togglePw;
+        }
 
-            function toggleConfirmPw() {
-                const confirmInput = document.getElementById('password_confirmation');
-                const btn = document.getElementById('toggleConfirmBtn');
+        function toggleConfirmPw() {
+            const confirmInput = document.getElementById('password_confirmation');
+            const btn = document.getElementById('toggleConfirmBtn');
+            if (confirmInput && btn) {
                 const isHidden = confirmInput.type === 'password';
                 confirmInput.type = isHidden ? 'text' : 'password';
                 btn.textContent = isHidden ? 'Sembunyikan' : 'Tampilkan';
             }
-            window.toggleConfirmPw = toggleConfirmPw;
+        }
 
+        window.togglePw = togglePw;
+        window.toggleConfirmPw = toggleConfirmPw;
 
-            // Validasi saat form disubmit
-            form.addEventListener('submit', function(e) {
-                const email = document.getElementById('email').value.trim();
-                const password = passwordInput.value.trim();
-                const confirm = confirmInput.value.trim();
-                const telepon = document.getElementById('telepon').value.trim();
-                const teleponRegex = /^08[0-9]{9,11}$/;
-                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        // Jalankan saat DOM fully loaded (untuk pemuatan halaman awal)
+        document.addEventListener('DOMContentLoaded', initializeProfileScripts);
 
-                
-                if (!emailRegex.test(email)) {
-                    e.preventDefault();
-                    Swal.fire('Email tidak valid', 'Masukkan email dengan format yang benar.', 'error');
-                    return;
-                }
-
-                if (!teleponRegex.test(telepon)) {
-                    e.preventDefault();
-                    Swal.fire('Nomor telepon tidak valid', 'Gunakan format Indonesia, contoh: 08xxxxxxxxxx.Minimal 11 angka', 'error');
-                    return;
-                }
-
-                const wantToChange = password !== '' || confirm !== '';
-
-                if (wantToChange) {
-                    if (!passwordRegex.test(password)) {
-                        e.preventDefault();
-                        Swal.fire('Password tidak valid', 'Pastikan semua syarat password terpenuhi.',
-                            'error');
-                        return;
-                    }
-
-                    if (password !== confirm) {
-                        e.preventDefault();
-                        Swal.fire('Konfirmasi salah', 'Password dan konfirmasi tidak sama.', 'error');
-                        return;
-                    }
-                }
-            });
-        });
+        // Jalankan setiap kali Turbo selesai memuat konten (untuk navigasi AJAX)
+        document.addEventListener('turbo:load', initializeProfileScripts);
     </script>
 </x-admin-layout>

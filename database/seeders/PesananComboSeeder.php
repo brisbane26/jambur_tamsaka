@@ -85,7 +85,7 @@ class PesananComboSeeder extends Seeder
         $placeholderJadwal = Jadwal::firstOrCreate(
             ['id' => 1], // Coba temukan atau buat dengan ID 1
             [
-                'tanggal' => Carbon::parse('2025-05-31'), // Tanggal dummy yang sangat lampau
+                'tanggal' => Carbon::parse('2025-05-27'), // Tanggal dummy yang sangat lampau
                 'nama_acara' => 'Adat (Pesanan Menunggu)',
                 'user_id' => $customer1->id ?? User::first()->id, // Assign ke customer pertama atau user mana saja
                 'created_at' => now(),
@@ -104,7 +104,7 @@ class PesananComboSeeder extends Seeder
             // Pesanan 1: 24 Mei 2025 (disetujui) - Gedung Utama
             $this->createOrderWithGedungCheck(
                 $customer1,
-                Carbon::create(2025, 5, 24)->toDateString(),
+                Carbon::create(2025, 6, 3)->toDateString(),
                 'Acara Pernikahan ' . $customer1->nama_lengkap . ' (Disetujui)',
                 'disetujui',
                 [$paketGedungUtama, $paketCatering1],
@@ -115,7 +115,7 @@ class PesananComboSeeder extends Seeder
             // Pesanan 2: 28 Mei 2025 (disetujui) - Gedung Resepsi
             $this->createOrderWithGedungCheck(
                 $customer1,
-                Carbon::create(2025, 5, 28)->toDateString(),
+                Carbon::create(2025, 6, 2)->toDateString(),
                 'Acara Resepsi ' . $customer1->nama_lengkap . ' (Disetujui)',
                 'disetujui',
                 [$paketGedungResepsi, $paketMUA1],
@@ -123,10 +123,10 @@ class PesananComboSeeder extends Seeder
                 $placeholderJadwal->id
             );
 
-            // Pesanan 3: 31 Mei 2025 (menunggu) - (Tidak perlu cek gedung karena tidak masuk jadwal)
+            // Pesanan 3: 27 Mei 2025 (menunggu) - (Tidak perlu cek gedung karena tidak masuk jadwal)
             $this->createCustomerOrder(
                 $customer1,
-                Carbon::create(2025, 5, 31)->toDateString(),
+                Carbon::create(2025, 5, 27)->toDateString(),
                 'Acara Lamaran ' . $customer1->nama_lengkap . ' (Menunggu)',
                 'menunggu',
                 $paketGedungUtama, // Tetap sertakan paket gedung di detail pesanan
@@ -137,7 +137,7 @@ class PesananComboSeeder extends Seeder
             // Pesanan 4: 1 Juni 2025 (menunggu) - (Tidak perlu cek gedung karena tidak masuk jadwal)
             $this->createCustomerOrder(
                 $customer1,
-                Carbon::create(2025, 6, 1)->toDateString(),
+                Carbon::create(2025, 5, 27)->toDateString(),
                 'Acara Santai ' . $customer1->nama_lengkap . ' (Menunggu)',
                 'menunggu',
                 $paketGedungResepsi, // Tetap sertakan paket gedung di detail pesanan
@@ -151,7 +151,7 @@ class PesananComboSeeder extends Seeder
             // Pesanan 1: 24 Mei 2025 (disetujui) - Gedung Resepsi (Bisa karena customer1 pesan Gedung Utama)
             $this->createOrderWithGedungCheck(
                 $customer2,
-                Carbon::create(2025, 5, 24)->toDateString(),
+                Carbon::create(2025, 6, 3)->toDateString(),
                 'Pemberkatan ' . $customer2->nama_lengkap . ' (Disetujui)',
                 'disetujui',
                 [$paketGedungResepsi, $paketCatering2],
@@ -162,7 +162,7 @@ class PesananComboSeeder extends Seeder
             // Pesanan 2: 29 Mei 2025 (disetujui) - Gedung Utama
             $this->createOrderWithGedungCheck(
                 $customer2,
-                Carbon::create(2025, 5, 29)->toDateString(),
+                Carbon::create(2025, 6, 5)->toDateString(),
                 'Gathering ' . $customer2->nama_lengkap . ' (Disetujui)',
                 'disetujui',
                 [$paketGedungUtama, $paketMUA1],

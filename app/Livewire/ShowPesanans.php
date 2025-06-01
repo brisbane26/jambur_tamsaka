@@ -106,7 +106,7 @@ class ShowPesanans extends Component
             } else {
                 $this->dispatch('showToast', 
                     type: 'warning',
-                    message: 'Pesanan hanya bisa dibatalkan minimal 3 hari sebelum tanggal pelaksanaan (H-3).'
+                    message: 'Pesanan hanya bisa dibatalkan maksimal 3 hari sebelum tanggal pelaksanaan (H-3).'
                 );
             }
         }

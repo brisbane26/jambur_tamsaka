@@ -88,9 +88,17 @@ class UserController extends Controller
         return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
     }
 
-    public function destroy(User $user)
+    public function destroy($id)
     {
-        $user->delete();
-        return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
+        $paket = User::findOrFail($id);
+        $paket->delete();
+
+        $notifications = [
+            'message' => 'User Berhasil Dihapus',
+            'alert-type' => 'success'
+        ];
+
+        return redirect()->route('admin.users.index')->with($notifications);
     }
+
 }
