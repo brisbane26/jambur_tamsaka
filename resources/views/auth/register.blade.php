@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Form Registrasi Bertahap</title>
+    <title>Form Registrasi</title>
     <link rel="icon" type="image/png" href="{{ asset('images/favicon-removebg-preview.png') }}" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -20,7 +20,7 @@
 
 
             <h2 class="text-5xl font-bold mb-4 text-yellow-400 text-right">Mejuah-Juah!</h2>
-            <p class="text-xl text-right">Silakan membuat akun baru anda</p>
+            <p class="text-xl text-right">Silakan membuat akun baru Anda</p>
 
             <!-- Hiasan dekoratif (opsional, SVG/elemen tambahan) -->
             <div class="absolute top-10 right-10">

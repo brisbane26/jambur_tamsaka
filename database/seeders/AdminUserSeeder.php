@@ -63,11 +63,11 @@ $customerUsers = [
         'email_verified_at' => now(),
     ],
     [
-        'email' => 'petra@example.com',
-        'username' => 'petra',
+        'email' => 'petong@example.com',
+        'username' => 'petong',
         'nama_lengkap' => 'Petra Igor',
         'telepon' => '081234567892',
-        'password' => Hash::make('petra123'),
+        'password' => Hash::make('petong123'),
         'email_verified_at' => now(),
     ],
     [

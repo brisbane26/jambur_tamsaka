@@ -44,7 +44,8 @@
             <!-- Modal Konfirmasi -->
             <div id="modal-{{ $keranjang->id }}" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
                 <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-                    <h2 class="text-lg mb-4 font-semibold">Apakah Anda yakin ingin menghapus item ini?</h2>
+                    <h2 class="text-lg mb-4 font-semibold">Konfirmasi Hapus</h2>
+                    <p class="mb-6 text-gray-600">Apakah Anda yakin ingin menghapus paket dari keranjang?</p>
 
                     <div class="flex justify-end space-x-2">
                         <button onclick="closeModal({{ $keranjang->id }})"

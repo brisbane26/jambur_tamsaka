@@ -1,4 +1,4 @@
-  <link rel="icon" type="image/png" href="{{ asset('images/favicon-removebg-preview.png') }}" />
+<link rel="icon" type="image/png" href="{{ asset('images/favicon-removebg-preview.png') }}" />
 <x-admin-layout>
     <h3 class="text-gray-700 text-3xl font-medium">Daftar User</h3>
 
@@ -50,7 +50,7 @@
 
             <div class="mt-6 flex justify-end space-x-4">
                 <button onclick="closeModal({{ $user->id }})"
-                        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 text-sm">
+                        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 text-sm w-[80px] h-[38px]">
                     Batal
                 </button>
                 <form action="{{ route('admin.users.destroy', $user) }}" method="POST">
