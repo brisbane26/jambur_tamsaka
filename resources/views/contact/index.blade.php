@@ -46,7 +46,7 @@
                             </div>
                         </div>
                         <div class="mt-6">
-                            <a href="https://wa.me/+6281260679408?text=I%20would%20like%20to%20inquire%20about%20your%20products%20and%20services." 
+                            <a href="https://wa.me/+6281260679408?text=Halo,%20saya%20ingin%20memesan%20untuk%20acara%20saya."
                                target="_blank" rel="noopener noreferrer"
                                class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 transition-colors duration-300">
                                <i class="fab fa-whatsapp mr-2"></i> Chat Sekarang
