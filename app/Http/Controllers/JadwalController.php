@@ -10,14 +10,40 @@ class JadwalController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            // Hanya tampilkan jadwal yang terkait dengan pesanan disetujui
-            $data = Jadwal::whereHas('pesanan', function($query) {
+            // Ambil jadwal yang terkait dengan pesanan disetujui
+            // Eager load relasi yang diperlukan untuk mendapatkan nama gedung
+            $data = Jadwal::with(['pesanan.detailPesanan.paket.kategori'])
+                ->whereHas('pesanan', function($query) {
                     $query->where('status', 'disetujui');
                 })
                 ->whereDate('tanggal', '>=', now())
-                ->get(['id', 'nama_acara as title', 'tanggal as start', 'user_id']);
+                ->get();
+
+            $events = $data->map(function ($jadwal) {
+                $namaGedung = null;
+                // Iterasi melalui detail pesanan untuk menemukan paket dengan kategori Gedung
+                if ($jadwal->pesanan) {
+                    foreach ($jadwal->pesanan->detailPesanan as $detail) {
+                        // Pastikan paket dan kategori ada, dan kategori_id adalah 1 (Gedung)
+                        if ($detail->paket && $detail->paket->kategori && $detail->paket->kategori->id === 1) {
+                            $namaGedung = $detail->paket->nama_paket; // Asumsi nama gedung ada di nama_paket
+                            break; // Hentikan setelah menemukan gedung pertama
+                        }
+                    }
+                }
+
+                // Gunakan nama gedung jika ditemukan, jika tidak, kembali ke nama_acara atau default lain
+                $title = $namaGedung ?: $jadwal->nama_acara;
+
+                return [
+                    'id'    => $jadwal->id,
+                    'title' => $title, // Menggunakan nama gedung atau nama acara
+                    'start' => $jadwal->tanggal,
+                    'user_id' => $jadwal->user_id // Tambahkan ini jika dibutuhkan di frontend
+                ];
+            });
             
-            return response()->json($data);
+            return response()->json($events);
         }
 
         return view('jadwal.index');
@@ -33,7 +59,10 @@ class JadwalController extends Controller
             case 'update':
                 $event = Jadwal::find($request->id);
                 if ($event) {
-                    $event->update(['nama_acara' => $request->nama_acara]);
+                    // Jika Anda ingin mengizinkan admin untuk mengubah nama acara di kalender
+                    // Dan nama acara ini sebenarnya adalah nama gedung, maka nama_acara di tabel jadwal
+                    // akan menyimpan nama gedung tersebut.
+                    $event->update(['nama_acara' => $request->nama_acara]); 
                     return response()->json([
                         'id' => $event->id,
                         'title' => $event->nama_acara,
