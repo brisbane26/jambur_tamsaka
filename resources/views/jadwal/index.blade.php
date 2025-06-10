@@ -105,7 +105,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="eventModalLabel">Kelola Acara</h5>
+                        <h5 class="modal-title" id="eventModalLabel">Acara</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -174,7 +174,7 @@
                 
                 if (events.length > 0) {
                     var event = events[0];
-                    $('#eventModalLabel').text('Kelola Acara');
+                    $('#eventModalLabel').text('Acara');
                     $('#eventDate').val(moment(event.start).format('DD MMMM YYYY'));
                     // Gunakan properti originalTitle untuk mengisi nama acara di modal
                     $('#eventName').val(event.originalTitle); 
@@ -188,7 +188,7 @@
                 // Hanya admin yang bisa berinteraksi dengan modal dari eventClick
                 if (!isAdmin) return false;
                 
-                $('#eventModalLabel').text('Kelola Acara');
+                $('#eventModalLabel').text('Acara');
                 $('#eventDate').val(moment(event.start).format('DD MMMM YYYY'));
                 // Gunakan properti originalTitle untuk mengisi nama acara di modal
                 $('#eventName').val(event.originalTitle); 

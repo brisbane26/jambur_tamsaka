@@ -10,8 +10,6 @@ class JadwalController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            // Ambil jadwal yang terkait dengan pesanan disetujui
-            // Eager load relasi yang diperlukan untuk mendapatkan nama gedung
             $data = Jadwal::with(['pesanan.detailPesanan.paket.kategori'])
                 ->whereHas('pesanan', function($query) {
                     $query->where('status', 'disetujui');
@@ -19,29 +17,42 @@ class JadwalController extends Controller
                 ->whereDate('tanggal', '>=', now())
                 ->get();
 
-            $events = $data->map(function ($jadwal) {
-                $namaGedung = null;
-                // Iterasi melalui detail pesanan untuk menemukan paket dengan kategori Gedung
+            $events = []; // Inisialisasi array kosong untuk menampung semua event
+
+            foreach ($data as $jadwal) {
+                $gedungDitemukan = false;
+                
                 if ($jadwal->pesanan) {
                     foreach ($jadwal->pesanan->detailPesanan as $detail) {
-                        // Pastikan paket dan kategori ada, dan kategori_id adalah 1 (Gedung)
+                        // Jika paket adalah gedung
                         if ($detail->paket && $detail->paket->kategori && $detail->paket->kategori->id === 1) {
-                            $namaGedung = $detail->paket->nama_paket; // Asumsi nama gedung ada di nama_paket
-                            break; // Hentikan setelah menemukan gedung pertama
+                            $gedungDitemukan = true;
+                            // Tambahkan event baru untuk setiap gedung
+                            $events[] = [
+                                'id'            => 'gedung-' . $jadwal->id . '-' . $detail->paket->id, // ID unik untuk setiap event gedung
+                                'title'         => $detail->paket->nama_paket, // Nama gedung untuk tampilan kalender
+                                'originalTitle' => $jadwal->nama_acara, // Nama acara asli untuk modal
+                                'start'         => $jadwal->tanggal,
+                                'user_id'       => $jadwal->user_id,
+                                'jadwal_id'     => $jadwal->id // Simpan ID jadwal asli
+                            ];
                         }
                     }
                 }
 
-                // Gunakan nama gedung untuk 'title' yang akan ditampilkan di kalender
-                // Simpan nama acara asli di properti 'originalTitle' untuk modal
-                return [
-                    'id'            => $jadwal->id,
-                    'title'         => $namaGedung ?: $jadwal->nama_acara, // Untuk tampilan kalender (nama gedung atau nama acara)
-                    'originalTitle' => $jadwal->nama_acara, // Nama acara asli untuk modal
-                    'start'         => $jadwal->tanggal,
-                    'user_id'       => $jadwal->user_id
-                ];
-            });
+                // Jika tidak ada gedung yang ditemukan untuk jadwal ini, 
+                // tambahkan event dengan nama acara asli
+                if (!$gedungDitemukan) {
+                     $events[] = [
+                        'id'            => $jadwal->id, 
+                        'title'         => $jadwal->nama_acara, // Nama acara untuk tampilan kalender
+                        'originalTitle' => $jadwal->nama_acara, // Nama acara asli untuk modal
+                        'start'         => $jadwal->tanggal,
+                        'user_id'       => $jadwal->user_id,
+                        'jadwal_id'     => $jadwal->id // Simpan ID jadwal asli
+                    ];
+                }
+            }
             
             return response()->json($events);
         }
@@ -57,26 +68,35 @@ class JadwalController extends Controller
 
         switch ($request->type) {
             case 'update':
-                $event = Jadwal::find($request->id);
+                // Ketika mengupdate, kita perlu tahu ID jadwal yang sebenarnya
+                // Karena ID event di frontend bisa jadi 'gedung-IDJadwal-IDPaket'
+                // Kita perlu mendapatkan ID jadwal dari request atau event itu sendiri
+                $jadwalIdToUpdate = $request->input('jadwal_id') ?? $request->id; // Coba ambil dari jadwal_id, fallback ke id jika tidak ada
+
+                $event = Jadwal::find($jadwalIdToUpdate);
                 if ($event) {
-                    // Saat update, kita ingin mengupdate nama_acara yang sebenarnya di database
-                    // Jadi, gunakan $request->nama_acara
                     $event->update(['nama_acara' => $request->nama_acara]); 
+                    // Saat update, kita harus memicu refresh kalender
+                    // Agar semua event yang terkait dengan jadwal ini terupdate.
+                    // Atau, kita bisa mengembalikan event yang diupdate dengan title yang benar.
+                    // Untuk kesederhanaan, mari kembalikan data yang cukup untuk refresh.
                     return response()->json([
                         'id' => $event->id,
-                        'title' => $event->nama_acara, // Saat update, kirim nama acara yang baru sebagai title
+                        'title' => $event->nama_acara, // Setelah diupdate, title bisa jadi nama_acara
                         'start' => $event->tanggal,
-                        'originalTitle' => $event->nama_acara // Pastikan juga originalTitle terupdate
+                        'originalTitle' => $event->nama_acara // Selalu kirim nama_acara asli untuk modal
                     ]);
                 }
                 return response()->json(['error' => 'Acara tidak ditemukan.'], 404);
 
             case 'delete':
-                $event = Jadwal::find($request->id);
+                // Sama seperti update, pastikan kita mendapatkan ID jadwal yang benar
+                $jadwalIdToDelete = $request->input('jadwal_id') ?? $request->id;
+
+                $event = Jadwal::find($jadwalIdToDelete);
                 if ($event && $event->pesanan) {
-                    // Update status pesanan terkait menjadi dibatalkan
                     $event->pesanan->update(['status' => 'dibatalkan']);
-                    return response()->json(['success' => true]);
+                    return response()->json(['success' => true, 'jadwal_id' => $jadwalIdToDelete]); // Kirim jadwal_id
                 }
                 return response()->json(['error' => 'Acara tidak ditemukan.'], 404);
         }
