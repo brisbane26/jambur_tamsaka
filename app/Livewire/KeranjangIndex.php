@@ -10,15 +10,32 @@ class KeranjangIndex extends Component
     public $keranjangs = [];
     public $totalHarga = 0;
 
-    public function updateQuantityLive($keranjangId, $newQuantity)
-    {
-        $newQuantity = max(1, min(1000, (int)$newQuantity));
-        
-        Keranjang::where('id', $keranjangId)
-            ->update(['kuantitas' => $newQuantity]);
-        
-        $this->loadKeranjang(); // Reload data dari database
+public function updateQuantityLive($keranjangId, $newQuantity)
+{
+    $keranjang = Keranjang::find($keranjangId);
+    
+// Handle khusus untuk Catering
+    if (str_contains($keranjang->paket->kategori->nama_kategori, 'Catering')) {
+        $newQuantity = max(50, min(2000, (int)$newQuantity)); // Minimal 50, maksimal 2000
+        // Jika input tidak 50 atau kelipatan 50, set ke 50
+        if ($newQuantity % 50 !== 0) {
+            $newQuantity = 50;
+        }
+    } 
+    // Kategori fixed lainnya
+    elseif ($this->isFixedQuantityCategory($keranjang->paket->kategori->nama_kategori)) {
+        $newQuantity = 1;
+    } 
+    // Kategori normal
+    else {
+        $newQuantity = max(1, min(2000, (int)$newQuantity));
     }
+    
+    Keranjang::where('id', $keranjangId)
+        ->update(['kuantitas' => $newQuantity]);
+    
+    $this->loadKeranjang();
+}
     
     public function mount()
     {
@@ -41,25 +58,38 @@ public function loadKeranjang()
         });
     }
 
-    public function updateQuantity($keranjangId, $action)
-    {
-        // Ambil ulang data dari database (kuantitas terbaru setelah input manual)
-        $keranjang = Keranjang::find($keranjangId);
+public function updateQuantity($keranjangId, $action)
+{
+    $keranjang = Keranjang::with('paket.kategori')->find($keranjangId);
+    
+    if (!$keranjang) return;
 
-        if (!$keranjang) return;
-
-        // Gunakan nilai dari database, bukan dari cache Livewire
-        $currentQty = $keranjang->kuantitas;
-
+    // Handle khusus untuk Catering
+    if (str_contains($keranjang->paket->kategori->nama_kategori, 'Catering')) {
         if ($action === 'increment') {
-            $keranjang->kuantitas = min(1000, $currentQty + 1);
-        } elseif ($action === 'decrement') {
-            $keranjang->kuantitas = max(1, $currentQty - 1);
+            $newQty = min(2000, $keranjang->kuantitas + 50); // Naik 50 per klik
+        } else {
+            // Untuk decrement, pastikan tidak kurang dari 50
+            $newQty = max(50, $keranjang->kuantitas - 50); // Turun 50 per klik
         }
-
-        $keranjang->save();
-        $this->loadKeranjang();
+        $keranjang->kuantitas = $newQty;
+    } 
+    // Kategori fixed lainnya
+    elseif ($this->isFixedQuantityCategory($keranjang->paket->kategori->nama_kategori)) {
+        return; // Tidak bisa diubah sama sekali
+    } 
+    // Kategori normal
+    else {
+        if ($action === 'increment') {
+            $keranjang->kuantitas = min(2000, $keranjang->kuantitas + 1);
+        } else {
+            $keranjang->kuantitas = max(1, $keranjang->kuantitas - 1);
+        }
     }
+
+    $keranjang->save();
+    $this->loadKeranjang();
+}
 
     
     public function handleQuantityUpdate($id, $newQuantity)
@@ -108,6 +138,12 @@ public function loadKeranjang()
             message: 'Item tidak ditemukan atau sudah dihapus.'
         );
     }
+}
+// Di dalam KeranjangIndex Livewire component
+private function isFixedQuantityCategory($kategori)
+{
+    $fixedCategories = ['Salon', 'Musik', 'Dekorasi', 'Gedung', 'Dokumentasi', 'Lainnya'];
+    return in_array($kategori, $fixedCategories);
 }
 
 }

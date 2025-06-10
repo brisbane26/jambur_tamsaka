@@ -24,7 +24,7 @@
 
                     <div class="mb-4">
                         <label for="nama_acara" class="block text-gray-700 mb-2">Nama Acara</label>
-                        <input type="text" id="nama_acara" name="nama_acara"
+                        <input type="text" id="nama_acara" name="nama_acara" value="{{ old('nama_acara') }}"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600"
                             required>
                     </div>
@@ -42,7 +42,7 @@
                     @role('admin')
                     <div class="mb-4">
                         <label for="catatan" class="block text-gray-700 mb-2">Catatan Khusus (Untuk Pesanan Offline)</label>
-                        <textarea id="catatan" name="catatan" rows="3"
+                        <textarea id="catatan" name="catatan" value="{{ old('catatan') }}" rows="3"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600"
                             placeholder="Masukkan detail customer (nama, kontak, dll)"></textarea>
                     </div>
