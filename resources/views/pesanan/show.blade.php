@@ -114,42 +114,49 @@
             </div>
         </div>
 
-        @role('admin')
-            <div class="bg-white shadow-md rounded-lg p-6 mb-6">
-                <h3 class="text-lg font-semibold mb-4 border-b pb-2">Update Status Pesanan</h3>
-                <form action="{{ route('pesanan.updateStatus', $pesanan->id) }}" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-                            <select name="status" id="status"
-                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                                @foreach (['menunggu', 'disetujui', 'ditolak', 'selesai', 'dibatalkan'] as $status)
-                                    <option value="{{ $status }}"
-                                        {{ $pesanan->status === $status ? 'selected' : '' }}>
-                                        {{ ucfirst($status) }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div id="alasan-tolak-container" class="{{ $pesanan->status !== 'ditolak' ? 'hidden' : '' }}">
-                            <label for="alasan_tolak" class="block text-sm font-medium text-gray-700">Alasan
-                                Penolakan</label>
-                            <textarea name="alasan_tolak" id="alasan_tolak" rows="2"
-                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">{{ $pesanan->alasan_tolak }}</textarea>
-                        </div>
+@role('admin')
+    @if (!empty($statusOptions))
+        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+            <h3 class="text-lg font-semibold mb-4 border-b pb-2">Update Status Pesanan</h3>
+            <form action="{{ route('pesanan.updateStatus', $pesanan->id) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-gray-700">Ubah Status ke</label>
+                        <select name="status" id="status"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            
+                            @foreach ($statusOptions as $value => $label)
+                                <option value="{{ $value }}">
+                                    {{ $label }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
-
-                    <div class="mt-4">
-                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded text-sm hover:bg-blue-600">
-                            Update Status
-                        </button>
+                    <div id="alasan-tolak-container" class="hidden">
+                        <label for="alasan_tolak" class="block text-sm font-medium text-gray-700">Alasan Penolakan</label>
+                        <textarea name="alasan_tolak" id="alasan_tolak" rows="2"
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
                     </div>
-                </form>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded text-sm hover:bg-blue-600">
+                        Update Status
+                    </button>
+                </div>
+            </form>
+        </div>
+    @else
+        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+             <h3 class="text-lg font-semibold mb-2">Update Status Pesanan</h3>
+             <div class="alert alert-info bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded relative" role="alert">
+                Status pesanan adalah <strong>"{{ ucfirst($pesanan->status) }}"</strong> dan tidak ada aksi lebih lanjut yang dapat dilakukan.
             </div>
-        @endrole
+        </div>
+    @endif
+@endrole
 
         <div class="p-6">
             @role('customer')

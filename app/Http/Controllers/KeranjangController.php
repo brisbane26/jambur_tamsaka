@@ -76,6 +76,7 @@ public function checkout_index()
 
 public function checkout_store(Request $request)
     {
+        // 1. Validasi input dari form
         $request->validate([
             'nama_acara' => 'required|string|max:255',
             'tanggal_acara' => 'required|date|after_or_equal:' . now()->addDays(3)->toDateString(),
@@ -84,75 +85,46 @@ public function checkout_store(Request $request)
             'catatan' => 'nullable|string|max:1000'
         ], [
             // Pesan validasi kustom
-            'tanggal_acara.after_or_equal' => 'Tanggal acara harus minimal 3 hari ke depan dari hari ini.',
+            'tanggal_acara.after_or_equal' => 'Tanggal acara harus minimal 3 hari dari sekarang.',
             'tanggal_acara.required' => 'Kolom tanggal acara wajib diisi.',
-            'tanggal_acara.date' => 'Format tanggal acara tidak valid.',
             'nama_acara.required' => 'Kolom nama acara wajib diisi.',
-            'nama_acara.string' => 'Nama acara harus berupa teks.',
-            'nama_acara.max' => 'Nama acara tidak boleh lebih dari :max karakter.',
             'metode_bayar.required' => 'Metode pembayaran wajib dipilih.',
-            'metode_bayar.in' => 'Metode pembayaran tidak valid.',
             'bukti_transfer.required_if' => 'Bukti transfer wajib diunggah jika metode pembayaran adalah transfer.',
             'bukti_transfer.image' => 'File bukti transfer harus berupa gambar.',
-            'bukti_transfer.mimes' => 'Format gambar bukti transfer yang diperbolehkan adalah jpeg, png, jpg.',
-            'bukti_transfer.max' => 'Ukuran gambar bukti transfer tidak boleh lebih dari :max kilobyte.',
-            'catatan.string' => 'Catatan harus berupa teks.',
-            'catatan.max' => 'Catatan tidak boleh lebih dari :max karakter.',
+            'bukti_transfer.mimes' => 'Format gambar yang diperbolehkan adalah jpeg, png, jpg.',
+            'bukti_transfer.max' => 'Ukuran gambar bukti transfer tidak boleh lebih dari 2MB.',
         ]);
 
-        // Ambil ID gedung utama dan resepsi
+        $isDateLocked = Pesanan::where('status', 'disetujui') // Hanya cari pesanan yang sudah disetujui
+            ->whereHas('jadwal', function ($query) use ($request) {
+                $query->where('tanggal', $request->tanggal_acara);
+            })
+            ->exists(); // Cukup cek apakah ada (true/false), lebih efisien
+
+        if ($isDateLocked) {
+            // Jika tanggal sudah dikunci oleh pesanan yang disetujui, langsung kembalikan error
+            return back()->withErrors([
+                'tanggal_acara' => 'Mohon maaf, sudah ada pesanan yang disetujui pada tanggal ini.'
+            ])->withInput(); // withInput() agar data form tidak hilang
+        }
+
         $gedungUtamaId = Paket::where('nama_paket', 'Gedung Utama')->value('id');
         $gedungResepsiId = Paket::where('nama_paket', 'Gedung Resepsi')->value('id');
 
-        // Cek ketersediaan gedung di tanggal yang diminta
-        $gedungUtamaTerpakai = DetailPesanan::whereHas('pesanan.jadwal', function($q) use ($request) {
-            $q->where('tanggal', $request->tanggal_acara);
-        })
-        ->where('paket_id', $gedungUtamaId)
-        ->exists();
+        // Ambil semua paket dari keranjang pengguna
+        $keranjangItems = Keranjang::where('user_id', auth()->id())->pluck('paket_id')->toArray();
 
-        $gedungResepsiTerpakai = DetailPesanan::whereHas('pesanan.jadwal', function($q) use ($request) {
-            $q->where('tanggal', $request->tanggal_acara);
-        })
-        ->where('paket_id', $gedungResepsiId)
-        ->exists();
+        $pesanGedungUtama = in_array($gedungUtamaId, $keranjangItems);
+        $pesanGedungResepsi = in_array($gedungResepsiId, $keranjangItems);
 
-        // Cek gedung yang dipesan di keranjang
-        $keranjangGedung = Keranjang::where('user_id', auth()->id())
-            ->whereHas('paket.kategori', function($q) {
-                $q->where('nama_kategori', 'Gedung');
-            })
-            ->pluck('paket_id')
-            ->toArray();
-
-        $pesanGedungUtama = in_array($gedungUtamaId, $keranjangGedung);
-        $pesanGedungResepsi = in_array($gedungResepsiId, $keranjangGedung);
-
-        // Validasi ketersediaan
-        if ($gedungUtamaTerpakai && $gedungResepsiTerpakai) {
-            if ($pesanGedungUtama || $pesanGedungResepsi) {
-                return back()->withErrors([
-                    'tanggal_acara' => 'Maaf, Gedung Utama dan Gedung Resepsi sudah dipesan pada tanggal yang Anda pilih.'
-                ]);
-            }
-        } elseif ($gedungUtamaTerpakai && $pesanGedungUtama) {
-            return back()->withErrors([
-                'tanggal_acara' => 'Maaf, Gedung Utama sudah dipesan pada tanggal yang Anda pilih.'
-            ]);
-        } elseif ($gedungResepsiTerpakai && $pesanGedungResepsi) {
-            return back()->withErrors([
-                'tanggal_acara' => 'Maaf, Gedung Resepsi sudah dipesan pada tanggal yang Anda pilih.'
-            ]);
-        }
-
-        // Validasi minimal 1 gedung dipesan
+        // Validasi bahwa minimal harus ada 1 gedung di keranjang
         if (!$pesanGedungUtama && !$pesanGedungResepsi) {
             return back()->withErrors([
-                'tanggal_acara' => 'Anda harus memesan minimal 1 gedung (Gedung Utama atau Gedung Resepsi) untuk melanjutkan.'
-            ]);
+                // Pesan error ini bisa disesuaikan atau ditampilkan di halaman keranjang
+                'keranjang' => 'Anda harus memesan minimal 1 gedung (Gedung Utama atau Gedung Resepsi) untuk melanjutkan.'
+            ])->withInput();
         }
 
-        // Proses checkout
         $buktiPath = null;
         if ($request->hasFile('bukti_transfer')) {
             $buktiPath = $request->file('bukti_transfer')->store('bukti_transfer', 'public');
@@ -167,33 +139,36 @@ public function checkout_store(Request $request)
         $pesanan = Pesanan::create([
             'user_id' => Auth::id(),
             'jadwal_id' => $jadwal->id,
-            'status' => 'menunggu',
+            'status' => 'menunggu', // Status default saat dibuat
             'bukti_transaksi' => $buktiPath,
+            'catatan' => $request->catatan, // Pindahkan catatan ke pesanan utama
         ]);
 
         Pembayaran::create([
             'pesanan_id' => $pesanan->id,
             'metode_bayar' => $request->metode_bayar,
-            'status' => $request->metode_bayar == 'cash' ? 'Pending' : 'Pending',
+            'status' => 'Pending', // Status pembayaran bisa 'Pending' atau 'Lunas' nanti
         ]);
 
-        foreach (Keranjang::where('user_id', Auth::id())->get() as $keranjang) {
+        foreach (Keranjang::where('user_id', Auth::id())->get() as $item) {
             DetailPesanan::create([
                 'pesanan_id' => $pesanan->id,
-                'paket_id' => $keranjang->paket_id,
-                'kuantitas' => $keranjang->kuantitas,
-                'harga' => $keranjang->paket->harga_jual,
-                'catatan' => Auth::user()->hasRole('admin') ? $request->catatan : null
+                'paket_id' => $item->paket_id,
+                'kuantitas' => $item->kuantitas,
+                'harga' => $item->paket->harga_jual,
+                // Kolom catatan per item tidak lagi relevan jika catatan ada di pesanan utama
             ]);
         }
 
+        // Kosongkan keranjang setelah pesanan berhasil dibuat
         Keranjang::where('user_id', Auth::id())->delete();
 
         return redirect()->route('pesanan.index')->with([
-            'message' => 'Pesanan berhasil dibuat',
+            'message' => 'Pesanan berhasil dibuat dan sedang menunggu konfirmasi.',
             'alert-type' => 'success'
         ]);
     }
+    
 public function store(Request $request)
 {
     $request->validate([
