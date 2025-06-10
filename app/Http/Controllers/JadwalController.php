@@ -32,14 +32,14 @@ class JadwalController extends Controller
                     }
                 }
 
-                // Gunakan nama gedung jika ditemukan, jika tidak, kembali ke nama_acara atau default lain
-                $title = $namaGedung ?: $jadwal->nama_acara;
-
+                // Gunakan nama gedung untuk 'title' yang akan ditampilkan di kalender
+                // Simpan nama acara asli di properti 'originalTitle' untuk modal
                 return [
-                    'id'    => $jadwal->id,
-                    'title' => $title, // Menggunakan nama gedung atau nama acara
-                    'start' => $jadwal->tanggal,
-                    'user_id' => $jadwal->user_id // Tambahkan ini jika dibutuhkan di frontend
+                    'id'            => $jadwal->id,
+                    'title'         => $namaGedung ?: $jadwal->nama_acara, // Untuk tampilan kalender (nama gedung atau nama acara)
+                    'originalTitle' => $jadwal->nama_acara, // Nama acara asli untuk modal
+                    'start'         => $jadwal->tanggal,
+                    'user_id'       => $jadwal->user_id
                 ];
             });
             
@@ -59,14 +59,14 @@ class JadwalController extends Controller
             case 'update':
                 $event = Jadwal::find($request->id);
                 if ($event) {
-                    // Jika Anda ingin mengizinkan admin untuk mengubah nama acara di kalender
-                    // Dan nama acara ini sebenarnya adalah nama gedung, maka nama_acara di tabel jadwal
-                    // akan menyimpan nama gedung tersebut.
+                    // Saat update, kita ingin mengupdate nama_acara yang sebenarnya di database
+                    // Jadi, gunakan $request->nama_acara
                     $event->update(['nama_acara' => $request->nama_acara]); 
                     return response()->json([
                         'id' => $event->id,
-                        'title' => $event->nama_acara,
-                        'start' => $event->tanggal
+                        'title' => $event->nama_acara, // Saat update, kirim nama acara yang baru sebagai title
+                        'start' => $event->tanggal,
+                        'originalTitle' => $event->nama_acara // Pastikan juga originalTitle terupdate
                     ]);
                 }
                 return response()->json(['error' => 'Acara tidak ditemukan.'], 404);
