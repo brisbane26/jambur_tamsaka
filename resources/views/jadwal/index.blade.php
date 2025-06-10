@@ -117,40 +117,13 @@
                                 <input type="text" class="form-control" id="eventDate" readonly>
                             </div>
                             <div class="form-group">
-                                <label for="eventName">Nama Acara</label>
-                                <input type="text" class="form-control" id="eventName" required>
+                                <label for="eventName">Gedung</label>
+                                <input type="text" class="form-control" id="eventName" readonly>
                             </div>
-                            <input type="hidden" id="eventId">
                         </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" id="deleteEvent">Hapus</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                        <button type="button" class="btn btn-primary" id="updateEvent">Update</button>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Modal konfirmasi hapus -->
-        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-hidden="true">
-          <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">Konfirmasi Hapus</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                Apakah Anda yakin ingin membatalkan acara ini?
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Hapus</button>
-              </div>
-            </div>
-          </div>
         </div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -162,7 +135,7 @@
         <script>
             $(document).ready(function () {
                 var SITEURL = "{{ url('/') }}";
-                var isAdmin = @json(auth()->user()->hasRole('admin'));
+                var isAdmin = @json(auth()->user());
 
                 $.ajaxSetup({
                     headers: {
@@ -225,70 +198,9 @@
                     }
                 });
 
-                // Tombol Update Event
-                $('#updateEvent').click(function() {
-                    var eventName = $('#eventName').val().trim();
-                    var eventId = $('#eventId').val();
-                    
-                    if (!eventName) {
-                        toastr.error("Nama acara harus diisi");
-                        return;
-                    }
-
-                    $.ajax({
-                        url: SITEURL + "/jadwal",
-                        data: {
-                            id: eventId,
-                            nama_acara: eventName,
-                            type: 'update'
-                        },
-                        type: "POST",
-                        success: function (data) {
-                            var event = calendar.fullCalendar('clientEvents', eventId)[0];
-                            if (event) {
-                                event.title = data.title;
-                                calendar.fullCalendar('updateEvent', event);
-                            }
-                            $('#eventModal').modal('hide');
-                            toastr.success("Nama acara berhasil diperbarui");
-                        },
-                        error: function (xhr) {
-                            var error = JSON.parse(xhr.responseText);
-                            toastr.error(error.error);
-                        }
+            
                     });
-                });
 
-                // Tombol Hapus di modal utama → buka modal konfirmasi hapus
-                $('#deleteEvent').click(function() {
-                    $('#confirmDeleteModal').modal('show');
-                });
-
-                // Tombol Hapus di modal konfirmasi → eksekusi hapus AJAX
-                $('#confirmDeleteBtn').click(function() {
-                    var eventId = $('#eventId').val();
-
-                    $.ajax({
-                        url: SITEURL + "/jadwal",
-                        data: {
-                            id: eventId,
-                            type: 'delete'
-                        },
-                        type: "POST",
-                        success: function () {
-                            calendar.fullCalendar('removeEvents', eventId);
-                            $('#eventModal').modal('hide');
-                            $('#confirmDeleteModal').modal('hide');
-                            toastr.success("Acara berhasil dibatalkan");
-                        },
-                        error: function (xhr) {
-                            var error = JSON.parse(xhr.responseText);
-                            toastr.error(error.error);
-                            $('#confirmDeleteModal').modal('hide');
-                        }
-                    });
-                });
-            });
         </script>
     </body>
 </x-admin-layout>
