@@ -117,7 +117,7 @@
                                 <input type="text" class="form-control" id="eventDate" readonly>
                             </div>
                             <div class="form-group">
-                                <label for="eventName">Nama Acara</label>
+                                <label for="eventName">Gedung</label>
                                 <input type="text" class="form-control" id="eventName" readonly>
                             </div>
                         </form>
