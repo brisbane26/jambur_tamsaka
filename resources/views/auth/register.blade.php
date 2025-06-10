@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Form Registrasi</title>
     <link rel="icon" type="image/png" href="{{ asset('images/favicon-removebg-preview.png') }}" />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -32,7 +33,7 @@
         <div class="md:w-1/2 p-8">
             <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">Daftar</h2>
 
-            <form id="registerForm" method="POST" action="{{ route('register') }}">
+            <form id="registerForm" method="POST" data-turbo="false"  action="{{ route('register') }}">
                 @csrf
 
                 <!-- STEP 1 -->
@@ -51,10 +52,13 @@
 
                     <!-- Nomor Telepon -->
                     <div class="mb-6">
-                        <input type="text" id="telepon" name="telepon" placeholder="Nomor Telepon" required
+                        <input type="text" id="telepon" name="telepon" placeholder="Contoh: 081234567890" required
                             oninput="validatePhone()"
                             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 outline-none" />
-                            <p class="text-sm mt-1 text-gray-500" id="phone-format">Hanya angka (minimal 11 digit) yang diperbolehkan.</p>
+                        <ul class="text-sm mt-1 text-gray-500 space-y-1">
+                            <li id="rule-phone-numeric">Hanya angka (0-9)</li>
+                            <li id="rule-phone-length">Antara 10-13 digit</li>
+                        </ul>
                     </div>
 
                     <button type="button" onclick="nextStep()"
@@ -76,6 +80,7 @@
                         <p class="text-sm mt-1 text-gray-500" id="email-format">Format email valid (cth:
                             user@example.com)</p>
                     </div>
+
 
                     <!-- Password -->
                     <div class="mb-4 relative">
@@ -115,49 +120,139 @@
     </div>
 
     <script>
+        // --- Referensi Elemen ---
+        const registerForm = document.getElementById('registerForm');
+        const namaInput = document.getElementById('nama_lengkap');
+        const usernameInput = document.getElementById('username');
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
         const confirmInput = document.getElementById('password_confirmation');
         const phoneInput = document.getElementById('telepon');
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-        function nextStep() {
-            const nama = document.getElementById('nama_lengkap').value.trim();
-            const username = document.getElementById('username').value.trim();
-            const phone = phoneInput.value.trim();
-            const validPhone = /^[0-9]{11,}$/.test(phone);
+        // --- Fungsi untuk Tahap 1 ---
+async function nextStep() {
+    // 1. Validasi dasar di frontend dulu
+    if (!namaInput.value.trim() || !usernameInput.value.trim() || !phoneInput.value.trim()) {
+        Swal.fire('Lengkapi Data', 'Nama, username, dan nomor telepon wajib diisi.', 'error');
+        return;
+    }
+    
+    // Regex BARU: harus diawali 08, diikuti 8-11 digit angka lainnya (total 10-13 digit)
+    const validPhoneRegex = /^08[0-9]{8,11}$/; 
+    if (!validPhoneRegex.test(phoneInput.value.trim())) {
+        // Pesan error BARU sesuai permintaan
+        Swal.fire('Format Salah', 'Pastikan nomor telepon anda sesuai ketentuan.', 'error');
+        return;
+    }
 
+    // Tampilkan loading awal
+    Swal.fire({
+        title: 'Mengecek username...',
+        didOpen: () => Swal.showLoading(),
+        allowOutsideClick: false
+    });
 
-            if (!nama || !username || !phone) {
-                Swal.fire('Lengkapi Data', 'Semua kolom harus diisi.', 'error');
-                return;
-            }
+    try {
+        // 2. Pengecekan pertama: USERNAME
+        let response = await fetch("{{ route('register.check.username') }}", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+            body: JSON.stringify({ username: usernameInput.value })
+        });
+        let data = await response.json();
 
-            if (!validPhone) {
-            Swal.fire('Nomor Telepon tidak valid', 'Nomor harus berupa angka dan minimal 11 digit.', 'error');
+        if (data.exists) {
+            Swal.fire('Username Terdaftar', 'Maaf, username ini sudah digunakan. Silakan gunakan username lain.', 'error');
             return;
         }
 
-            document.getElementById('step1').classList.add('hidden');
-            document.getElementById('step2').classList.remove('hidden');
+        // 3. Jika username aman, lanjutkan pengecekan kedua: NOMOR TELEPON
+        Swal.update({ title: 'Mengecek nomor telepon...' });
+
+        response = await fetch("{{ route('register.check.telepon') }}", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+            body: JSON.stringify({ telepon: phoneInput.value })
+        });
+        data = await response.json();
+
+        if (data.exists) {
+            Swal.fire('Nomor Terdaftar', 'Maaf, nomor telepon ini sudah terdaftar. Silakan gunakan nomor lain.', 'error');
+            return;
         }
 
+        // 4. Jika semua aman, tutup loading dan lanjut ke Tahap 2
+        Swal.close();
+        document.getElementById('step1').classList.add('hidden');
+        document.getElementById('step2').classList.remove('hidden');
+
+    } catch (error) {
+        Swal.fire('Error Server', 'Gagal menghubungi server. Silakan coba lagi.', 'error');
+    }
+}
+
+        // --- Event Listener untuk Tombol "Daftar" ---
+        registerForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const password = passwordInput.value;
+            const validPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(password);
+
+            if (!emailInput.value.trim() || !password || !confirmInput.value) {
+                Swal.fire('Lengkapi Data', 'Email, password, dan konfirmasi wajib diisi.', 'error');
+                return;
+            }
+            if (!validPassword) {
+                Swal.fire('Password Lemah', 'Pastikan semua syarat password terpenuhi.', 'error');
+                return;
+            }
+            if (password !== confirmInput.value) {
+                Swal.fire('Konfirmasi Salah', 'Password dan konfirmasi tidak cocok.', 'error');
+                return;
+            }
+
+            Swal.fire({
+                title: 'Mengecek data & mendaftar...',
+                didOpen: () => Swal.showLoading(),
+                allowOutsideClick: false
+            });
+
+            try {
+                const response = await fetch("{{ route('register.check.email') }}", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+                    body: JSON.stringify({ email: emailInput.value })
+                });
+                const data = await response.json();
+
+                if (data.exists) {
+                    Swal.close();
+                    Swal.fire('Email Terdaftar', 'Maaf, email ini sudah terdaftar.', 'error');
+                } else {
+                    // Semua pengecekan lolos, submit form secara penuh
+                    registerForm.submit();
+                }
+            } catch (error) {
+                Swal.fire('Error Server', 'Gagal menghubungi server. Silakan coba lagi.', 'error');
+            }
+        });
+
+        // --- Fungsi Helper Lainnya ---
         function prevStep() {
             document.getElementById('step2').classList.add('hidden');
             document.getElementById('step1').classList.remove('hidden');
         }
 
-        function validatePhone() {
-            const telepon = phoneInput.value;
-            const valid = /^[0-9]*$/.test(telepon);
-            document.getElementById('phone-format').style.color = valid ? 'green' : 'gray';
-            phoneInput.value = telepon.replace(/[^0-9]/g, '');
-        }
+function validatePhone() {
+    phoneInput.value = phoneInput.value.replace(/[^0-9]/g, '');
+    const currentValue = phoneInput.value;
 
-        emailInput.addEventListener('input', () => {
-            const email = emailInput.value.trim();
-            const valid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
-            document.getElementById('email-format').style.color = valid ? 'green' : 'gray';
-        });
+    toggleRule('rule-phone-numeric', currentValue.length > 0);
+
+    const isLengthValid = currentValue.length >= 10 && currentValue.length <= 13;
+    toggleRule('rule-phone-length', isLengthValid);
+}
 
         passwordInput.addEventListener('input', () => {
             const val = passwordInput.value;
@@ -173,48 +268,16 @@
         }
 
         function togglePw() {
-            const pw = document.getElementById('password');
-            const btn = document.getElementById('toggleBtn');
-            const hidden = pw.type === 'password';
-            pw.type = hidden ? 'text' : 'password';
-            btn.textContent = hidden ? 'Sembunyikan' : 'Tampilkan';
+            const hidden = passwordInput.type === 'password';
+            passwordInput.type = hidden ? 'text' : 'password';
+            document.getElementById('toggleBtn').textContent = hidden ? 'Sembunyikan' : 'Tampilkan';
         }
 
         function toggleConfirmPw() {
-            const confirmPw = document.getElementById('password_confirmation');
-            const btn = document.getElementById('toggleConfirmBtn');
-            const hidden = confirmPw.type === 'password';
-            confirmPw.type = hidden ? 'text' : 'password';
-            btn.textContent = hidden ? 'Sembunyikan' : 'Tampilkan';
+            const hidden = confirmInput.type === 'password';
+            confirmInput.type = hidden ? 'text' : 'password';
+            document.getElementById('toggleConfirmBtn').textContent = hidden ? 'Sembunyikan' : 'Tampilkan';
         }
-
-
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
-            const email = emailInput.value.trim();
-            const password = passwordInput.value;
-            const confirm = confirmInput.value;
-
-            const validEmail =/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
-            const validPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(password);
-
-            if (!validEmail) {
-                e.preventDefault();
-                Swal.fire('Email tidak valid', 'Masukkan format email yang benar.', 'error');
-                return;
-            }
-
-            if (!validPassword) {
-                e.preventDefault();
-                Swal.fire('Password tidak valid', 'Pastikan semua syarat password terpenuhi.', 'error');
-                return;
-            }
-
-            if (password !== confirm) {
-                e.preventDefault();
-                Swal.fire('Konfirmasi salah', 'Password dan konfirmasi tidak sama.', 'error');
-                return;
-            }
-        });
     </script>
 </body>
 

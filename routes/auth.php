@@ -35,6 +35,10 @@ Route::middleware('guest')->group(function () {
                 ->name('password.store');
 });
 
+Route::post('/register/check-username', [RegisteredUserController::class, 'checkUsername'])->name('register.check.username');
+Route::post('/register/check-telepon', [RegisteredUserController::class, 'checkTelepon'])->name('register.check.telepon');
+Route::post('/register/check-email', [RegisteredUserController::class, 'checkEmail'])->name('register.check.email');
+
 Route::middleware('auth')->group(function () {
     Route::get('verify-email', EmailVerificationPromptController::class)
                 ->name('verification.notice');
