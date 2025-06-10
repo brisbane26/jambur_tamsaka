@@ -23,13 +23,22 @@
                 <td class="py-3 px-4 border">{{ $keranjang->paket->nama_paket }}</td>
                 <td class="py-3 px-4 border">
                     <div class="flex items-center justify-center gap-2">
-                        <input
-                            key="qty-{{ $keranjang->id }}-{{ $keranjang->kuantitas }}"
-                            type="number"
-                            value="{{ $keranjang->kuantitas }}"
-                            wire:input.debounce.500ms="updateQuantityLive({{ $keranjang->id }}, $event.target.value)"
-                            min="1" max="1000"
-                            oninput="this.value = Math.abs(this.value)">
+                        @if(in_array($keranjang->paket->kategori->nama_kategori, ['Salon', 'Musik', 'Dekorasi', 'Gedung', 'Dokumentasi', 'Lainnya']))
+                            <input
+                                type="number"
+                                value="1"
+                                readonly
+                                class="w-16 text-center border rounded bg-gray-100 cursor-not-allowed">
+                        @else
+                            <input
+                                key="qty-{{ $keranjang->id }}-{{ $keranjang->kuantitas }}"
+                                type="number"
+                                value="{{ $keranjang->kuantitas }}"
+                                wire:input.debounce.500ms="updateQuantityLive({{ $keranjang->id }}, $event.target.value)"
+                                min="1" max="2000"
+                                oninput="this.value = Math.abs(this.value)"
+                                class="w-16 text-center border rounded">
+                        @endif
                     </div>
                 </td>
                 <td class="py-3 px-4 border">Rp {{ number_format($keranjang->paket->harga_jual, 0, ',', '.') }}</td>

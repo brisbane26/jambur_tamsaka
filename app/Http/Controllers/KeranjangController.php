@@ -194,11 +194,22 @@ public function checkout_store(Request $request)
             'alert-type' => 'success'
         ]);
     }
-    public function store(Request $request)
+public function store(Request $request)
 {
     $request->validate([
         'paket_id' => 'required|exists:pakets,id',
     ]);
+
+    // Ambil data paket beserta kategorinya
+    $paket = Paket::with('kategori')->findOrFail($request->paket_id);
+    
+    // Tentukan kuantitas default
+    $quantity = 1;
+    
+    // Jika kategori mengandung 'Catering', set kuantitas ke 50
+    if (str_contains($paket->kategori->nama_kategori, 'Catering')) {
+        $quantity = 50;
+    }
 
     // Cari keranjang yang sudah ada
     $keranjang = Keranjang::where([
@@ -208,13 +219,13 @@ public function checkout_store(Request $request)
 
     // Jika ada, tambah kuantitas
     if ($keranjang) {
-        $keranjang->increment('kuantitas');
+        $keranjang->increment('kuantitas', $quantity);
     } else {
-        // Jika tidak, buat baru dengan kuantitas 1
+        // Jika tidak, buat baru dengan kuantitas yang ditentukan
         Keranjang::create([
             'user_id' => Auth::id(),
             'paket_id' => $request->paket_id,
-            'kuantitas' => 1,
+            'kuantitas' => $quantity,
         ]);
     }
 
@@ -224,7 +235,7 @@ public function checkout_store(Request $request)
     ];
 
     return redirect()->route('paket.index')->with($notifications);
-}
+}   
 
 
     public function update(Request $request, Keranjang $keranjang)
