@@ -128,16 +128,24 @@
                             class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                             
                             @foreach ($statusOptions as $value => $label)
-                                <option value="{{ $value }}">
+                                <option value="{{ $value }}"
+                                    {{ old('status', $pesanan->status) == $value ? 'selected' : '' }}>
                                     {{ $label }}
                                 </option>
                             @endforeach
+
                         </select>
                     </div>
-                    <div id="alasan-tolak-container" class="hidden">
+
+                    <div id="alasan-tolak-container" class="{{ old('status', $pesanan->status) == 'ditolak' ? '' : 'hidden' }}">
                         <label for="alasan_tolak" class="block text-sm font-medium text-gray-700">Alasan Penolakan</label>
                         <textarea name="alasan_tolak" id="alasan_tolak" rows="2"
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
+                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            >{{ old('alasan_tolak') }}</textarea>
+                        
+                        @error('alasan_tolak')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
 
@@ -153,9 +161,33 @@
              <h3 class="text-lg font-semibold mb-2">Update Status Pesanan</h3>
              <div class="alert alert-info bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded relative" role="alert">
                 Status pesanan adalah <strong>"{{ ucfirst($pesanan->status) }}"</strong> dan tidak ada aksi lebih lanjut yang dapat dilakukan.
-            </div>
+             </div>
         </div>
     @endif
+
+    @push('scripts')
+        <script>
+            document.addEventListener('turbo:load', function() {
+                const statusSelect = document.getElementById('status');
+                const alasanTolakContainer = document.getElementById('alasan-tolak-container');
+
+                if (statusSelect && alasanTolakContainer) {
+                    
+                    const checkStatusVisibility = () => {
+                        if (statusSelect.value === 'ditolak') {
+                            alasanTolakContainer.classList.remove('hidden');
+                        } else {
+                            alasanTolakContainer.classList.add('hidden');
+                        }
+                    };
+
+                    checkStatusVisibility();
+
+                    statusSelect.addEventListener('change', checkStatusVisibility);
+                }
+            });
+        </script>
+    @endpush
 @endrole
 
         <div class="p-6">
