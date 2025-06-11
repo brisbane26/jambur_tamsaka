@@ -113,7 +113,6 @@ public function updateStatus(Request $request, Pesanan $pesanan)
         return back()->with('error', 'Status yang sudah disetujui tidak dapat diubah kembali menjadi menunggu.');
     }
     
-    // 3. Cek konflik jika status baru adalah 'disetujui'
     if ($request->status === 'disetujui') {
         $pesanan->load('jadwal', 'detailPesanan.paket');
 
