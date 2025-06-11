@@ -266,38 +266,82 @@ public function updateStatus(Request $request, Pesanan $pesanan)
         return view('pesanan.history', compact('pesanans', 'statusFilter'));
     }
 
-    public function laporan(Request $request) 
+   public function laporan(Request $request) 
     {
-        $filter = $request->input('filter'); // minggu, bulan, tahun
+        $filter = $request->input('filter'); // minggu, bulan, tahun, custom
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
 
         $query = Pesanan::with(['user', 'jadwal'])->where('status', 'selesai');
 
+        // Variabel untuk menyimpan rentang tanggal yang akan ditampilkan
+        $startDateForDisplay = null;
+        $endDateForDisplay = null;
+        $filterDescription = null; // Deskripsi filter, misal "Minggu Ini"
+
         if ($filter === 'minggu') {
-            $query->whereHas('jadwal', function ($q) {
-                $q->whereBetween('tanggal', [
-                    Carbon::now()->startOfWeek(),
-                    Carbon::now()->endOfWeek()
-                ]);
+            $start = Carbon::now()->startOfWeek();
+            $end = Carbon::now()->endOfWeek();
+            $query->whereHas('jadwal', function ($q) use ($start, $end) {
+                $q->whereBetween('tanggal', [$start, $end]);
             });
+            $startDateForDisplay = $start;
+            $endDateForDisplay = $end;
+            $filterDescription = 'Minggu Ini';
         } elseif ($filter === 'bulan') {
-            $query->whereHas('jadwal', function ($q) {
-                $q->whereMonth('tanggal', Carbon::now()->month)
-                    ->whereYear('tanggal', Carbon::now()->year);
+            $start = Carbon::now()->startOfMonth();
+            $end = Carbon::now()->endOfMonth();
+            $query->whereHas('jadwal', function ($q) use ($start, $end) {
+                $q->whereBetween('tanggal', [$start, $end]);
             });
+            $startDateForDisplay = $start;
+            $endDateForDisplay = $end;
+            $filterDescription = 'Bulan Ini';
         } elseif ($filter === 'tahun') {
-            $query->whereHas('jadwal', function ($q) {
-                $q->whereYear('tanggal', Carbon::now()->year);
+            $start = Carbon::now()->startOfYear();
+            $end = Carbon::now()->endOfYear();
+            $query->whereHas('jadwal', function ($q) use ($start, $end) {
+                $q->whereBetween('tanggal', [$start, $end]);
             });
+            $startDateForDisplay = $start;
+            $endDateForDisplay = $end;
+            $filterDescription = 'Tahun Ini';
+        } elseif ($filter === 'custom' && $startDate && $endDate) {
+            $start = Carbon::parse($startDate)->startOfDay();
+            $end = Carbon::parse($endDate)->endOfDay();
+            $query->whereHas('jadwal', function ($q) use ($start, $end) {
+                $q->whereBetween('tanggal', [$start, $end]);
+            });
+            $startDateForDisplay = $start;
+            $endDateForDisplay = $end;
+            $filterDescription = 'Rentang Tanggal Kustom';
+        } else {
+            // Jika filter "Semua" atau tidak ada filter yang dipilih
+            // Ambil rentang dari data yang ada di database atau biarkan null
+            // Untuk laporan "Semua", kita bisa mengambil rentang dari tanggal pertama hingga tanggal terakhir dari semua pesanan selesai
+            $firstPesananDate = Pesanan::where('status', 'selesai')->orderBy('created_at', 'asc')->value('created_at');
+            $lastPesananDate = Pesanan::where('status', 'selesai')->orderBy('created_at', 'desc')->value('created_at');
+
+            if ($firstPesananDate && $lastPesananDate) {
+                $startDateForDisplay = Carbon::parse($firstPesananDate)->startOfDay();
+                $endDateForDisplay = Carbon::parse($lastPesananDate)->endOfDay();
+                $filterDescription = 'Semua Waktu';
+            } else {
+                // Jika tidak ada data sama sekali
+                $filterDescription = 'Tidak ada data laporan.';
+            }
         }
+
 
         // Ambil semua data dengan urutan berdasarkan tanggal dari tabel jadwal
         $pesanans = $query->get()->sortBy(function ($item) {
             return $item->jadwal->tanggal;
         });
 
+        $totalPesanan = $pesanans->count();
         $totalPendapatan = $pesanans->sum('total_keuntungan');
 
-        return view('laporan.index', compact('pesanans', 'filter', 'totalPendapatan'));
+        return view('laporan.index', compact('pesanans', 'filter', 'totalPendapatan', 'totalPesanan', 'startDateForDisplay', 'endDateForDisplay', 'filterDescription'));
     }
 
     public function detail(Pesanan $pesanan)
