@@ -73,7 +73,7 @@
 
         <div class="mb-4 text-gray-800">
     @if ($filterDescription)
-        <p class="font-semibold">{{ $filterDescription }}@if($filterDescription != 'Semua Waktu' && $filterDescription != 'Tidak ada data laporan.'):@endif</p>
+        {{-- <p class="font-semibold">{{ $filterDescription }}@if($filterDescription != 'Semua Waktu' && $filterDescription != 'Tidak ada data laporan.'):@endif</p> --}}
     @endif
 
             @if ($startDateForDisplay && $endDateForDisplay && $filterDescription != 'Semua Waktu')
@@ -82,13 +82,11 @@
                     Sampai: {{ $endDateForDisplay->translatedFormat('d F Y') }}
                 </p>
             @elseif ($filterDescription === 'Tidak ada data laporan.')
-                <p>{{ $filterDescription }}</p>
+                {{-- <p>{{ $filterDescription }}</p> --}}
             @endif
         </div>
 
-        <div class="flex justify-end mb-4 print:hidden">
-            <span class="text-gray-700 text-lg font-semibold">Total Pesanan: {{ $totalPesanan }}</span>
-        </div>
+
 
         <div class="bg-white shadow-md rounded-lg overflow-auto">
             <div>
