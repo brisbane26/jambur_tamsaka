@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Keranjang;
+use App\Models\Keranjang; // Tidak digunakan di PesananController, bisa dihapus jika tidak ada fungsi lain
 use App\Models\Paket;
 use App\Models\Jadwal;
-use App\Models\Bank;
+use App\Models\Bank; // Tidak digunakan di PesananController, bisa dihapus jika tidak ada fungsi lain
 use App\Models\Pesanan;
 use App\Models\Pembayaran;
 use App\Models\User;
+use App\Models\DetailPesanan; // Pastikan ini di-import
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
@@ -20,7 +21,6 @@ class PesananController extends Controller
     {
         $user = Auth::user();
         
-        // Gunakan scope atau query langsung
         $pesanans = Pesanan::with(['user', 'jadwal', 'detailPesanan.paket'])
             ->when(!$user->hasRole('admin'), function($query) use ($user) {
                 $query->where('user_id', $user->id);
@@ -37,7 +37,6 @@ class PesananController extends Controller
 
     public function show(Pesanan $pesanan)
     {
-        // Authorization dengan @role di blade atau middleware
         if (Auth::user()->hasRole('customer') && $pesanan->user_id != Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
@@ -70,7 +69,6 @@ class PesananController extends Controller
                 break;
         }
 
-
         return view('pesanan.show', [
             'pesanan' => $pesanan,
             'isAdmin' => Auth::user()->hasRole('admin'),
@@ -78,29 +76,23 @@ class PesananController extends Controller
         ]);
     }
 
+    // Fungsi helper ini tidak lagi digunakan secara langsung untuk validasi konflik,
+    // karena kita akan mengambil semua gedung dari detail pesanan.
+    // Tapi bisa tetap dipertahankan jika ada kebutuhan lain.
     private function getGedungGroup(string $namaGedung): array
     {
-        // Normalisasi input ke huruf kecil untuk perbandingan yang konsisten
         $normalizedName = strtolower(trim($namaGedung));
         
-        $grupGedungSatu = [
-            'Gedung Utama', 
-        ];
+        $grupGedungUtama = 'Gedung Utama'; 
+        $grupGedungResepsi = 'Gedung Resepsi';
 
-        $grupGedungDua = [
-            'Gedung Resepsi',
-        ];
-
-        // Normalisasi juga array grup untuk perbandingan yang andal
-        if (in_array($normalizedName, array_map('strtolower', $grupGedungSatu))) {
-            return $grupGedungSatu; 
+        if (strtolower($grupGedungUtama) === $normalizedName) {
+            return [$grupGedungUtama];
         }
-
-        if (in_array($normalizedName, array_map('strtolower', $grupGedungDua))) {
-            return $grupGedungDua;
+        if (strtolower($grupGedungResepsi) === $normalizedName) {
+            return [$grupGedungResepsi];
         }
-
-        return [$namaGedung];
+        return [$namaGedung]; // Fallback jika bukan gedung utama/resepsi
     }
 
     public function updateStatus(Request $request, Pesanan $pesanan)
@@ -116,52 +108,174 @@ class PesananController extends Controller
 
         // --- AWAL BLOK LOGIKA PERSETUJUAN DAN PENOLAKAN OTOMATIS ---
         if ($request->status === 'disetujui') {
-            $pesanan->load('jadwal', 'detailPesanan.paket');
+            $pesanan->load('jadwal', 'detailPesanan.paket.kategori'); // Load kategori juga
 
             $tanggalAcara = $pesanan->jadwal->tanggal;
-            $firstDetail = $pesanan->detailPesanan->first();
 
-            if (!$firstDetail || !$firstDetail->paket) {
-                return back()->with('error', 'Gagal memeriksa konflik: Detail paket tidak ditemukan pada pesanan ini.');
+            // Dapatkan ID paket gedung yang ada di pesanan ini
+            $gedungIdsInThisOrder = $pesanan->detailPesanan
+                                            ->filter(function ($detail) {
+                                                return $detail->paket && $detail->paket->kategori->nama_kategori === 'Gedung';
+                                            })
+                                            ->pluck('paket_id')
+                                            ->unique()
+                                            ->toArray();
+
+            // Jika tidak ada gedung di pesanan ini, langsung setujui saja jika tidak ada konflik tanggal
+            if (empty($gedungIdsInThisOrder)) {
+                // Masih perlu cek apakah tanggal acara sudah ada di pesanan lain yang disetujui
+                $anyConflictOnDate = Pesanan::where('status', 'disetujui')
+                                            ->where('id', '!=', $pesanan->id)
+                                            ->whereHas('jadwal', function ($query) use ($tanggalAcara) {
+                                                $query->where('tanggal', $tanggalAcara);
+                                            })->exists();
+                if ($anyConflictOnDate) {
+                    return redirect()->back()->with([
+                        'message' => 'Konflik! Tanggal acara ini sudah digunakan oleh pesanan lain yang disetujui, dan pesanan ini tidak mengandung gedung.',
+                        'alert-type' => 'warning'
+                    ]);
+                }
+                $pesanan->update(['status' => 'disetujui', 'alasan_tolak' => null]);
+                return redirect()->back()->with([
+                    'message' => 'Pesanan berhasil disetujui! (Tidak ada gedung yang terlibat)',
+                    'alert-type' => 'success'
+                ]);
             }
-            $namaGedung = $firstDetail->paket->nama_paket;
-            $gedungGroup = $this->getGedungGroup($namaGedung);
+            
+            // Dapatkan ID dari Gedung Utama dan Gedung Resepsi
+            $gedungUtamaId = Paket::where('nama_paket', 'Gedung Utama')->value('id');
+            $gedungResepsiId = Paket::where('nama_paket', 'Gedung Resepsi')->value('id');
 
-            // 1. Periksa apakah sudah ada pesanan LAIN yang disetujui untuk jadwal ini
-            $conflict = Pesanan::where('status', 'disetujui')
-                ->where('id', '!=', $pesanan->id)
+            $isThisOrderForGedungUtama = in_array($gedungUtamaId, $gedungIdsInThisOrder);
+            $isThisOrderForGedungResepsi = in_array($gedungResepsiId, $gedungIdsInThisOrder);
+            $isThisOrderForBothBuildings = $isThisOrderForGedungUtama && $isThisOrderForGedungResepsi;
+
+
+            // Cek konflik dengan pesanan yang sudah disetujui pada tanggal yang sama
+            $approvedOrdersOnSameDate = Pesanan::where('status', 'disetujui')
+                ->where('id', '!=', $pesanan->id) // Exclude current order
                 ->whereHas('jadwal', function ($query) use ($tanggalAcara) {
                     $query->where('tanggal', $tanggalAcara);
                 })
-                ->whereHas('detailPesanan.paket', function ($query) use ($gedungGroup) {
-                    $query->whereIn('nama_paket', $gedungGroup);
-                })
-                ->exists();
+                ->with('detailPesanan.paket') // Load detail pesanan dari pesanan yang sudah disetujui
+                ->get();
+            
+            $existingApprovedGedungUtama = false;
+            $existingApprovedGedungResepsi = false;
 
-            if ($conflict) {
+            foreach ($approvedOrdersOnSameDate as $approvedOrder) {
+                foreach ($approvedOrder->detailPesanan as $detail) {
+                    if ($detail->paket_id == $gedungUtamaId) {
+                        $existingApprovedGedungUtama = true;
+                    }
+                    if ($detail->paket_id == $gedungResepsiId) {
+                        $existingApprovedGedungResepsi = true;
+                    }
+                }
+            }
+
+            // --- Logika Deteksi Konflik yang Ditingkatkan ---
+            $conflictMessage = '';
+            if ($isThisOrderForBothBuildings) {
+                if ($existingApprovedGedungUtama || $existingApprovedGedungResepsi) {
+                    $conflictMessage = 'Konflik! Pesanan ini memesan kedua gedung, tetapi salah satu atau kedua gedung sudah disetujui pada tanggal yang sama.';
+                }
+            } elseif ($isThisOrderForGedungUtama) {
+                if ($existingApprovedGedungUtama) {
+                    $conflictMessage = 'Konflik! Pesanan ini memesan Gedung Utama, tetapi Gedung Utama sudah disetujui pada tanggal yang sama.';
+                }
+            } elseif ($isThisOrderForGedungResepsi) {
+                if ($existingApprovedGedungResepsi) {
+                    $conflictMessage = 'Konflik! Pesanan ini memesan Gedung Resepsi, tetapi Gedung Resepsi sudah disetujui pada tanggal yang sama.';
+                }
+            }
+
+            if ($conflictMessage) {
                 return redirect()->back()->with([
-                    'message' => 'Konflik! Sudah ada pesanan lain yang disetujui untuk gedung dan tanggal ini.',
+                    'message' => $conflictMessage,
                     'alert-type' => 'warning'
                 ]);
             }
+            // --- Akhir Logika Deteksi Konflik yang Ditingkatkan ---
 
+
+            // Setujui pesanan ini
             $pesanan->update(['status' => 'disetujui', 'alasan_tolak' => null]);
 
-            Pesanan::where('status', 'menunggu')
-                ->where('id', '!=', $pesanan->id) // Pastikan tidak menolak pesanan yang baru disetujui
-                ->whereHas('jadwal', function ($query) use ($tanggalAcara) {
-                    $query->where('tanggal', $tanggalAcara);
-                })
-                ->whereHas('detailPesanan.paket', function ($query) use ($gedungGroup) {
-                    $query->whereIn('nama_paket', $gedungGroup);
-                })
-                ->update([
-                    'status' => 'ditolak',
-                    'alasan_tolak' => 'Mohon maaf, admin sudah menyetujui pesanan lain dengan tanggal ini.'
-                ]);
+            // Tolak otomatis pesanan lain yang "menunggu" dan berkonflik
+            // Ambil ID gedung dari pesanan yang baru disetujui
+            $gedungIdsBeingApproved = $pesanan->detailPesanan
+                                            ->filter(function ($detail) {
+                                                return $detail->paket && $detail->paket->kategori->nama_kategori === 'Gedung';
+                                            })
+                                            ->pluck('paket_id')
+                                            ->toArray();
+
+            // Hanya proses jika ada gedung yang disetujui
+            if (!empty($gedungIdsBeingApproved)) {
+                // Temukan semua pesanan "menunggu" pada tanggal yang sama
+                $pendingOrdersOnSameDate = Pesanan::where('status', 'menunggu')
+                    ->where('id', '!=', $pesanan->id) // Jangan tolak pesanan yang baru disetujui
+                    ->whereHas('jadwal', function ($query) use ($tanggalAcara) {
+                        $query->where('tanggal', $tanggalAcara);
+                    })
+                    ->with('detailPesanan.paket')
+                    ->get();
+                
+                foreach ($pendingOrdersOnSameDate as $pendingOrder) {
+                    $hasConflict = false;
+                    $pendingOrderGedungIds = $pendingOrder->detailPesanan
+                                                        ->filter(function ($detail) {
+                                                            return $detail->paket && $detail->paket->kategori->nama_kategori === 'Gedung';
+                                                        })
+                                                        ->pluck('paket_id')
+                                                        ->toArray();
+                    
+                    // Cek apakah ada irisan (gedung yang sama) antara gedung yang disetujui
+                    // dengan gedung di pesanan menunggu
+                    foreach ($gedungIdsBeingApproved as $approvedGedungId) {
+                        if (in_array($approvedGedungId, $pendingOrderGedungIds)) {
+                            $hasConflict = true;
+                            break;
+                        }
+                    }
+
+                    // Jika pesanan yang baru disetujui melibatkan Gedung Utama DAN Gedung Resepsi,
+                    // maka setiap pesanan menunggu pada tanggal itu yang memesan SALAH SATU dari gedung tersebut harus ditolak.
+                    // Jika pesanan yang baru disetujui hanya satu gedung (misal Gedung Utama),
+                    // maka pesanan menunggu yang memesan Gedung Utama juga ditolak.
+                    
+                    // Logika yang lebih spesifik:
+                    // Jika pesanan disetujui adalah Gedung Utama, tolak semua pending yang pesan Gedung Utama
+                    // Jika pesanan disetujui adalah Gedung Resepsi, tolak semua pending yang pesan Gedung Resepsi
+                    // Jika pesanan disetujui adalah KEDUA GEDUNG, tolak semua pending yang pesan Gedung Utama ATAU Gedung Resepsi
+
+                    $shouldReject = false;
+                    if ($isThisOrderForBothBuildings) { // Jika yang disetujui adalah kedua gedung
+                        if (in_array($gedungUtamaId, $pendingOrderGedungIds) || in_array($gedungResepsiId, $pendingOrderGedungIds)) {
+                            $shouldReject = true;
+                        }
+                    } elseif ($isThisOrderForGedungUtama) { // Jika yang disetujui hanya Gedung Utama
+                        if (in_array($gedungUtamaId, $pendingOrderGedungIds)) {
+                            $shouldReject = true;
+                        }
+                    } elseif ($isThisOrderForGedungResepsi) { // Jika yang disetujui hanya Gedung Resepsi
+                        if (in_array($gedungResepsiId, $pendingOrderGedungIds)) {
+                            $shouldReject = true;
+                        }
+                    }
+                    
+                    if ($shouldReject) {
+                        $pendingOrder->update([
+                            'status' => 'ditolak',
+                            'alasan_tolak' => 'Mohon maaf, admin sudah menyetujui pesanan lain dengan gedung yang sama pada tanggal ini.'
+                        ]);
+                    }
+                }
+            }
             
             return redirect()->back()->with([
-                'message' => 'Pesanan berhasil disetujui!',
+                'message' => 'Pesanan berhasil disetujui! Pesanan yang berkonflik pada tanggal yang sama telah ditolak.',
                 'alert-type' => 'success'
             ]);
         }
@@ -219,10 +333,8 @@ class PesananController extends Controller
 
         // Customer hanya bisa batalkan jika status menunggu/disetujui dan dia adalah pemilik pesanan
         if ($pesanan->user_id == $user->id && in_array($pesanan->status, ['menunggu', 'disetujui'])) {
-            // Pastikan relasi jadwal dimuat untuk mendapatkan tanggal acara
             $pesanan->load('jadwal'); 
 
-            // Periksa apakah jadwal ada untuk pesanan ini
             if (!$pesanan->jadwal) {
                 return back()->with([
                     'message' => 'Informasi jadwal untuk pesanan ini tidak ditemukan.',
@@ -230,12 +342,10 @@ class PesananController extends Controller
                 ]);
             }
 
-            // Pastikan tanggal acara dan hari ini di awal hari untuk perbandingan yang akurat
             $tanggalAcara = Carbon::parse($pesanan->jadwal->tanggal)->startOfDay();
             $hariIni = Carbon::today()->startOfDay();
 
-            // Logika H-3: Tanggal acara harus setelah 2 hari dari hari ini (yaitu, minimal H-3)
-            if ($tanggalAcara->isAfter($hariIni->addDays(2))) {
+            if ($tanggalAcara->isAfter($hariIni->addDays(2))) { // Logika H-3
                 $pesanan->update(['status' => 'dibatalkan']);
 
                 return back()->with([
@@ -250,7 +360,6 @@ class PesananController extends Controller
             }
         }
 
-        // Jika tidak memenuhi kriteria di atas (bukan admin, bukan pemilik, atau status tidak valid)
         return back()->with([
             'message' => 'Anda tidak dapat membatalkan pesanan ini karena bukan pemilik atau status tidak valid.',
             'alert-type' => 'alert'
@@ -260,10 +369,10 @@ class PesananController extends Controller
     public function history(Request $request)
     {
         $user = Auth::user();
-        $statusFilter = $request->input('status'); // nilai bisa: 'selesai', 'dibatalkan', 'ditolak', atau null
+        $statusFilter = $request->input('status');
 
         $pesanans = Pesanan::whereIn('status', ['selesai', 'dibatalkan', 'ditolak'])
-            ->with(['user', 'jadwal']) // tambahkan 'jadwal' juga agar tidak N+1 di view
+            ->with(['user', 'jadwal'])
             ->when(!$user->hasRole('admin'), function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
@@ -271,23 +380,22 @@ class PesananController extends Controller
                 $query->where('status', $statusFilter);
             })
             ->orderBy('id', 'asc')
-            ->paginate(10); // tambahkan pagination agar lebih rapi
+            ->paginate(10);
 
         return view('pesanan.history', compact('pesanans', 'statusFilter'));
     }
 
-   public function laporan(Request $request) 
+    public function laporan(Request $request) 
     {
-        $filter = $request->input('filter'); // minggu, bulan, tahun, custom
+        $filter = $request->input('filter');
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
         $query = Pesanan::with(['user', 'jadwal'])->where('status', 'selesai');
 
-        // Variabel untuk menyimpan rentang tanggal yang akan ditampilkan
         $startDateForDisplay = null;
         $endDateForDisplay = null;
-        $filterDescription = null; // Deskripsi filter, misal "Minggu Ini"
+        $filterDescription = null;
 
         if ($filter === 'minggu') {
             $start = Carbon::now()->startOfWeek();
@@ -326,7 +434,6 @@ class PesananController extends Controller
             $endDateForDisplay = $end;
             $filterDescription = 'Rentang Tanggal Kustom';
         } else {
-            // Jika filter "Semua" atau tidak ada filter yang dipilih
             $firstPesananDate = Pesanan::where('status', 'selesai')->orderBy('created_at', 'asc')->value('created_at');
             $lastPesananDate = Pesanan::where('status', 'selesai')->orderBy('created_at', 'desc')->value('created_at');
 
@@ -339,7 +446,6 @@ class PesananController extends Controller
             }
         }
 
-        // Ambil semua data dengan urutan berdasarkan tanggal dari tabel jadwal
         $pesanans = $query->get()->sortBy(function ($item) {
             return $item->jadwal->tanggal;
         });
@@ -352,7 +458,6 @@ class PesananController extends Controller
 
     public function detail(Pesanan $pesanan)
     {
-        // Authorization dengan @role di blade atau middleware
         if (Auth::user()->hasRole('customer') && $pesanan->user_id != Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
@@ -369,17 +474,14 @@ class PesananController extends Controller
     {
         $user = Auth::user();
 
-        // Jumlah pesanan diproses (status menunggu)
         $pesananDiproses = Pesanan::where('user_id', $user->id)
             ->where('status', 'menunggu')
             ->count();
 
-        // Jumlah pesanan selesai
         $pesananSelesai = Pesanan::where('user_id', $user->id)
             ->where('status', 'selesai')
             ->count();
 
-        // Total pengeluaran user
         $totalPengeluaran = Pesanan::where('user_id', $user->id)
             ->whereIn('status', ['menunggu', 'disetujui', 'selesai'])
             ->with('detailPesanan.paket')
