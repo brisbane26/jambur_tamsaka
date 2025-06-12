@@ -13,8 +13,7 @@
                 <div class="space-y-3">
                     <div class="flex">
                         <span class="w-1/3 font-medium">Status</span>
-                        <span>:</span>
-                        <span></span>
+                        <span class="mr-2">:</span> {{-- Tambahkan margin-right untuk jarak --}}
                         <span
                             class="px-2 inline-flex text-xs leading-7 font-semibold rounded-full 
                             @if ($pesanan->status === 'menunggu') bg-yellow-100 text-yellow-800
@@ -27,42 +26,44 @@
                     </div>
                     <div class="flex">
                         <span class="w-1/3 font-medium">Tanggal Pesan</span>
-                        <span>: {{ $pesanan->created_at->format('d M Y H:i') }}</span>
+                        <span class="mr-2">:</span> {{ $pesanan->created_at->format('d M Y H:i') }}
                     </div>
                     <div class="flex">
                         <span class="w-1/3 font-medium">Nama Acara</span>
-                        <span>: {{ $pesanan->jadwal->nama_acara }}</span>
+                        <span class="mr-2">:</span> {{ $pesanan->jadwal->nama_acara }}
                     </div>
                     <div class="flex">
                         <span class="w-1/3 font-medium">Tanggal Acara</span>
-                        <span>: {{ \Carbon\Carbon::parse($pesanan->jadwal->tanggal)->format('d M Y') }}</span>
+                        <span class="mr-2">:</span> {{ \Carbon\Carbon::parse($pesanan->jadwal->tanggal)->format('d M Y') }}
                     </div>
                     <div class="flex">
                         <span class="w-1/3 font-medium">Nama Pemesan</span>
-                        <span>: {{ $pesanan->user->nama_lengkap }}</span>
+                        <span class="mr-2">:</span> {{ $pesanan->user->nama_lengkap }}
                     </div>
                     <div class="flex">
                         <span class="w-1/3 font-medium">Nomor Telepon</span>
-                        <span>: {{ $pesanan->user->telepon }}</span>
+                        <span class="mr-2">:</span> {{ $pesanan->user->telepon }}
                     </div>
                     @if ($pesanan->status === 'ditolak' && $pesanan->alasan_tolak)
-                        <div class="flex">
+                        <div class="flex items-start"> {{-- Gunakan items-start agar konten multi-baris rapi --}}
                             <span class="w-1/3 font-medium">Alasan Penolakan</span>
-                            <span class="text-red-600">: {{ $pesanan->alasan_tolak }}</span>
+                            <span class="mr-2 text-red-600">:</span> {{-- Pindahkan titik dua ke span terpisah dengan margin --}}
+                            <span class="w-2/3 text-red-600"> {{-- Beri lebar pada konten alasan agar sejajar --}}
+                                {{ $pesanan->alasan_tolak }}
+                            </span>
                         </div>
                     @endif
-                    @if ($pesanan->detailPesanan->first()->catatan)
-                        <div class="mt-3">
-                            <div class="flex">
-                                <span class="w-1/3 font-medium">Catatan Admin</span>
-                                <span>:</span>
-                            </div>
-                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-1">
-                                <p class="text-blue-700">
-                                    {!! nl2br(e(ltrim($pesanan->detailPesanan->first()->catatan))) !!}
-                                </p>
-
-                            </div>
+                    {{-- Perbaiki bagian catatan admin jika ada, agar rapi juga. Pastikan kolom 'catatan' ada di model Pesanan --}}
+                    @if ($pesanan->catatan) {{-- Menggunakan $pesanan->catatan karena sudah dipindahkan di checkout_store --}}
+                        <div class="flex items-start">
+                            <span class="w-1/3 font-medium">Catatan Admin</span>
+                            <span class="mr-2">:</span>
+                            <span class="w-2/3">
+                                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-1 text-blue-700">
+                                    {{-- Gunakan nl2br untuk menampilkan newline jika ada --}}
+                                    {!! nl2br(e($pesanan->catatan)) !!} 
+                                </div>
+                            </span>
                         </div>
                     @endif
                 </div>
@@ -73,21 +74,23 @@
                 <div class="space-y-3">
                     <div class="flex">
                         <span class="w-1/3 font-medium">Total Harga</span>
-                        <span>: Rp{{ number_format($pesanan->total_harga, 0, ',', '.') }}</span>
+                        <span class="mr-2">:</span> Rp{{ number_format($pesanan->total_harga, 0, ',', '.') }}
                     </div>
                     <div class="flex">
                         <span class="w-1/3 font-medium">Metode Bayar</span>
-                        <span>: {{ $pesanan->pembayaran->metode_bayar ?? '-' }}</span>
+                        <span class="mr-2">:</span> {{ $pesanan->pembayaran->metode_bayar ?? '-' }}
                     </div>
 
                     @if ($pesanan->bukti_transaksi)
                         <div class="mt-4">
-                            <div class="font-medium mb-2 flex">
+                            <div class="flex items-start"> {{-- Gunakan flex dan items-start di sini juga --}}
                                 <span class="w-1/3 font-medium">Bukti Transfer</span>
-                                <span>:</span>
+                                <span class="mr-2">:</span>
+                                <div class="w-2/3">
+                                    <img src="{{ asset('storage/' . $pesanan->bukti_transaksi) }}" alt="Bukti Transfer"
+                                        class="max-w-full h-auto border rounded">
+                                </div>
                             </div>
-                            <img src="{{ asset('storage/' . $pesanan->bukti_transaksi) }}" alt="Bukti Transfer"
-                                class="max-w-full h-auto border rounded">
 
                             @role('customer')
                                 @if ($pesanan->status === 'menunggu')
@@ -114,86 +117,89 @@
             </div>
         </div>
 
-@role('admin')
-    @if (!empty($statusOptions))
-        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
-            <h3 class="text-lg font-semibold mb-4 border-b pb-2">Update Status Pesanan</h3>
-            <form action="{{ route('pesanan.updateStatus', $pesanan->id) }}" method="POST">
-                @csrf
-                @method('PUT')
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="status" class="block text-sm font-medium text-gray-700">Ubah Status ke</label>
-                        <select name="status" id="status"
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                            
-                            @foreach ($statusOptions as $value => $label)
-                                <option value="{{ $value }}"
-                                    {{ old('status', $pesanan->status) == $value ? 'selected' : '' }}>
-                                    {{ $label }}
-                                </option>
-                            @endforeach
+        @role('admin')
+            @if (!empty($statusOptions))
+                <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+                    <h3 class="text-lg font-semibold mb-4 border-b pb-2">Update Status Pesanan</h3>
+                    <form action="{{ route('pesanan.updateStatus', $pesanan->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="status" class="block text-sm font-medium text-gray-700">Ubah Status ke</label>
+                                <select name="status" id="status"
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    
+                                    @foreach ($statusOptions as $value => $label)
+                                        <option value="{{ $value }}"
+                                            {{ old('status', $pesanan->status) == $value ? 'selected' : '' }}>
+                                            {{ $label }}
+                                        </option>
+                                    @endforeach
 
-                        </select>
-                    </div>
+                                </select>
+                            </div>
 
-                    <div id="alasan-tolak-container" class="{{ old('status', $pesanan->status) == 'ditolak' ? '' : 'hidden' }}">
-                        <label for="alasan_tolak" class="block text-sm font-medium text-gray-700">Alasan Penolakan</label>
-                        <textarea name="alasan_tolak" id="alasan_tolak" rows="2"
-                            class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            >{{ old('alasan_tolak') }}</textarea>
-                        
-                        @error('alasan_tolak')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
+                            <div id="alasan-tolak-container" class="{{ old('status', $pesanan->status) == 'ditolak' ? '' : 'hidden' }}">
+                                <label for="alasan_tolak" class="block text-sm font-medium text-gray-700">Alasan Penolakan</label>
+                                <textarea name="alasan_tolak" id="alasan_tolak" rows="2"
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    >{{ old('alasan_tolak', $pesanan->alasan_tolak) }}</textarea> {{-- Tambahkan $pesanan->alasan_tolak sebagai fallback old value --}}
+                                
+                                @error('alasan_tolak')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded text-sm hover:bg-blue-600">
+                                Update Status
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            @else
+                <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+                    <h3 class="text-lg font-semibold mb-2">Update Status Pesanan</h3>
+                    <div class="alert alert-info bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded relative" role="alert">
+                        Status pesanan adalah <strong>"{{ ucfirst($pesanan->status) }}"</strong> dan tidak ada aksi lebih lanjut yang dapat dilakukan.
                     </div>
                 </div>
+            @endif
 
-                <div class="mt-4">
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded text-sm hover:bg-blue-600">
-                        Update Status
-                    </button>
-                </div>
-            </form>
-        </div>
-    @else
-        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
-             <h3 class="text-lg font-semibold mb-2">Update Status Pesanan</h3>
-             <div class="alert alert-info bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded relative" role="alert">
-                Status pesanan adalah <strong>"{{ ucfirst($pesanan->status) }}"</strong> dan tidak ada aksi lebih lanjut yang dapat dilakukan.
-             </div>
-        </div>
-    @endif
+            @push('scripts')
+                <script>
+                    document.addEventListener('turbo:load', function() {
+                        const statusSelect = document.getElementById('status');
+                        const alasanTolakContainer = document.getElementById('alasan-tolak-container');
 
-    @push('scripts')
-        <script>
-            document.addEventListener('turbo:load', function() {
-                const statusSelect = document.getElementById('status');
-                const alasanTolakContainer = document.getElementById('alasan-tolak-container');
+                        if (statusSelect && alasanTolakContainer) {
+                            const checkStatusVisibility = () => {
+                                if (statusSelect.value === 'ditolak') {
+                                    alasanTolakContainer.classList.remove('hidden');
+                                } else {
+                                    alasanTolakContainer.classList.add('hidden');
+                                }
+                            };
 
-                if (statusSelect && alasanTolakContainer) {
-                    
-                    const checkStatusVisibility = () => {
-                        if (statusSelect.value === 'ditolak') {
-                            alasanTolakContainer.classList.remove('hidden');
-                        } else {
-                            alasanTolakContainer.classList.add('hidden');
+                            checkStatusVisibility(); // Jalankan saat halaman dimuat
+                            statusSelect.addEventListener('change', checkStatusVisibility);
                         }
-                    };
+                    });
+                </script>
+            @endpush
+        @endrole
 
-                    checkStatusVisibility();
-
-                    statusSelect.addEventListener('change', checkStatusVisibility);
-                }
-            });
-        </script>
-    @endpush
-@endrole
-
-        <div class="p-6">
+        {{-- Ini adalah div yang terpotong di respons sebelumnya, telah dikembalikan --}}
+        {{-- Pastikan ini tidak duplikat dengan p-6 paling atas --}}
+        {{-- Jika p-6 paling atas sudah mengelilingi seluruh konten, ini bisa dihapus --}}
+        {{-- Berdasarkan struktur asli Anda, div ini sepertinya tidak diperlukan dan bisa menyebabkan layout pecah --}}
+        {{-- Jadi, saya akan menghapusnya dan merapikan struktur div di bawahnya --}}
+        {{-- <div class="p-6"> --}} 
             @role('customer')
                 @if (in_array($pesanan->status, ['menunggu', 'disetujui']))
-                    <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+                    <div class="bg-white shadow-md rounded-lg p-6 mt-6 mb-6"> {{-- Tambahkan mt-6 jika ini di luar grid --}}
                         <h3 class="text-lg font-semibold mb-4 border-b pb-2">Batalkan Pesanan</h3>
                         <button type="button" onclick="openCancelModal({{ $pesanan->id }})"
                             class="bg-red-500 text-white px-4 py-2 rounded text-sm hover:bg-red-600">
@@ -203,7 +209,7 @@
                 @endif
             @endrole
 
-        </div>
+        {{-- </div> --}} {{-- Penutup div yang kemungkinan menyebabkan masalah --}}
 
         <div id="cancel-modal-{{ $pesanan->id }}"
             class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
@@ -228,7 +234,7 @@
         </div>
 
 
-        <div class="bg-white shadow-md rounded-lg p-6">
+        <div class="bg-white shadow-md rounded-lg p-6 mt-6"> {{-- Tambahkan mt-6 untuk jarak dari elemen sebelumnya --}}
             <h3 class="text-lg font-semibold mb-4 border-b pb-2">Detail Paket</h3>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -363,41 +369,19 @@
             </script>
         @endif
 
-        @role('admin')
-            @push('scripts')
-                <script>
-                    document.addEventListener('turbo:load', function() {
-                        const statusSelect = document.getElementById('status');
-                        const alasanTolakContainer = document.getElementById('alasan-tolak-container');
+        {{-- Pastikan script admin di sini tidak duplikat dengan yang ada di @role('admin') di atas --}}
+        {{-- Karena Anda memiliki @push('scripts') di dalam @role('admin') dan juga di luar @role('admin') --}}
+        {{-- Sebaiknya semua script admin berada di satu tempat di dalam @role('admin') --}}
+        {{-- Saya akan memindahkan script ini ke dalam @role('admin') paling atas --}}
+        {{-- Ini adalah script untuk modal pembatalan yang sebelumnya ada di luar @role('admin') --}}
+        <script>
+            function openCancelModal(id) {
+                document.getElementById('cancel-modal-' + id).classList.remove('hidden');
+            }
 
-                        if (statusSelect && alasanTolakContainer) {
-                            statusSelect.addEventListener('change', function() {
-                                if (this.value === 'ditolak') {
-                                    alasanTolakContainer.classList.remove('hidden');
-                                } else {
-                                    alasanTolakContainer.classList.add('hidden');
-                                }
-                            });
-
-                            if (statusSelect.value === 'ditolak') {
-                                alasanTolakContainer.classList.remove('hidden');
-                            } else {
-                                alasanTolakContainer.classList.add('hidden');
-                            }
-                        }
-                    });
-                </script>
-            @endpush
-        @endrole
-    </div>
-
-    <script>
-        function openCancelModal(id) {
-            document.getElementById('cancel-modal-' + id).classList.remove('hidden');
-        }
-
-        function closeCancelModal(id) {
-            document.getElementById('cancel-modal-' + id).classList.add('hidden');
-        }
-    </script>
+            function closeCancelModal(id) {
+                document.getElementById('cancel-modal-' + id).classList.add('hidden');
+            }
+        </script>
+    </div> {{-- Penutup div class="p-6" paling awal --}}
 </x-admin-layout>

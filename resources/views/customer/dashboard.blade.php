@@ -84,12 +84,20 @@
           Aturan Pemesanan Jambur
         </h2>
         <ul class="list-disc pl-6 text-gray-800 text-lg space-y-2">
-          <li><span class="font-semibold text-[#5c1515]">Pemesanan gedung</span> hanya dapat dilakukan minimal <span class="font-bold">3 hari setelah hari ini</span>.</li>
-          <li><span class="font-semibold text-[#5c1515]">Pembatalan pesanan</span> hanya dapat dilakukan maksimal <span class="font-bold">H-3 sebelum hari acara</span>.</li>
-          <li><span class="font-semibold text-[#5c1515]">Pelanggan wajib memesan gedung</span> untuk dapat <span class="font-bold">memesan paket-paket lain</span>.</li>
-          <li><span class="font-semibold text-[#5c1515]">Pembayaran cash (tunai)</span> wajib dilakukan <span class="font-bold">langsung di kantor Jambur.</span></li>
-          <li><span class="font-semibold text-[#5c1515]">Pengembalian uang</span> dilakukan dengan <span class="font-bold">menghubungi admin.</span></li>
-          <li><span class="font-semibold text-[#5c1515]">Pembayaran pesanan</span> tunai atau non tunai <span class="font-bold">harus dibayarkan secara penuh</span></li>
+                        <li><span class="font-semibold text-[#5c1515]">Pemesanan gedung</span> hanya dapat dilakukan
+                            minimal <span class="font-bold">3 hari setelah hari ini</span>.</li>
+                        <li><span class="font-semibold text-[#5c1515]">Pembatalan pesanan</span> hanya dapat dilakukan
+                            maksimal <span class="font-bold">H-3 sebelum hari acara</span>.</li>
+                        <li><span class="font-semibold text-[#5c1515]">Pelanggan wajib memesan gedung</span> untuk dapat
+                            <span class="font-bold">memesan paket-paket lain</span>.</li>
+                        <li><span class="font-semibold text-[#5c1515]">Pembayaran cash (tunai)</span> wajib dilakukan langsung 
+                            <span class="font-bold">di kantor Jambur dalam waktu 1 hari.</span></li>
+                        <li><span class="font-semibold text-[#5c1515]">Pesanan dengan pembayaran cash (tunai)</span> yang tidak dibayar dalam 1 hari 
+                            <span class="font-bold">akan ditolak.</span></li>
+                        <li><span class="font-semibold text-[#5c1515]">Pengembalian uang</span> dilakukan dengan <span
+                                class="font-bold">menghubungi admin.</span></li>
+                        <li><span class="font-semibold text-[#5c1515]">Pembayaran pesanan</span> tunai atau non tunai
+                            <span class="font-bold">harus dibayarkan secara penuh</span></li>
 
         </ul>
         <div class="mt-6 flex items-center bg-[#f3eaea] rounded-lg p-4">
