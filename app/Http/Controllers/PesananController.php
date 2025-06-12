@@ -91,74 +91,93 @@ class PesananController extends Controller
             'Gedung Resepsi',
         ];
 
-        if (in_array($normalizedName, $grupGedungSatu)) {
+        // Normalisasi juga array grup untuk perbandingan yang andal
+        if (in_array($normalizedName, array_map('strtolower', $grupGedungSatu))) {
             return $grupGedungSatu; 
         }
 
-        if (in_array($normalizedName, $grupGedungDua)) {
+        if (in_array($normalizedName, array_map('strtolower', $grupGedungDua))) {
             return $grupGedungDua;
         }
 
         return [$namaGedung];
     }
 
-public function updateStatus(Request $request, Pesanan $pesanan)
-{
-    $request->validate([
-        'status' => 'required|in:menunggu,disetujui,ditolak,selesai,dibatalkan',
-        'alasan_tolak' => 'required_if:status,ditolak|nullable|string|max:255',
-    ]);
+    public function updateStatus(Request $request, Pesanan $pesanan)
+    {
+        $request->validate([
+            'status' => 'required|in:menunggu,disetujui,ditolak,selesai,dibatalkan',
+            'alasan_tolak' => 'required_if:status,ditolak|nullable|string|max:255',
+        ]);
 
-    if ($pesanan->status === 'disetujui' && $request->status === 'menunggu') {
-        return back()->with('error', 'Status yang sudah disetujui tidak dapat diubah kembali menjadi menunggu.');
-    }
-    
-    if ($request->status === 'disetujui') {
-        $pesanan->load('jadwal', 'detailPesanan.paket');
-
-        $tanggalAcara = $pesanan->jadwal->tanggal;
-        $firstDetail = $pesanan->detailPesanan->first();
-
-        if (!$firstDetail || !$firstDetail->paket) {
-            return back()->with('error', 'Gagal memeriksa konflik: Detail paket tidak ditemukan pada pesanan ini.');
+        if ($pesanan->status === 'disetujui' && $request->status === 'menunggu') {
+            return back()->with('error', 'Status yang sudah disetujui tidak dapat diubah kembali menjadi menunggu.');
         }
-        $namaGedung = $firstDetail->paket->nama_paket;
 
-        $gedungGroup = $this->getGedungGroup($namaGedung);
+        // --- AWAL BLOK LOGIKA PERSETUJUAN DAN PENOLAKAN OTOMATIS ---
+        if ($request->status === 'disetujui') {
+            $pesanan->load('jadwal', 'detailPesanan.paket');
 
-        $conflict = Pesanan::where('status', 'disetujui')
-            ->where('id', '!=', $pesanan->id)
-            ->whereHas('jadwal', function ($query) use ($tanggalAcara) {
-                $query->where('tanggal', $tanggalAcara);
-            })
-            ->whereHas('detailPesanan.paket', function ($query) use ($gedungGroup) {
-                $query->whereIn('nama_paket', $gedungGroup);
-            })
-            ->exists();
+            $tanggalAcara = $pesanan->jadwal->tanggal;
+            $firstDetail = $pesanan->detailPesanan->first();
 
-        if ($conflict) {
+            if (!$firstDetail || !$firstDetail->paket) {
+                return back()->with('error', 'Gagal memeriksa konflik: Detail paket tidak ditemukan pada pesanan ini.');
+            }
+            $namaGedung = $firstDetail->paket->nama_paket;
+            $gedungGroup = $this->getGedungGroup($namaGedung);
 
-        $notifications = [
-        'message' => 'Konflik! Sudah ada pesanan lain yang disetujui untuk gedung dan tanggal ini.',
-        'alert-type' => 'warning'
-        ];
+            // 1. Periksa apakah sudah ada pesanan LAIN yang disetujui untuk jadwal ini
+            $conflict = Pesanan::where('status', 'disetujui')
+                ->where('id', '!=', $pesanan->id)
+                ->whereHas('jadwal', function ($query) use ($tanggalAcara) {
+                    $query->where('tanggal', $tanggalAcara);
+                })
+                ->whereHas('detailPesanan.paket', function ($query) use ($gedungGroup) {
+                    $query->whereIn('nama_paket', $gedungGroup);
+                })
+                ->exists();
 
-        return redirect()->back()->with($notifications);
+            if ($conflict) {
+                return redirect()->back()->with([
+                    'message' => 'Konflik! Sudah ada pesanan lain yang disetujui untuk gedung dan tanggal ini.',
+                    'alert-type' => 'warning'
+                ]);
+            }
+
+            $pesanan->update(['status' => 'disetujui', 'alasan_tolak' => null]);
+
+            Pesanan::where('status', 'menunggu')
+                ->where('id', '!=', $pesanan->id) // Pastikan tidak menolak pesanan yang baru disetujui
+                ->whereHas('jadwal', function ($query) use ($tanggalAcara) {
+                    $query->where('tanggal', $tanggalAcara);
+                })
+                ->whereHas('detailPesanan.paket', function ($query) use ($gedungGroup) {
+                    $query->whereIn('nama_paket', $gedungGroup);
+                })
+                ->update([
+                    'status' => 'ditolak',
+                    'alasan_tolak' => 'Mohon maaf, admin sudah menyetujui pesanan lain dengan tanggal ini.'
+                ]);
+            
+            return redirect()->back()->with([
+                'message' => 'Pesanan berhasil disetujui!',
+                'alert-type' => 'success'
+            ]);
         }
+        // --- AKHIR BLOK LOGIKA PERSETUJUAN ---
+
+        // Jika status yang diupdate BUKAN 'disetujui', jalankan logika standar
+        $pesanan->update([
+            'status' => $request->status,
+            'alasan_tolak' => $request->status === 'ditolak' ? $request->alasan_tolak : null
+        ]);
+
+        return redirect()->back()->with([
+            'message' => 'Status pesanan berhasil diperbarui!',
+            'alert-type' => 'success'
+        ]);
     }
-
-    $pesanan->update([
-        'status' => $request->status,
-        'alasan_tolak' => $request->status === 'ditolak' ? $request->alasan_tolak : null
-    ]);
-
-    $notifications = [
-        'message' => 'Status pesanan berhasil diperbarui!',
-        'alert-type' => 'success'
-    ];
-
-    return redirect()->back()->with($notifications);
-}
 
     public function updateBukti(Request $request, Pesanan $pesanan)
     {
@@ -179,12 +198,10 @@ public function updateStatus(Request $request, Pesanan $pesanan)
 
         $pesanan->update(['bukti_transaksi' => $buktiPath]);
 
-        $notifications = [
+        return redirect()->back()->with([
             'message' => 'Bukti transfer berhasil diperbarui.',
             'alert-type' => 'success'
-        ];
-
-        return redirect()->back()->with($notifications);
+        ]);
     }
 
     public function cancel(Pesanan $pesanan)
@@ -194,11 +211,10 @@ public function updateStatus(Request $request, Pesanan $pesanan)
         // Admin bisa batalkan kapan saja
         if ($user->hasRole('admin')) {
             $pesanan->update(['status' => 'dibatalkan']);
-            $notifications = [
+            return back()->with([
                 'message' => 'Pesanan berhasil dibatalkan oleh Admin.',
                 'alert-type' => 'success'
-            ];
-            return back()->with($notifications);
+            ]);
         }
 
         // Customer hanya bisa batalkan jika status menunggu/disetujui dan dia adalah pemilik pesanan
@@ -208,11 +224,10 @@ public function updateStatus(Request $request, Pesanan $pesanan)
 
             // Periksa apakah jadwal ada untuk pesanan ini
             if (!$pesanan->jadwal) {
-                $notifications = [
+                return back()->with([
                     'message' => 'Informasi jadwal untuk pesanan ini tidak ditemukan.',
                     'alert-type' => 'error'
-                ];
-                return back()->with($notifications);
+                ]);
             }
 
             // Pastikan tanggal acara dan hari ini di awal hari untuk perbandingan yang akurat
@@ -220,31 +235,26 @@ public function updateStatus(Request $request, Pesanan $pesanan)
             $hariIni = Carbon::today()->startOfDay();
 
             // Logika H-3: Tanggal acara harus setelah 2 hari dari hari ini (yaitu, minimal H-3)
-            // Contoh: Jika hari ini 27 Mei, acara harus setelah 29 Mei (yaitu mulai 30 Mei)
             if ($tanggalAcara->isAfter($hariIni->addDays(2))) {
                 $pesanan->update(['status' => 'dibatalkan']);
 
-                $notifications = [
+                return back()->with([
                     'message' => 'Pesanan berhasil dibatalkan.',
                     'alert-type' => 'success'
-                ];
-                return back()->with($notifications);
+                ]);
             } else {
-                $notifications = [
+                return back()->with([
                     'message' => 'Pesanan hanya bisa dibatalkan maksimal 3 hari sebelum tanggal pelaksanaan (H-3).',
                     'alert-type' => 'warning'
-                ];
-                return back()->with($notifications);
+                ]);
             }
         }
 
         // Jika tidak memenuhi kriteria di atas (bukan admin, bukan pemilik, atau status tidak valid)
-        $notifications = [
+        return back()->with([
             'message' => 'Anda tidak dapat membatalkan pesanan ini karena bukan pemilik atau status tidak valid.',
             'alert-type' => 'alert'
-        ];
-
-        return back()->with($notifications);
+        ]);
     }
 
     public function history(Request $request)
@@ -317,8 +327,6 @@ public function updateStatus(Request $request, Pesanan $pesanan)
             $filterDescription = 'Rentang Tanggal Kustom';
         } else {
             // Jika filter "Semua" atau tidak ada filter yang dipilih
-            // Ambil rentang dari data yang ada di database atau biarkan null
-            // Untuk laporan "Semua", kita bisa mengambil rentang dari tanggal pertama hingga tanggal terakhir dari semua pesanan selesai
             $firstPesananDate = Pesanan::where('status', 'selesai')->orderBy('created_at', 'asc')->value('created_at');
             $lastPesananDate = Pesanan::where('status', 'selesai')->orderBy('created_at', 'desc')->value('created_at');
 
@@ -327,11 +335,9 @@ public function updateStatus(Request $request, Pesanan $pesanan)
                 $endDateForDisplay = Carbon::parse($lastPesananDate)->endOfDay();
                 $filterDescription = 'Semua Waktu';
             } else {
-                // Jika tidak ada data sama sekali
                 $filterDescription = 'Tidak ada data laporan.';
             }
         }
-
 
         // Ambil semua data dengan urutan berdasarkan tanggal dari tabel jadwal
         $pesanans = $query->get()->sortBy(function ($item) {
@@ -373,10 +379,9 @@ public function updateStatus(Request $request, Pesanan $pesanan)
             ->where('status', 'selesai')
             ->count();
 
-        // Total pengeluaran user: jumlah semua harga paket * kuantitas dari detail pesanan pesanan user
-        // Kita join detailPesanan dan paket
+        // Total pengeluaran user
         $totalPengeluaran = Pesanan::where('user_id', $user->id)
-            ->whereIn('status', ['menunggu', 'disetujui', 'selesai']) // status pesanan yang dihitung (sesuaikan)
+            ->whereIn('status', ['menunggu', 'disetujui', 'selesai'])
             ->with('detailPesanan.paket')
             ->get()
             ->flatMap(function($pesanan) {
