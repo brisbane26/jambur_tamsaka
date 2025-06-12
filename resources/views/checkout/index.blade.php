@@ -130,96 +130,48 @@
         </div>
     </div>
 
-    @push('styles')
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    @endpush
+<script>
+        // Fungsi untuk menginisialisasi event listener
+        function initializePaymentMethodToggle() {
+            const transferRadio = document.getElementById('transfer');
+            const cashRadio = document.getElementById('cash');
+            const bankInfo = document.getElementById('bankInfo');
+            const buktiTransfer = document.getElementById('buktiTransfer');
 
-    @push('scripts')
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-        <script>
-            function initializePaymentMethodToggle() {
-                const transferRadio = document.getElementById('transfer');
-                const cashRadio = document.getElementById('cash');
-                const bankInfo = document.getElementById('bankInfo');
-                const buktiTransfer = document.getElementById('buktiTransfer');
-
-                if (transferRadio && cashRadio && bankInfo && buktiTransfer) {
-                    transferRadio.addEventListener('change', function() {
-                        if (this.checked) {
-                            bankInfo.classList.remove('hidden');
-                            buktiTransfer.classList.remove('hidden');
-                        }
-                    });
-
-                    cashRadio.addEventListener('change', function() {
-                        if (this.checked) {
-                            bankInfo.classList.add('hidden');
-                            buktiTransfer.classList.add('hidden');
-                        }
-                    });
-
-                    if (transferRadio.checked) {
+            // Pastikan elemen ditemukan sebelum menambahkan event listener
+            if (transferRadio && cashRadio && bankInfo && buktiTransfer) {
+                transferRadio.addEventListener('change', function() {
+                    if (this.checked) {
                         bankInfo.classList.remove('hidden');
                         buktiTransfer.classList.remove('hidden');
-                    } else {
+                    }
+                });
+
+                cashRadio.addEventListener('change', function() {
+                    if (this.checked) {
                         bankInfo.classList.add('hidden');
                         buktiTransfer.classList.add('hidden');
                     }
+                });
+
+                // Inisialisasi awal saat halaman dimuat (untuk kasus refresh atau navigasi langsung)
+// Jika transferRadio sudah checked saat load, tampilkan bank info
+                if (transferRadio.checked) {
+                    bankInfo.classList.remove('hidden');
+                    buktiTransfer.classList.remove('hidden');
+                } else {
+                    // Pastikan tersembunyi jika cashRadio checked atau tidak ada yang checked
+                    bankInfo.classList.add('hidden');
+                    buktiTransfer.classList.add('hidden');
                 }
             }
+        }
 
-            function initializeToastr() {
-                toastr.options = {
-                    "closeButton": true,
-                    "progressBar": true,
-                    "positionClass": "toast-top-right",
-                    "showDuration": "300",
-                    "hideDuration": "1000",
-                    "timeOut": "5000", // Notifikasi akan hilang setelah 5 detik
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
-                };
+        // Jalankan fungsi inisialisasi saat DOMContentLoaded (untuk initial page load)
+        document.addEventListener('DOMContentLoaded', initializePaymentMethodToggle);
 
-                @if(Session::has('message'))
-                    var type = "{{ Session::get('alert-type', 'info') }}";
-                    var message = "{{ Session::get('message') }}";
-                    switch(type){
-                        case 'info':
-                            toastr.info(message);
-                            break;
-                        case 'warning':
-                            toastr.warning(message);
-                            break;
-                        case 'success':
-                            toastr.success(message);
-                            break;
-                        case 'error':
-                            toastr.error(message);
-                            break;
-                    }
-                @endif
+        // Jalankan fungsi inisialisasi setiap kali Turbo memuat halaman baru
+        document.addEventListener('turbo:load', initializePaymentMethodToggle);
+    </script>
 
-                // Menangani error validasi dari $errors
-                @if($errors->any())
-                    @foreach ($errors->all() as $error)
-                        toastr.error("{{ $error }}");
-                    @endforeach
-                @endif
-            }
-
-            document.addEventListener('DOMContentLoaded', function() {
-                initializePaymentMethodToggle();
-                initializeToastr();
-            });
-
-            document.addEventListener('turbo:load', function() {
-                initializePaymentMethodToggle();
-                initializeToastr();
-            });
-        </script>
-    @endpush
 </x-admin-layout>

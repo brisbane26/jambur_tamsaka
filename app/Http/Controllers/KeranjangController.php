@@ -101,7 +101,7 @@ class KeranjangController extends Controller
         $currentUser = Auth::user();
 
         // --- AWAL LOGIKA PEMBATASAN PESANAN 24 JAM UNTUK CUSTOMER ---
-        if ($currentUser->hasRole('customer')) {
+        if ($currentUser->hasRole('customer') && $request->metode_bayar === 'cash') {
             $lastOrder = Pesanan::where('user_id', $currentUser->id)
                                 ->whereIn('status', ['menunggu', 'disetujui'])
                                 ->whereHas('pembayaran', function($query) {
@@ -232,7 +232,6 @@ class KeranjangController extends Controller
         Pembayaran::create([
             'pesanan_id' => $pesanan->id,
             'metode_bayar' => $request->metode_bayar,
-            'status' => 'Pending', // Status pembayaran bisa 'Pending' atau 'Lunas' nanti
         ]);
 
         foreach (Keranjang::where('user_id', Auth::id())->get() as $item) {

@@ -118,7 +118,7 @@
                             </div>
                             <div class="form-group">
                         <label for="eventName">Nama Acara</label>
-                        <input type="text" class="form-control" id="eventName" required> 
+                        <input type="text" class="form-control" id="eventName" readonly> 
                         </div>
                         </form>
                     </div>
