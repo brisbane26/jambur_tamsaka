@@ -17,7 +17,7 @@ Aplikasi Web Jambur Tamsaka adalah sistem informasi yang dirancang untuk memperm
 
 ## Installation
 
-Untuk menjalankan Laptop Store Medan di device anda, lakukan:
+Untuk menjalankan website Jambur Tamsaka di device anda, lakukan:
 
 1. Clone this repository:
 
